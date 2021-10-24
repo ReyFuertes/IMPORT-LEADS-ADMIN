@@ -1,0 +1,47 @@
+@import "src/styleguide/shared";
+img.profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.top-nav {
+  @include il-topnav;
+  overflow: hidden;
+}
+.chat {
+  cursor: pointer;
+}
+.active-link {
+  background-color: $color-gray-3;
+  border-bottom: 2px solid $color-primary;
+}
+.settings {
+  cursor: pointer;
+  div.username {
+    width: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 5px;
+  }
+}
+::ng-deep {
+  .mat-menu-content:not(:empty) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .mat-menu-item {
+    height: 40px !important;
+    max-height: 40px !important;
+    line-height: 40px !important;
+    &:not(:last-child) {
+      border-bottom: thin $color-gray-3 solid !important;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .logo {
+    max-width: 15% !important;
+  }
+}
+

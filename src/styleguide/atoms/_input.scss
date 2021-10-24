@@ -1,0 +1,12 @@
+@mixin il-input {
+  .read-only {
+    input {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+.p-inputtext {
+  width: 100%;
+  font-size: 0.85rem;
+}

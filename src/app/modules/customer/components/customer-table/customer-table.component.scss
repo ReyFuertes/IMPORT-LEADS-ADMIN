@@ -1,0 +1,29 @@
+@import "src/styleguide/shared";
+.customer-table-container {
+  margin-top: 40px;
+}
+.actions {
+  i {
+    cursor: pointer;
+    color: $color-gray-1;
+    &:hover {
+      color: $color-blue;
+    }
+  }
+}
+:host ::ng-deep {
+  .p-column-filter-overlay-menu .p-column-filter-add-rule {
+    display: none !important;
+  }
+  .p-datatable .p-datatable-tbody > tr > td,
+  .p-datatable .p-datatable-thead > tr > th {
+    padding: 0.56rem;
+    font-size: 0.86rem;
+  }
+  .p-datatable-customers {
+    padding: 20px;
+  }
+  p-table {
+    width: 100% !important;
+  }
+}
