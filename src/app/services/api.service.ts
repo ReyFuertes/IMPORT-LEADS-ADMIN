@@ -2,10 +2,16 @@
 import { HttpClient } from '@angular/common/http';
 import { BaseService } from 'src/app/services/base.service';
 import { Injectable } from '@angular/core';
-import { IAccess } from '../models/user.model';
+import { IAccess, IUser } from '../models/user.model';
 import { StorageService } from '../modules/service/storage.service';
 import { IRole } from '../models/generic.model';
 
+@Injectable({ providedIn: 'root' })
+export class UserService extends BaseService<IUser> {
+  constructor(http: HttpClient, storageSrv: StorageService) {
+    super(http, 'user', storageSrv);
+  }
+}
 @Injectable({ providedIn: 'root' })
 export class AccessService extends BaseService<IAccess> {
   constructor(http: HttpClient, storageSrv: StorageService) {

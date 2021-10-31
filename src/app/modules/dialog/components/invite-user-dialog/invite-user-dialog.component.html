@@ -1,0 +1,17 @@
+<div class="il-dialog" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+  <div class="header" fxLayoutAlign="end end" fxLayout="row">
+    <div fxLayout="row">
+      <div fxFlex fxFlexOffset="20px">
+        <h4>{{ 'Invite User' }}</h4>
+      </div>
+      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
+    </div>
+  </div>
+  <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+    <p-chips [(ngModel)]="emails" separator=","></p-chips>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px" class="footer">
+    <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>
+    <button (click)="onInvite()" pButton type="button" class="primary medium" label="INVITE"></button>
+  </div>
+</div>

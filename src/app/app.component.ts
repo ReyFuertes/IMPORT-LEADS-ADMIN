@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LoaderService } from './services/http-token-interceptor';
 import { loadAllRolesAction, loadUserAccessAction } from './store/actions/app.action';
 import { RootState } from './store/root.reducer';
 
@@ -17,9 +18,9 @@ export class AppComponent implements OnInit {
   public svgPath: string = environment.svgPath;
   public hideTopNav: boolean = false;
 
-  constructor(private store: Store<RootState>) {
-    this.store.dispatch(loadUserAccessAction());
-    this.store.dispatch(loadAllRolesAction());
+  constructor(public loaderSrv: LoaderService, private store: Store<RootState>) {
+    // this.store.dispatch(loadUserAccessAction());
+    // this.store.dispatch(loadAllRolesAction());
   }
 
   ngOnInit(): void {

@@ -1,3 +1,8 @@
+export enum UserStatusType {
+  Pending = 0,
+  Approved = 1,
+  Cancelled = 2
+}
 export interface IRole {
   id?: string;
   role_name?: string;

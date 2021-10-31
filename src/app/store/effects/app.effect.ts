@@ -1,16 +1,25 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { tap, map, switchMap, takeUntil, filter, catchError } from 'rxjs/operators';
-import { NavigationEnd, Router } from '@angular/router';
-import { of } from 'rxjs';
-import { loadAllRolesAction, loadAllRolesSuccessAction, loadUserAccessAction, loadUserAccessSuccessAction } from '../actions/app.action';
+import { tap, map, switchMap } from 'rxjs/operators';
+import { loadAllRolesAction, loadAllRolesSuccessAction, loadUserAccessAction, loadUserAccessSuccessAction, loadUsersAction, loadUsersSuccessAction } from '../actions/app.action';
 import { RootState } from '../root.reducer';
 import { IAccess, IRole } from 'src/app/models/generic.model';
-import { AccessService, RolesService } from 'src/app/services/api.service';
+import { AccessService, RolesService, UserService } from 'src/app/services/api.service';
+import { IUser } from 'src/app/models/user.model';
 
 @Injectable()
 export class AppEffects {
+  loadUserAction$ = createEffect(() => this.actions$.pipe(
+    ofType(loadUsersAction),
+    switchMap(() => {
+      return this.userService.getAll().pipe(
+        map((response: IUser[]) => {
+          return loadUsersSuccessAction({ response });
+        })
+      )
+    })
+  ));
   loadAllRolesAction$ = createEffect(() => this.actions$.pipe(
     ofType(loadAllRolesAction),
     switchMap(() => {
@@ -32,8 +41,9 @@ export class AppEffects {
     })
   ));
 
-  constructor(private store: Store<RootState>, 
+  constructor(private store: Store<RootState>,
     private actions$: Actions,
     private roleService: RolesService,
-    private accessService: AccessService ) { }
+    private accessService: AccessService,
+    private userService: UserService) { }
 }

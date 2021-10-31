@@ -1,6 +1,7 @@
 @import "src/styleguide/shared";
 .content {
-  padding: 15px 10px 0 10px;
+  width: 100%;
+  padding: 15px 20px 0 20px;
   > div {
     flex-direction: row;
     display: flex;
@@ -43,8 +44,14 @@ label {
   padding-top: 20px;
 }
 :host ::ng-deep {
+  p-chips {
+    width: 100%;
+  }
+  .p-chips {
+    width: 100%;
+  }
   .p-multiselect, .p-inputtext {
-    width: 199px;
+    width: 100%;
   }
   .mat-form-field-appearance-legacy .mat-form-field-wrapper {
     padding-bottom: 0;

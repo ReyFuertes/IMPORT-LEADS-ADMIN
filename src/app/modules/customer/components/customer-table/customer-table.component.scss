@@ -1,6 +1,6 @@
 @import "src/styleguide/shared";
 .customer-table-container {
-  margin-top: 40px;
+  margin-top: 70px;
 }
 .actions {
   i {
@@ -10,6 +10,13 @@
       color: $color-blue;
     }
   }
+}
+tr {
+  cursor: pointer;
+}
+.pi-plus {
+  position: relative;
+  top: 1px;
 }
 :host ::ng-deep {
   .p-column-filter-overlay-menu .p-column-filter-add-rule {

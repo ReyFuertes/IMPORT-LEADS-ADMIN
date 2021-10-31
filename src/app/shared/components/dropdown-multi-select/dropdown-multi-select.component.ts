@@ -1,10 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ReplaySubject } from 'rxjs';
 import * as _ from 'lodash';
 import { GenericControl } from '../../generics/generic-control';
 import { ISimpleItem } from '../../generics/generic.model';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'il-dropdown-multi-select',
@@ -16,7 +13,7 @@ export class DropdownMultiSelectComponent extends GenericControl<ISimpleItem> im
   @Input() public maxSelectedLabels: number = 2;
   @Output() public valueEmitter = new EventEmitter<any>();
 
-  constructor(public translateService: TranslateService) {
+  constructor() {
     super();
   }
 

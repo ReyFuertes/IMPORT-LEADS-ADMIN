@@ -14,9 +14,10 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './store/effects/app.effect';
 import { AccessService } from './services/api.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { reducers } from './store/root.reducer';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { BlockUIModule } from 'primeng/blockui';
+import { TokenInterceptor } from './services/http-token-interceptor';
 
 const materialModules = [
   MatFormFieldModule,
@@ -24,7 +25,9 @@ const materialModules = [
   MatCardModule
 ];
 
-const primeNgModules = [];
+const primeNgModules = [
+  BlockUIModule
+];
 
 const directives = [
   NumberOnlyDirective,
@@ -51,7 +54,11 @@ const services = [
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([AppEffects]),
   ],
-  providers: [...directives, ...services],
+  providers: [
+    ...directives,
+    ...services,
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

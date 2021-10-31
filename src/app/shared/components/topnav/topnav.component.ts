@@ -5,7 +5,6 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ISimpleItem } from '../../generics/generic.model';
 import { GenericDestroyPageComponent } from '../../generics/generic-destroy-page';
-import { TranslateService } from '@ngx-translate/core';
 import { IUser } from 'src/app/models/user.model';
 import { StorageService } from 'src/app/modules/service/storage.service';
 import { RootState } from 'src/app/store/root.reducer';

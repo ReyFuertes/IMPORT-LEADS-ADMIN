@@ -1,56 +1,26 @@
-<div class="customer-table-container" fxLayout="column" fxLayoutAlign="start start">
-  <p-table #dt1 [value]="customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines" [paginator]="true" selectionMode="single"
+<div *ngIf="($users | async) as users" class="customer-table-container" fxLayout="column" fxLayoutAlign="start start">
+  <p-table #dt1 [value]="users" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines" [paginator]="true" selectionMode="single"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['name','date','email','status']">
     <ng-template pTemplate="caption">
-      <div class="p-d-flex">
-        <span class="p-input-icon-left p-ml-auto">
-          <i class="pi pi-search"></i>
-          <input pInputText type="text" placeholder="Search keyword" />
-        </span>
+      <div fxLayout="row" fxFlex="100">
+        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+          <span class="p-input-icon-left p-ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" placeholder="Search keyword" />
+          </span>
+        </div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+          <button (click)="onInvite()" pButton type="button" class="purple medium" label="INVITE"><i class="pi pi-send"></i></button>
+          <button (click)="onAddUser()" pButton type="button" class="primary medium" label="NEW"><i class="pi pi-plus"></i></button>
+        </div>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th>
+        <th *ngFor="let header of columnHeaders">
           <div class="p-d-flex">
-            <span>Date</span>
-            <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="p-d-flex">
-            <span>Name</span>
-            <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="p-d-flex">
-            <span>Email</span>
-            <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="p-d-flex">
-            <span>Phone Number</span>
-            <p-columnFilter type="text" field="phoneNumber" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="p-d-flex">
-            <span>Company Name</span>
-            <p-columnFilter type="text" field="companyName" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="p-d-flex">
-            <span>Company Address</span>
-            <p-columnFilter type="text" field="companyAddress" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="p-d-flex">
-            <span>Status</span>
-            <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
+            <span>{{ header?.label }}</span>
+            <p-columnFilter type="date" [field]="header?.value" display="menu"></p-columnFilter>
           </div>
         </th>
         <th>
@@ -62,31 +32,15 @@
     </ng-template>
     <ng-template pTemplate="body" let-customer>
       <tr>
-        <td>
-          <span>{{customer?.date}}</span>
-        </td>
-        <td>
-          <span>{{customer?.name}}</span>
-        </td>
-        <td>
-          <span>{{customer?.email}}</span>
-        </td>
-        <td>
-          <span>{{customer?.phoneNumber}}</span>
-        </td>
-        <td>
-          <span>{{customer?.companyName}}</span>
-        </td>
-        <td>
-          <span>{{customer?.companyAddress}}</span>
-        </td>
-        <td>
-          <span>{{customer?.status}}</span>
+        <td *ngFor="let header of columnHeaders; let i = index">
+          <span *ngIf="i === 0">{{customer[header?.value] | date: 'dd/MM/yyyy' }}</span>
+          <span *ngIf="i !== 0 && i !== 6">{{customer[header?.value] | titlecase }}</span>
+          <span *ngIf="i === 6">{{ userStatusType[0] }}</span>
         </td>
         <td>
           <div class="actions" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
-            <i pTooltip="Edit" tooltipPosition="top" class="pi pi-pencil"></i>
-            <i pTooltip="Delete" tooltipPosition="top" class="pi pi-trash"></i>
+            <i pTooltip="Edit" (click)="onEditUser()" tooltipPosition="top" class="pi pi-pencil"></i>
+            <i pTooltip="Delete" (click)="onDelete()" tooltipPosition="top" class="pi pi-trash"></i>
           </div>
         </td>
       </tr>

@@ -1,9 +1,12 @@
 
 import { ActionReducerMap } from '@ngrx/store';
 import { AppReducer, appState } from './reducers/app-reducer';
+import { NotificationReducer, NotificationState } from './reducers/notification.reducer';
 export interface RootState {
-  appState: appState
+  appState: appState,
+  notification?: NotificationState,
 }
 export const reducers: ActionReducerMap<RootState> = {
-  appState: AppReducer
+  appState: AppReducer,
+  notification: NotificationReducer,
 };

@@ -1,113 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-const DUMMY_DATA = [{
-  id: 1000,
-  name: "James Butt",
-  email: "jamesbutt@gmail.com",
-  company: "Benton, John B Jr",
-  date: "2015-09-13",
-  status: "pending",
-  phoneNumber: "000-000-000-000",
-  address: "Hongkong",
-  companyName: "Factor 101",
-  companyAddress: "China 102 Street"
-},
-{
-  id: 1001,
-  name: "Josephine Darakjy",
-  email: "josedark@gmail.com",
-  company: "Chanay, Jeffrey A Esq",
-  date: "2019-02-09",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-},
-{
-  id: 1002,
-  name: "Art Venere",
-  email: "artvene@gmail.com",
-  company: "Chemel, James L Cpa",
-  date: "2017-05-13",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-},
-{
-  id: 1003,
-  name: "Lenna Paprocki",
-  email: "lenapap@gmail.com",
-  company: "Feltz Printing Service",
-  date: "2020-09-15",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-},
-{
-  id: 1004,
-  name: "Donette Foller",
-  email: "donfoll@gmail.com",
-  company: "Printing Dimensions",
-  date: "2016-05-20",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-},
-{
-  id: 1005,
-  name: "Simona Morasca",
-  email: "simonmarasca@gmail.com",
-  company: "Chapman, Ross E Esq",
-  date: "2018-02-16",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-},
-{
-  id: 1006,
-  name: "Mitsue Tollner",
-  email: "mittollner@gmail.com",
-  company: "Morlong Associates",
-  date: "2018-02-19",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-},
-{
-  id: 1007,
-  name: "Leota Dilliard",
-  email: "leotadillaiard@gmail.com",
-  company: "Commercial Press",
-  date: "2019-08-13",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-},
-{
-  id: 1008,
-  name: "Sage Wieser",
-  email: "sageserk@gmail.com",
-  company: "Truhlar And Truhlar Attys",
-  date: "2018-11-21",
-  status: "approved",
-  phoneNumber: "000-000-000-000",
-  address: "China",
-  companyName: "Factor 102",
-  companyAddress: "China 103 Street"
-}]
-
+import { MatDialog } from '@angular/material/dialog';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { UserStatusType } from 'src/app/models/generic.model';
+import { IUser } from 'src/app/models/user.model';
+import { AddUserDialogComponent } from 'src/app/modules/dialog/components/add-user-dialog/add-user-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
+import { InviteUserDialogComponent } from 'src/app/modules/dialog/components/invite-user-dialog/invite-user-dialog.component';
+import { ISimpleItem } from 'src/app/shared/generics/generic.model';
+import { RootState } from 'src/app/store/root.reducer';
+import { getUsersSelector } from 'src/app/store/selectors/app.selector';
 @Component({
   selector: 'il-customer-table',
   templateUrl: './customer-table.component.html',
@@ -115,10 +17,84 @@ const DUMMY_DATA = [{
 })
 export class CustomerTableComponent implements OnInit {
   public customers: any[];
+  public $users: Observable<IUser[]>;
+  public columnHeaders: ISimpleItem[] = [{
+    label: 'Date',
+    value: 'created_at'
+  }, {
+    label: 'Username/Email',
+    value: 'username'
+  }, {
+    label: 'Name',
+    value: 'name'
+  }, {
+    label: 'Phone',
+    value: 'phone'
+  }, {
+    label: 'Company Name',
+    value: 'company_name'
+  }, {
+    label: 'Company Address',
+    value: 'company_address'
+  }, {
+    label: 'Status',
+    value: 'status'
+  }];
+  public userStatusType = UserStatusType;
 
-  constructor() { }
+  constructor(private dialog: MatDialog, private store: Store<RootState>) {
+    this.$users = this.store.pipe(select(getUsersSelector));
+  }
 
-  ngOnInit() {
-    this.customers = DUMMY_DATA;
+  ngOnInit() { }
+
+  public onInvite(): void {
+    const dialogRef = this.dialog.open(InviteUserDialogComponent, {
+      width: '410px',
+      data: { action: 0 }
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+        }
+      });
+  }
+
+  public onDelete(): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '410px',
+      data: { action: 0 }
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+        }
+      });
+  }
+
+  public onAddUser(): void {
+    const dialogRef = this.dialog.open(AddUserDialogComponent, {
+      width: '550px',
+      height: '385px',
+      data: { action: 0 }
+    });
+    dialogRef.afterClosed().subscribe((result: IUser) => {
+      if (result) {
+
+      }
+    });
+  }
+
+  public onEditUser(): void {
+    const dialogRef = this.dialog.open(AddUserDialogComponent, {
+      width: '550px',
+      height: '385px',
+      data: { action: 1 }
+    });
+    dialogRef.afterClosed().subscribe((result: IUser) => {
+      if (result) {
+
+      }
+    });
   }
 }
