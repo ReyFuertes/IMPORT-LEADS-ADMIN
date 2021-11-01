@@ -19,8 +19,8 @@ export class AppComponent implements OnInit {
   public hideTopNav: boolean = false;
 
   constructor(public loaderSrv: LoaderService, private store: Store<RootState>) {
-    // this.store.dispatch(loadUserAccessAction());
-    // this.store.dispatch(loadAllRolesAction());
+    this.store.dispatch(loadUserAccessAction());
+    this.store.dispatch(loadAllRolesAction());
   }
 
   ngOnInit(): void {

@@ -1,0 +1,93 @@
+<div class="il-dialog" fxLayout="column" fxLayoutAlign="center center">
+  <div class="header" fxLayoutAlign="end end" fxLayout="row">
+    <div fxLayout="row">
+      <div fxFlex fxFlexOffset="20px">
+        <h4>{{ actionText[data?.action] }} {{ 'CUSTOMER' }}</h4>
+      </div>
+      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
+    </div>
+  </div>
+  <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+    <p-tabView>
+      <p-tabPanel header="General Info">
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div>
+            <label>{{ 'Firstname' }}</label>
+            <il-input [form]="getGeneralInformationForm" placeholder="Firstname" controlName="firstname"></il-input>
+          </div>
+          <div>
+            <label>{{ 'Lastname' }}</label>
+            <il-input [form]="getGeneralInformationForm" placeholder="Lastname" controlName="lastname"></il-input>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div>
+            <label>{{ 'Email/Username' }}</label>
+            <il-input-email [form]="getEmailPasswordForm" placeholder="Email/Username" type="email" controlName="username"></il-input-email>
+          </div>
+          <div>
+            <label>{{ 'Password' }}</label>
+            <il-input-password [form]="getEmailPasswordForm" placeholder="Password" controlName="password"></il-input-password>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div>
+            <label>{{ 'Phone Number' }}</label>
+            <il-input [form]="getGeneralInformationForm" placeholder="Phone Number" controlName="phoneNumber"></il-input>
+          </div>
+          <div>
+            <label>{{ 'Address' }}</label>
+            <il-input [form]="getGeneralInformationForm" placeholder="Address" controlName="address"></il-input>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div>
+            <label>{{ 'Company Name' }}</label>
+            <il-input [form]="getGeneralInformationForm" placeholder="Company Name" controlName="companyName"></il-input>
+          </div>
+          <div>
+            <label>{{ 'Company Address' }}</label>
+            <il-input [form]="getGeneralInformationForm" placeholder="Company Address" controlName="companyAddress"></il-input>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div fxFlex="50">
+            <il-dropdown-select label="Language" [form]="getGeneralInformationForm" controlName="language" [options]="languageOptions"></il-dropdown-select>
+          </div>
+          <div fxFlex="50"></div>
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel header="Users">
+        <p-table [value]="users" [scrollable]="true" scrollHeight="256px">
+          <ng-template pTemplate="header">
+            <tr>
+              <th fxFlex="30">Username</th>
+              <th fxFlex="30">Roles</th>
+              <th fxFlex="30">Access</th>
+              <th fxFlex="70px" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-user>
+            <tr>
+              <td fxFlex="30">{{user?.username}}</td>
+              <td fxFlex="30">{{user?.roles}}</td>
+              <td fxFlex="30">{{user?.access}}</td>
+              <td fxFlex="70px" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+                <i (click)="onEditUser(user)" pTooltip="Edit" tooltipPosition="top" class="pi pi-pencil"></i>
+                <i (click)="onDelete(user)" pTooltip="Delete" tooltipPosition="top" class="pi pi-times"></i>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="actions" fxLayout="row" fxLayoutAlign="end center">
+          <button (click)="onAddUser()" pButton type="button" class="default small" label="Add a user"></button>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
+    <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>
+    <button [disabled]="!form.valid" (click)="onAdd()" pButton type="button" class="primary medium" [label]="actionText[data?.action]"></button>
+  </div>
+</div>

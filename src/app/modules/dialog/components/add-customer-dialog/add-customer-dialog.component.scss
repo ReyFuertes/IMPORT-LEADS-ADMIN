@@ -1,0 +1,98 @@
+@import "src/styleguide/shared";
+.content {
+  width: 100%;
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  > div {
+    flex-direction: row;
+    display: flex;
+  }
+  div {
+    width: 100%;
+  }
+}
+.header {
+  width: 100%;
+  padding: 15px 10px 10px 10px;
+  border-bottom: thin $color-gray-3 solid;
+  > div {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    height: 30px;
+    width: 100%;
+    &:first-child {
+      text-align: center;
+    }
+  }
+}
+.actions {
+  height: 50px;
+}
+.pi-times {
+  color: $color-black-3;
+  cursor: pointer;
+  &:hover {
+    color: $color-blue;
+  }
+}
+label {
+  font-size: 12px;
+  font-weight: 500;
+  color: $color-black-2;
+}
+.footer {
+  width: 100%;
+  border-top: thin $color-gray-3 solid;
+  padding-top: 20px;
+}
+.pi-pencil, .pi-times {
+  cursor: pointer;
+  color: $color-black-3;
+  &:hover {
+    color: $color-black-0;
+  }
+}
+:host ::ng-deep {
+  .p-datatable-wrapper {
+    border: thin $color-gray-3 solid;
+  }
+  .p-tabview .p-tabview-panels {
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    min-height: 322px;
+  }
+  .p-datatable .p-datatable-tbody > tr  {
+    &:hover {
+      background-color: $color-gray-3;
+    }
+    > td {
+      padding: 0.5rem;
+      font-size: 0.85rem;
+      &:last-child {
+        width: 50px !important;
+      }
+    }
+  }
+  .p-datatable .p-datatable-thead > tr > th {
+    padding: 0.5rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+    &:last-child {
+      width: 50px !important;
+    }
+  }
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    padding: 0.5rem 1.5rem;
+  }
+  .p-tabview .p-tabview-panels {
+    min-height: 314px;
+  }
+  .p-dropdown, p-dropdown {
+    width: 100%;
+  }
+  .p-multiselect, .p-inputtext {
+    width: 100%;
+  }
+  .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+}

@@ -1,0 +1,30 @@
+<div class="il-dialog" fxLayout="column" fxLayoutAlign="center center">
+  <div class="header" fxLayoutAlign="end end" fxLayout="row">
+    <div fxLayout="row">
+      <div fxFlex fxFlexOffset="20px">
+        <h4>{{ actionText[data?.action] }} {{ 'USER' }}</h4>
+      </div>
+      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
+    </div>
+  </div>
+  <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutGap="20px">
+      <div>
+        <label>{{ 'Username' }}</label>
+        <il-input [form]="form" placeholder="Username" controlName="username"></il-input>
+      </div>
+    </div>
+    <div fxLayoutGap="20px">
+      <div fxFlex fxLayoutAlign="end end">
+        <il-dropdown-multi-select label="Access" placeholder="Select Access" [form]="form" controlName="access" [options]="$access | async"></il-dropdown-multi-select>
+      </div>
+      <div fxFlex fxLayoutAlign="end end">
+        <il-dropdown-multi-select label="Role" placeholder="Select Role" [form]="form" controlName="roles" [options]="$roles | async"></il-dropdown-multi-select>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
+    <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>
+    <button [disabled]="!form.valid" (click)="onSave()" pButton type="button" class="primary medium" [label]="actionText[data?.action]"></button>
+  </div>
+</div>

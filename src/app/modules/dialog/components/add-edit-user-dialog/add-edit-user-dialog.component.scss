@@ -1,6 +1,7 @@
 @import "src/styleguide/shared";
 .content {
-  padding: 15px 10px 0 10px;
+  width: 100%;
+  padding: 0.5rem 1rem 1rem;
   > div {
     flex-direction: row;
     display: flex;
@@ -24,6 +25,9 @@
     }
   }
 }
+.actions {
+  height: 50px;
+}
 .pi-times {
   color: $color-black-3;
   cursor: pointer;
@@ -37,16 +41,16 @@ label {
   color: $color-black-2;
 }
 .footer {
-  margin: 20px;
   width: 100%;
   border-top: thin $color-gray-3 solid;
   padding-top: 20px;
+  padding-left: 20px;
 }
 :host ::ng-deep {
-  .p-multiselect, .p-inputtext {
-    width: 199px;
+  .p-multiselect-panel .p-multiselect-items:not(.p-multiselect-virtualscroll) {
+    padding: 0 !important;
   }
-  .mat-form-field-appearance-legacy .mat-form-field-wrapper {
-    padding-bottom: 0;
+  .p-multiselect, p-multiselect, il-dropdown-multi-select {
+    width: 100% !important;
   }
 }

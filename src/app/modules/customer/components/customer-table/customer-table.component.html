@@ -11,7 +11,7 @@
         </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
           <button (click)="onInvite()" pButton type="button" class="purple medium" label="INVITE"><i class="pi pi-send"></i></button>
-          <button (click)="onAddUser()" pButton type="button" class="primary medium" label="NEW"><i class="pi pi-plus"></i></button>
+          <button (click)="onAddCustomer()" pButton type="button" class="primary medium" label="NEW"><i class="pi pi-plus"></i></button>
         </div>
       </div>
     </ng-template>
@@ -39,7 +39,8 @@
         </td>
         <td>
           <div class="actions" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
-            <i pTooltip="Edit" (click)="onEditUser()" tooltipPosition="top" class="pi pi-pencil"></i>
+            <i pTooltip="Approve" (click)="onApprove()" tooltipPosition="top" class="pi pi-check"></i>
+            <i pTooltip="Edit" (click)="onEditCustomer()" tooltipPosition="top" class="pi pi-pencil"></i>
             <i pTooltip="Delete" (click)="onDelete()" tooltipPosition="top" class="pi pi-trash"></i>
           </div>
         </td>

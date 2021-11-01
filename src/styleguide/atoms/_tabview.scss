@@ -1,0 +1,9 @@
+p-tabview {
+  width: 100%;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 0.5rem;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  box-shadow: none !important;
+}

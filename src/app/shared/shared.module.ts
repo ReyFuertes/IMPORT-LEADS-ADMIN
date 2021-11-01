@@ -32,6 +32,7 @@ import { PasswordModule } from 'primeng/password';
 import { TopNavComponent } from './components/topnav/topnav.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
+import { InputEmailComponent } from './components/input-email/input-email.component';
 
 const materialModules = [
   MatFormFieldModule,
@@ -63,7 +64,8 @@ const sharedComponents = [
   DropdownSelectComponent,
   DropdownMultiSelectComponent,
   InputPasswordComponent,
-  TopNavComponent
+  TopNavComponent,
+  InputEmailComponent
 ];
 
 const directives = [

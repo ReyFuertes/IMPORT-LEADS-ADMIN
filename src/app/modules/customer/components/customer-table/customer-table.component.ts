@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { UserStatusType } from 'src/app/models/generic.model';
 import { IUser } from 'src/app/models/user.model';
-import { AddUserDialogComponent } from 'src/app/modules/dialog/components/add-user-dialog/add-user-dialog.component';
+import { AddCustomerDialogComponent } from 'src/app/modules/dialog/components/add-customer-dialog/add-customer-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
 import { InviteUserDialogComponent } from 'src/app/modules/dialog/components/invite-user-dialog/invite-user-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
@@ -60,6 +60,18 @@ export class CustomerTableComponent implements OnInit {
       });
   }
 
+  public onApprove(): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '410px',
+      data: { action: 1 }
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+        }
+      });
+  }
+
   public onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '410px',
@@ -72,10 +84,10 @@ export class CustomerTableComponent implements OnInit {
       });
   }
 
-  public onAddUser(): void {
-    const dialogRef = this.dialog.open(AddUserDialogComponent, {
+  public onAddCustomer(): void {
+    const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '550px',
-      height: '385px',
+      height: '495px',
       data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((result: IUser) => {
@@ -85,10 +97,10 @@ export class CustomerTableComponent implements OnInit {
     });
   }
 
-  public onEditUser(): void {
-    const dialogRef = this.dialog.open(AddUserDialogComponent, {
+  public onEditCustomer(): void {
+    const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '550px',
-      height: '385px',
+      height: '495px',
       data: { action: 1 }
     });
     dialogRef.afterClosed().subscribe((result: IUser) => {

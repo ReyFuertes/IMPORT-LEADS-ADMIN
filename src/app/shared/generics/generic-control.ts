@@ -1,7 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { Input, Output, EventEmitter, Directive } from '@angular/core';
 import { GenericDestroyPageComponent } from './generic-destroy-page';
-import { environment } from 'src/environments/environment';
 
 @Directive()
 export class GenericControl<T> extends GenericDestroyPageComponent {
@@ -12,9 +11,6 @@ export class GenericControl<T> extends GenericDestroyPageComponent {
   @Input() public controlName: any;
   @Input() public form: FormGroup;
   @Input() public selectedItem: T;
-
-  public svgPath: string = environment.svgPath;
-  public imgPath: string = environment.imgPath;
 
   @Output() public valueEmitter = new EventEmitter<T>();
 
