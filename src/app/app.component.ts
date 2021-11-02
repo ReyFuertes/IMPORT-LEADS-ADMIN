@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoaderService } from './services/http-token-interceptor';
-import { loadAllRolesAction, loadUserAccessAction } from './store/actions/app.action';
+import { loadAllRolesAction, loadCustomerAccessAction } from './store/actions/app.action';
 import { RootState } from './store/root.reducer';
 
 @Component({
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   public hideTopNav: boolean = false;
 
   constructor(public loaderSrv: LoaderService, private store: Store<RootState>) {
-    this.store.dispatch(loadUserAccessAction());
+    this.store.dispatch(loadCustomerAccessAction());
     this.store.dispatch(loadAllRolesAction());
   }
 

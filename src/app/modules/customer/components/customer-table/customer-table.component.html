@@ -1,5 +1,5 @@
-<div *ngIf="($users | async) as users" class="customer-table-container" fxLayout="column" fxLayoutAlign="start start">
-  <p-table #dt1 [value]="users" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines" [paginator]="true" selectionMode="single"
+<div *ngIf="($Customers | async) as Customers" class="customer-table-container" fxLayout="column" fxLayoutAlign="start start">
+  <p-table #dt1 [value]="Customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines" [paginator]="true" selectionMode="single"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['name','date','email','status']">
     <ng-template pTemplate="caption">
       <div fxLayout="row" fxFlex="100">
@@ -35,7 +35,7 @@
         <td *ngFor="let header of columnHeaders; let i = index">
           <span *ngIf="i === 0">{{customer[header?.value] | date: 'dd/MM/yyyy' }}</span>
           <span *ngIf="i !== 0 && i !== 6">{{customer[header?.value] | titlecase }}</span>
-          <span *ngIf="i === 6">{{ userStatusType[0] }}</span>
+          <span *ngIf="i === 6">{{ CustomerStatusType[0] }}</span>
         </td>
         <td>
           <div class="actions" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">

@@ -1,26 +1,26 @@
 import { createReducer, on, Action } from "@ngrx/store";
 import { IRole } from "src/app/models/generic.model";
-import { IAccess, IUser } from "src/app/models/user.model";
-import { loadAllRolesSuccessAction, loadUsersSuccessAction, loadUserAccessSuccessAction } from "../actions/app.action";
+import { IAccess, ICustomer } from "src/app/models/customer.model";
+import { loadAllRolesSuccessAction, loadCustomersSuccessAction, loadCustomerAccessSuccessAction } from "../actions/app.action";
 export interface appState {
   access?: IAccess[],
   roles?: IRole[],
-  users?: IUser[]
+  Customers?: ICustomer[]
 }
 export const initialState: appState = {
   access: null,
   roles: null,
-  users: null
+  Customers: null
 };
 const appReducer = createReducer(
   initialState,
-  on(loadUsersSuccessAction, (state, action) => {
-    return Object.assign({}, state, { users: action.response });
+  on(loadCustomersSuccessAction, (state, action) => {
+    return Object.assign({}, state, { Customers: action.response });
   }),
   on(loadAllRolesSuccessAction, (state, action) => {
     return Object.assign({}, state, { roles: action.response });
   }),
-  on(loadUserAccessSuccessAction, (state, action) => {
+  on(loadCustomerAccessSuccessAction, (state, action) => {
     return Object.assign({}, state, { access: action.response });
   }),
 );

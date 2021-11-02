@@ -1,21 +1,21 @@
 import { createAction, props } from '@ngrx/store';
 import { IRole } from 'src/app/models/generic.model';
-import { IAccess, IUser } from 'src/app/models/user.model';
+import { IAccess, ICustomer } from 'src/app/models/customer.model';
 
 export enum AppActionTypes {
-  loadUserAccessAction = '[User] load user access',
-  loadUserAccessSuccessAction = '[User] load user access (success)',
-  loadAllRolesAction = '[User Mgmt] load roles',
-  loadAllRolesSuccessAction = '[User Mgmt] load roles (success)',
-  loadUsersAction = '[User] load user',
-  loadUsersSuccessAction = '[User] load user (success)',
+  loadCustomerAccessAction = '[Customer] load Customer access',
+  loadCustomerAccessSuccessAction = '[Customer] load Customer access (success)',
+  loadAllRolesAction = '[Customer Mgmt] load roles',
+  loadAllRolesSuccessAction = '[Customer Mgmt] load roles (success)',
+  loadCustomersAction = '[Customer] load Customer',
+  loadCustomersSuccessAction = '[Customer] load Customer (success)',
 }
-export const loadUsersAction = createAction(
-  AppActionTypes.loadUsersAction,
+export const loadCustomersAction = createAction(
+  AppActionTypes.loadCustomersAction,
 );
-export const loadUsersSuccessAction = createAction(
-  AppActionTypes.loadUsersSuccessAction,
-  props<{ response: IUser[] }>()
+export const loadCustomersSuccessAction = createAction(
+  AppActionTypes.loadCustomersSuccessAction,
+  props<{ response: ICustomer[] }>()
 );
 export const loadAllRolesAction = createAction(
   AppActionTypes.loadAllRolesAction,
@@ -24,10 +24,10 @@ export const loadAllRolesSuccessAction = createAction(
   AppActionTypes.loadAllRolesSuccessAction,
   props<{ response: IRole[] }>()
 );
-export const loadUserAccessAction = createAction(
-  AppActionTypes.loadUserAccessAction
+export const loadCustomerAccessAction = createAction(
+  AppActionTypes.loadCustomerAccessAction
 );
-export const loadUserAccessSuccessAction = createAction(
-  AppActionTypes.loadUserAccessSuccessAction,
+export const loadCustomerAccessSuccessAction = createAction(
+  AppActionTypes.loadCustomerAccessSuccessAction,
   props<{ response: IAccess[] }>()
 );

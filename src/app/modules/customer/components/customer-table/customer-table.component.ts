@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { UserStatusType } from 'src/app/models/generic.model';
-import { IUser } from 'src/app/models/user.model';
+import { CustomerStatusType } from 'src/app/models/generic.model';
+import { ICustomer, ICustomerPayload } from 'src/app/models/customer.model';
 import { AddCustomerDialogComponent } from 'src/app/modules/dialog/components/add-customer-dialog/add-customer-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
-import { InviteUserDialogComponent } from 'src/app/modules/dialog/components/invite-user-dialog/invite-user-dialog.component';
+import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { getUsersSelector } from 'src/app/store/selectors/app.selector';
+import { getCustomersSelector } from 'src/app/store/selectors/app.selector';
+import { addCustomerAction } from '../../store/customer.actions';
 @Component({
   selector: 'il-customer-table',
   templateUrl: './customer-table.component.html',
@@ -17,7 +18,7 @@ import { getUsersSelector } from 'src/app/store/selectors/app.selector';
 })
 export class CustomerTableComponent implements OnInit {
   public customers: any[];
-  public $users: Observable<IUser[]>;
+  public $Customers: Observable<ICustomer[]>;
   public columnHeaders: ISimpleItem[] = [{
     label: 'Date',
     value: 'created_at'
@@ -40,16 +41,16 @@ export class CustomerTableComponent implements OnInit {
     label: 'Status',
     value: 'status'
   }];
-  public userStatusType = UserStatusType;
+  public CustomerStatusType = CustomerStatusType;
 
   constructor(private dialog: MatDialog, private store: Store<RootState>) {
-    this.$users = this.store.pipe(select(getUsersSelector));
+    this.$Customers = this.store.pipe(select(getCustomersSelector));
   }
 
   ngOnInit() { }
 
   public onInvite(): void {
-    const dialogRef = this.dialog.open(InviteUserDialogComponent, {
+    const dialogRef = this.dialog.open(InviteCustomerDialogComponent, {
       width: '410px',
       data: { action: 0 }
     });
@@ -90,9 +91,10 @@ export class CustomerTableComponent implements OnInit {
       height: '495px',
       data: { action: 0 }
     });
-    dialogRef.afterClosed().subscribe((result: IUser) => {
-      if (result) {
-
+    dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
+      if (payload) {
+        debugger
+        this.store.dispatch(addCustomerAction({ payload }));
       }
     });
   }
@@ -103,7 +105,7 @@ export class CustomerTableComponent implements OnInit {
       height: '495px',
       data: { action: 1 }
     });
-    dialogRef.afterClosed().subscribe((result: IUser) => {
+    dialogRef.afterClosed().subscribe((result: ICustomer) => {
       if (result) {
 
       }

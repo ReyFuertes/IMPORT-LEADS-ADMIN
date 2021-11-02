@@ -6,34 +6,38 @@ import { Observable } from 'rxjs';
 import { IAccess } from 'src/app/models/generic.model';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
+import { generatePassword } from 'src/app/shared/util/password';
 import { RootState } from 'src/app/store/root.reducer';
-import { getUserAccessSelector, getUserRolesSelector } from 'src/app/store/selectors/app.selector';
+import { getCustomerAccessSelector, getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
 
 @Component({
-  selector: 'il-add-edit-user-dialog',
-  templateUrl: './add-edit-user-dialog.component.html',
-  styleUrls: ['./add-edit-user-dialog.component.scss']
+  selector: 'il-add-edit-customer-user-dialog',
+  templateUrl: './add-edit-customer-user-dialog.component.html',
+  styleUrls: ['./add-edit-customer-user-dialog.component.scss']
 })
-export class AddEditUserDialogComponent implements OnInit {
+export class AddEditCustomerUserDialogComponent implements OnInit {
   public actionText: string[] = ['ADD', 'UPDATE'];
   public form: FormGroup;
   public $access: Observable<IAccess[]>;
   public $roles: Observable<ISimpleItem[]>;
 
-  constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditCustomerUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+      password: [generatePassword(), Validators.required],
       roles: [null, Validators.required],
       access: [null, Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.$access = this.store.pipe(select(getUserAccessSelector));
-    this.$roles = this.store.pipe(select(getUserRolesSelector));
+    this.$access = this.store.pipe(select(getCustomerAccessSelector));
+    this.$roles = this.store.pipe(select(getCustomerRolesSelector));
   }
 
   public onSave(): void {
-
+    if (this.form.valid) {
+      this.dialogRef.close(this.form.value);
+    }
   }
 }

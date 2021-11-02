@@ -5,7 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ISimpleItem } from '../../generics/generic.model';
 import { GenericDestroyPageComponent } from '../../generics/generic-destroy-page';
-import { IUser } from 'src/app/models/user.model';
+import { ICustomer } from 'src/app/models/customer.model';
 import { StorageService } from 'src/app/modules/service/storage.service';
 import { RootState } from 'src/app/store/root.reducer';
 
@@ -19,7 +19,7 @@ export class TopNavComponent extends GenericDestroyPageComponent implements OnIn
   public apiImagePath: string = environment.apiImagePath;
   public svgPath: string = environment.svgPath;
   public imgPath: string = environment.imgPath;
-  public user: IUser;
+  public Customer: ICustomer;
   public menus: ISimpleItem[] = [{
     label: 'Dashboard',
     value: '/dashboard'
@@ -38,7 +38,7 @@ export class TopNavComponent extends GenericDestroyPageComponent implements OnIn
   ngOnInit() { }
 
   public get getProfilePic(): string {
-    return this.user?.image ? this.apiImagePath + this.user?.image
+    return this.Customer?.image ? this.apiImagePath + this.Customer?.image
       : this.imgPath + 'default-profile-pic.png';
   }
 

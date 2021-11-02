@@ -1,4 +1,4 @@
-export enum UserStatusType {
+export enum CustomerStatusType {
   Pending = 0,
   Approved = 1,
   Cancelled = 2
@@ -11,7 +11,7 @@ export interface IAccess {
   id?: string;
   access_name?: string;
   parent?: IAccess;
-  user_route?: string;
+  Customer_route?: string;
 }
 export enum ModalStateType {
   add = 1,

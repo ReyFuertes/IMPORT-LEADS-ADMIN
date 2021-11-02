@@ -19,6 +19,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SliderModule } from 'primeng/slider';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { CustomerReducers } from './store/customer.reducer';
+import { CustomerEffects } from './store/customer.effects';
 
 const primengModules = [
   InputTextModule,
@@ -65,7 +69,8 @@ const routes: Routes = [{
     ...primengModules,
     ...materialModules,
     RouterModule.forChild(routes),
-
+    StoreModule.forFeature('customers', CustomerReducers),
+    EffectsModule.forFeature([CustomerEffects]),
   ],
   exports: [],
   providers: [],

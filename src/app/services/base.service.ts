@@ -46,8 +46,8 @@ export abstract class BaseService<T> {
     return ret;
   }
 
-  public post(object?: T | T[], param?: string): Observable<T | T[]> {
-    return this.http.post<T>(`${this.baseUrl}${this.entity}${this.fmtParam(param)}`,
+  public post(object?: T | T[], param?: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}${this.entity}${this.fmtParam(param)}`,
       this.removeNullProps(object),
       { headers: this.commonHeaders() });
   }

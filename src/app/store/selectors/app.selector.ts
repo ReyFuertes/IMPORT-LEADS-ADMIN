@@ -4,11 +4,11 @@ import { sortByDesc } from 'src/app/shared/util/sort';
 import { RootState } from '../root.reducer';
 
 export const selectedState = (state: RootState) => state.appState;
-export const getUsersSelector = createSelector(
+export const getCustomersSelector = createSelector(
   selectedState,
-  state => state?.users
+  state => state?.Customers
 );
-export const getUserRolesSelector = createSelector(
+export const getCustomerRolesSelector = createSelector(
   selectedState,
   state => {
     const fmtRoles = state?.roles;
@@ -21,7 +21,7 @@ export const getUserRolesSelector = createSelector(
     return roles;
   }
 );
-export const getUserAccessSelector = createSelector(
+export const getCustomerAccessSelector = createSelector(
   selectedState,
   state => {
     return state?.access?.map(a => {
@@ -34,7 +34,7 @@ export const getUserAccessSelector = createSelector(
         value: String(a.id),
         parent: a.parent,
         children,
-        user_route: a.user_route
+        Customer_route: a.Customer_route
       }
     }).sort((a, b) => sortByDesc(a, b, 'position'))
   }

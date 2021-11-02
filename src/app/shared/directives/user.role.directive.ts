@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AppState } from 'src/app/modules/contracts/store/reducers';
 import { Store, select } from '@ngrx/store';
-import { getUserRolesSelector } from 'src/app/store/selectors/app.selector';
+import { getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
 import { GenericDestroyPageComponent } from '../generics/generic-destroy-page';
 
 export enum Roles {
@@ -25,8 +25,8 @@ export class HasRoleDirective extends GenericDestroyPageComponent implements OnI
   }
 
   ngOnInit() {
-    //  We subscribe to the roles$ to know the roles the user has
-    this.store.pipe(select(getUserRolesSelector),
+    //  We subscribe to the roles$ to know the roles the Customer has
+    this.store.pipe(select(getCustomerRolesSelector),
       takeUntil(this.$unsubscribe)
     ).subscribe(roles => {
     

@@ -9,17 +9,17 @@ import { AddCustomerDialogComponent } from './components/add-customer-dialog/add
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationDialogComponent } from './components/confirmation/confirmation.component';
 import { ChipsModule } from 'primeng/chips';
-import { InviteUserDialogComponent } from './components/invite-user-dialog/invite-user-dialog.component';
+import { InviteCustomerDialogComponent } from './components/invite-customer-dialog/invite-customer-dialog.component';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
-import { AddEditUserDialogComponent } from './components/add-edit-user-dialog/add-edit-user-dialog.component';
+import { AddEditCustomerUserDialogComponent } from './components/add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
 
 const dialogComponents = [
   AddCustomerDialogComponent,
   ConfirmationDialogComponent,
-  InviteUserDialogComponent,
-  AddEditUserDialogComponent
+  InviteCustomerDialogComponent,
+  AddEditCustomerUserDialogComponent
 ];
 
 const materialModules = [

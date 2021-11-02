@@ -2,20 +2,20 @@ import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { tap, map, switchMap } from 'rxjs/operators';
-import { loadAllRolesAction, loadAllRolesSuccessAction, loadUserAccessAction, loadUserAccessSuccessAction, loadUsersAction, loadUsersSuccessAction } from '../actions/app.action';
+import { loadAllRolesAction, loadAllRolesSuccessAction, loadCustomerAccessAction, loadCustomerAccessSuccessAction, loadCustomersAction, loadCustomersSuccessAction } from '../actions/app.action';
 import { RootState } from '../root.reducer';
 import { IAccess, IRole } from 'src/app/models/generic.model';
-import { AccessService, RolesService, UserService } from 'src/app/services/api.service';
-import { IUser } from 'src/app/models/user.model';
+import { AccessService, RolesService, CustomerService } from 'src/app/services/api.service';
+import { ICustomer } from 'src/app/models/customer.model';
 
 @Injectable()
 export class AppEffects {
-  loadUserAction$ = createEffect(() => this.actions$.pipe(
-    ofType(loadUsersAction),
+  loadCustomerAction$ = createEffect(() => this.actions$.pipe(
+    ofType(loadCustomersAction),
     switchMap(() => {
-      return this.userService.getAll().pipe(
-        map((response: IUser[]) => {
-          return loadUsersSuccessAction({ response });
+      return this.customerService.getAll().pipe(
+        map((response: any) => {
+          return loadCustomersSuccessAction({ response });
         })
       )
     })
@@ -30,12 +30,12 @@ export class AppEffects {
       )
     })
   ));
-  loadUserAccessAction$ = createEffect(() => this.actions$.pipe(
-    ofType(loadUserAccessAction),
+  loadCustomerAccessAction$ = createEffect(() => this.actions$.pipe(
+    ofType(loadCustomerAccessAction),
     switchMap(() => {
       return this.accessService.getAll().pipe(
         map((response: IAccess[]) => {
-          return loadUserAccessSuccessAction({ response });
+          return loadCustomerAccessSuccessAction({ response });
         })
       )
     })
@@ -45,5 +45,5 @@ export class AppEffects {
     private actions$: Actions,
     private roleService: RolesService,
     private accessService: AccessService,
-    private userService: UserService) { }
+    private customerService: CustomerService) { }
 }

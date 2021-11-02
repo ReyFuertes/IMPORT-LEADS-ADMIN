@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { loadUsersAction } from 'src/app/store/actions/app.action';
+import { loadCustomersAction } from 'src/app/store/actions/app.action';
 import { RootState } from 'src/app/store/root.reducer';
 
 @Component({
@@ -10,6 +10,6 @@ import { RootState } from 'src/app/store/root.reducer';
 })
 export class CustomerContainerComponent {
   constructor(private store: Store<RootState>) {
-    this.store.dispatch(loadUsersAction());
+    this.store.dispatch(loadCustomersAction());
   }
 }

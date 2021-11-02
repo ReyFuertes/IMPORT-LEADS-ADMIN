@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IAccess, IUser } from 'src/app/models/user.model';
+import { IAccess, ICustomer, ICustomerUser } from 'src/app/models/customer.model';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
+import { generatePassword } from 'src/app/shared/util/password';
 import { RootState } from 'src/app/store/root.reducer';
-import { getUserAccessSelector, getUserRolesSelector } from 'src/app/store/selectors/app.selector';
-import { AddEditUserDialogComponent } from '../add-edit-user-dialog/add-edit-user-dialog.component';
+import { getCustomerAccessSelector, getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
+import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation/confirmation.component';
 
 @Component({
@@ -30,64 +31,64 @@ export class AddCustomerDialogComponent implements OnInit {
     label: 'Chinese',
     value: 'cn'
   }];
-  public users: any[] = [{
-    username: 'rfuertes@gmail.com',
+  public customerUsers: any[] = [{
+    Customername: 'rfuertes@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }, {
-    username: 'test@gmail.com',
+    Customername: 'test@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }, {
-    username: 'rfuertes@gmail.com',
+    Customername: 'rfuertes@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }, {
-    username: 'test@gmail.com',
+    Customername: 'test@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }, {
-    username: 'rfuertes@gmail.com',
+    Customername: 'rfuertes@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }, {
-    username: 'test@gmail.com',
+    Customername: 'test@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }, {
-    username: 'rfuertes@gmail.com',
+    Customername: 'rfuertes@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }, {
-    username: 'test@gmail.com',
+    Customername: 'test@gmail.com',
     roles: ['123456', '123'],
     access: ['56456', '123232']
   }];
 
   constructor(private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
-      emailPassword: this.fb.group({
-        username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
-        password: [null, Validators.required]
+      email_password: this.fb.group({
+        username: ['reynelfuertes@gmail.com', Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+        password: [generatePassword(), Validators.required]
       }),
-      generalInformation: this.fb.group({
-        firstname: [null, Validators.required],
-        lastname: [null, Validators.required],
-        phoneNumber: [null, Validators.required],
-        address: [null, Validators.required],
-        companyName: [null, Validators.required],
-        companyAddress: [null, Validators.required],
+      customer_information: this.fb.group({
+        firstname: ['rey', Validators.required],
+        lastname: ['fuertes', Validators.required],
+        phone_number: ['09339690655', Validators.required],
+        address: ['cebu city', Validators.required],
+        company_name: ['import leads', Validators.required],
+        company_address: ['hongkong', Validators.required],
         language: ['en', Validators.required]
       }),
     });
   }
 
   ngOnInit(): void {
-    this.$access = this.store.pipe(select(getUserAccessSelector));
-    this.$roles = this.store.pipe(select(getUserRolesSelector));
+    this.$access = this.store.pipe(select(getCustomerAccessSelector));
+    this.$roles = this.store.pipe(select(getCustomerRolesSelector));
   }
 
-  public onDelete(user: IUser): void {
+  public onDeleteCustomerUser(user: ICustomerUser): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '410px',
       data: { action: 0 }
@@ -99,26 +100,26 @@ export class AddCustomerDialogComponent implements OnInit {
       });
   }
 
-  public onAddUser(): void {
-    const dialogRef = this.dialog.open(AddEditUserDialogComponent, {
+  public onAddCustomerUser(): void {
+    const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '385px',
       height: '275px',
       data: { action: 0 }
     });
-    dialogRef.afterClosed().subscribe((result: IUser) => {
+    dialogRef.afterClosed().subscribe((result: ICustomer) => {
       if (result) {
-
+        debugger
       }
     });
   }
 
-  public onEditUser(user: IUser): void {
-    const dialogRef = this.dialog.open(AddEditUserDialogComponent, {
+  public onEditCustomerUser(user: ICustomerUser): void {
+    const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '385px',
       height: '275px',
       data: { action: 1, user }
     });
-    dialogRef.afterClosed().subscribe((result: IUser) => {
+    dialogRef.afterClosed().subscribe((result: ICustomer) => {
       if (result) {
 
       }
@@ -129,19 +130,19 @@ export class AddCustomerDialogComponent implements OnInit {
     return this.getEmailPasswordForm.value;
   }
   public get getEmailPasswordForm(): FormGroup {
-    return this.form.get('emailPassword') as FormGroup;
+    return this.form.get('email_password') as FormGroup;
   }
 
-  public get getGeneralInformationFormValues(): any {
-    return this.getGeneralInformationForm.value;
+  public get getCustomerInformationFormValues(): any {
+    return this.getCustomerInformationForm.value;
   }
-  public get getGeneralInformationForm(): FormGroup {
-    return this.form.get('generalInformation') as FormGroup;
+  public get getCustomerInformationForm(): FormGroup {
+    return this.form.get('customer_information') as FormGroup;
   }
 
   public onAdd(): void {
     if (this.form.valid) {
-      this.dialogRef.close(<IUser>this.form.value);
+      this.dialogRef.close(<ICustomer>this.form.value);
     }
   }
 }
