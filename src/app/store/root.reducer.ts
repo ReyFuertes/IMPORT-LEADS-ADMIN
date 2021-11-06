@@ -1,15 +1,18 @@
 
 import { ActionReducerMap } from '@ngrx/store';
-import { CustomerReducers, CustomerState } from '../modules/customer/store/customer.reducer';
+import { CustomerUserReducer, CustomerUserState } from '../modules/customer/store/reducers/customer-user.reducer';
+import { CustomerReducer, CustomerState } from '../modules/customer/store/reducers/customer.reducer';
 import { AppReducer, appState } from './reducers/app-reducer';
 import { NotificationReducer, NotificationState } from './reducers/notification.reducer';
 export interface RootState {
   appState: appState,
   notification?: NotificationState,
-  customer?: CustomerState
+  customer?: CustomerState,
+  customerUser?: CustomerUserState
 }
 export const reducers: ActionReducerMap<RootState> = {
   appState: AppReducer,
   notification: NotificationReducer,
-  customer: CustomerReducers
+  customer: CustomerReducer,
+  customerUser: CustomerUserReducer
 };

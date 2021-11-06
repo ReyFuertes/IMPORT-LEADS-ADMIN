@@ -67,6 +67,8 @@ label {
     > td {
       padding: 0.5rem;
       font-size: 0.85rem;
+      vertical-align: top;
+      display: initial;
       &:last-child {
         width: 50px !important;
       }
@@ -91,8 +93,5 @@ label {
   }
   .p-multiselect, .p-inputtext {
     width: 100%;
-  }
-  .mat-form-field-appearance-legacy .mat-form-field-wrapper {
-    padding-bottom: 0;
   }
 }

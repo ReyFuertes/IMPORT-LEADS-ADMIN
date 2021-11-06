@@ -11,6 +11,7 @@ import { ISimpleItem } from '../../generics/generic.model';
 export class DropdownMultiSelectComponent extends GenericControl<ISimpleItem> implements OnInit, OnChanges {
   @Input() public searchItem: boolean = false;
   @Input() public maxSelectedLabels: number = 2;
+  @Input() public filter: boolean = true;
   @Output() public valueEmitter = new EventEmitter<any>();
 
   constructor() {

@@ -10,7 +10,7 @@ import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
 import { getCustomersSelector } from 'src/app/store/selectors/app.selector';
-import { addCustomerAction } from '../../store/customer.actions';
+import { addCustomerAction } from '../../store/actions/customer.actions';
 @Component({
   selector: 'il-customer-table',
   templateUrl: './customer-table.component.html',
@@ -87,13 +87,12 @@ export class CustomerTableComponent implements OnInit {
 
   public onAddCustomer(): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
-      width: '550px',
-      height: '495px',
+      width: '690px',
+      height: '487px',
       data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
       if (payload) {
-        debugger
         this.store.dispatch(addCustomerAction({ payload }));
       }
     });
@@ -101,8 +100,8 @@ export class CustomerTableComponent implements OnInit {
 
   public onEditCustomer(): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
-      width: '550px',
-      height: '495px',
+      width: '690px',
+      height: '487px',
       data: { action: 1 }
     });
     dialogRef.afterClosed().subscribe((result: ICustomer) => {

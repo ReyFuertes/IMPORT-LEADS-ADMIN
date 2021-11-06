@@ -59,10 +59,10 @@
       </p-tabPanel>
 
       <p-tabPanel header="Users">
-        <p-table [value]="customerUsers" [scrollable]="true" scrollHeight="256px">
+        <p-table responsiveLayout="stack" [value]="getCustomerUsersFormValues" [scrollable]="true" scrollHeight="256px">
           <ng-template pTemplate="header">
             <tr>
-              <th fxFlex="30">Customername</th>
+              <th fxFlex="30">Username</th>
               <th fxFlex="30">Roles</th>
               <th fxFlex="30">Access</th>
               <th fxFlex="70px" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">Actions</th>
@@ -70,9 +70,21 @@
           </ng-template>
           <ng-template pTemplate="body" let-user>
             <tr>
-              <td fxFlex="30">{{user?.Customername}}</td>
-              <td fxFlex="30">{{user?.roles}}</td>
-              <td fxFlex="30">{{user?.access}}</td>
+              <td fxFlex="30">{{user?.username}}</td>
+              <td fxFlex="30">
+                <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
+                  <span *ngFor="let role of getRoles(user?.roles)" class="badge default">
+                    {{ role?.label | titlecase }}
+                  </span>
+                </div>
+              </td>
+              <td fxFlex="30">
+                <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
+                  <span *ngFor="let access of getAccesses(user?.access)" class="badge default">
+                    {{ access?.label | titlecase }}
+                  </span>
+                </div>
+              </td>
               <td fxFlex="70px" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
                 <i (click)="onEditCustomerUser(user)" pTooltip="Edit" tooltipPosition="top" class="pi pi-pencil"></i>
                 <i (click)="onDeleteCustomerUser(user)" pTooltip="Delete" tooltipPosition="top" class="pi pi-times"></i>

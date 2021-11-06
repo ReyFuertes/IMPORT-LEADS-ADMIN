@@ -23,7 +23,7 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
 
   constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditCustomerUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
-      username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+      username: ['user1@gmail.com', Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
       password: [generatePassword(), Validators.required],
       roles: [null, Validators.required],
       access: [null, Validators.required]

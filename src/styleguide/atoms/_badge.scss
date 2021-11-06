@@ -1,0 +1,10 @@
+.badge {
+  &.default {
+    padding: 0.2rem;
+    background-color: $color-gray-3;
+    border-radius: 20px;
+    font-size: 0.74rem;
+    margin-right: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+}

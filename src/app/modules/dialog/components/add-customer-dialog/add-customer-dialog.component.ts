@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IAccess, ICustomer, ICustomerUser } from 'src/app/models/customer.model';
+import { IAccess, ICustomer, ICustomerUser, IRole } from 'src/app/models/customer.model';
+import { addCustomerUserAction } from 'src/app/modules/customer/store/actions/customer-user.actions';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
 import { generatePassword } from 'src/app/shared/util/password';
@@ -22,8 +23,8 @@ export class AddCustomerDialogComponent implements OnInit {
   public accessOptions: any[];
   public roleOptions: any[];
   public actionText: string[] = ['ADD', 'UPDATE'];
-  public $access: Observable<IAccess[]>;
-  public $roles: Observable<ISimpleItem[]>;
+  public access: IAccess[];
+  public roles: ISimpleItem[];
   public languageOptions: ISimpleItem[] = [{
     label: 'English',
     value: 'en'
@@ -31,39 +32,7 @@ export class AddCustomerDialogComponent implements OnInit {
     label: 'Chinese',
     value: 'cn'
   }];
-  public customerUsers: any[] = [{
-    Customername: 'rfuertes@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }, {
-    Customername: 'test@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }, {
-    Customername: 'rfuertes@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }, {
-    Customername: 'test@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }, {
-    Customername: 'rfuertes@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }, {
-    Customername: 'test@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }, {
-    Customername: 'rfuertes@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }, {
-    Customername: 'test@gmail.com',
-    roles: ['123456', '123'],
-    access: ['56456', '123232']
-  }];
+  public customerUsers: any[] = [];
 
   constructor(private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
@@ -80,18 +49,26 @@ export class AddCustomerDialogComponent implements OnInit {
         company_address: ['hongkong', Validators.required],
         language: ['en', Validators.required]
       }),
+      users: new FormArray([])
     });
   }
 
   ngOnInit(): void {
-    this.$access = this.store.pipe(select(getCustomerAccessSelector));
-    this.$roles = this.store.pipe(select(getCustomerRolesSelector));
+    this.store.pipe(select(getCustomerAccessSelector)).subscribe(access => this.access = access);
+    this.store.pipe(select(getCustomerRolesSelector)).subscribe(roles => this.roles = roles);
+  }
+
+  public getRoles(roles: string[]): any[] {
+    return this.roles.filter(role => roles.includes(role?.value));
+  }
+
+  public getAccesses(accesses: string[]): IAccess[] {
+    return this.access.filter(access => accesses.includes(access?.value))
   }
 
   public onDeleteCustomerUser(user: ICustomerUser): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '410px',
-      data: { action: 0 }
+      width: '410px', data: { action: 0 }
     });
     dialogRef.afterClosed()
       .subscribe(result => {
@@ -102,28 +79,39 @@ export class AddCustomerDialogComponent implements OnInit {
 
   public onAddCustomerUser(): void {
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
-      width: '385px',
-      height: '275px',
-      data: { action: 0 }
+      width: '430px', height: '265px', data: { action: 0 }
     });
-    dialogRef.afterClosed().subscribe((result: ICustomer) => {
-      if (result) {
-        debugger
+    dialogRef.afterClosed().subscribe((user: ICustomerUser) => {
+      if (user) {
+        this.addCustomerUser(user);
       }
     });
   }
 
   public onEditCustomerUser(user: ICustomerUser): void {
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
-      width: '385px',
-      height: '275px',
-      data: { action: 1, user }
+      width: '430px', height: '265px', data: { action: 1, user }
     });
     dialogRef.afterClosed().subscribe((result: ICustomer) => {
       if (result) {
 
       }
     });
+  }
+
+  public removeCustomerUser(item: any): void {
+    this.getCustomerUsersFormValues.removeAt(item);
+  }
+
+  public addCustomerUser(item: ICustomerUser): any {
+    this.getCustomerUsersFormValues.push(item);
+  }
+
+  public get getCustomerUsersFormValues(): any {
+    return this.getCustomerUsersForm.value;
+  }
+  public get getCustomerUsersForm(): FormGroup {
+    return this.form.get('users') as FormGroup;
   }
 
   public get getEmailPasswordFormValues(): any {

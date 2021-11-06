@@ -21,8 +21,9 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { SliderModule } from 'primeng/slider';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { CustomerReducers } from './store/customer.reducer';
-import { CustomerEffects } from './store/customer.effects';
+import { CustomerUserEffects } from './store/effects/customer-user.effects';
+import { CustomerReducer } from './store/reducers/customer.reducer';
+import { CustomerEffects } from './store/effects/customer.effects';
 
 const primengModules = [
   InputTextModule,
@@ -69,8 +70,8 @@ const routes: Routes = [{
     ...primengModules,
     ...materialModules,
     RouterModule.forChild(routes),
-    StoreModule.forFeature('customers', CustomerReducers),
-    EffectsModule.forFeature([CustomerEffects]),
+    StoreModule.forFeature('customers', CustomerReducer),
+    EffectsModule.forFeature([CustomerEffects, CustomerUserEffects]),
   ],
   exports: [],
   providers: [],

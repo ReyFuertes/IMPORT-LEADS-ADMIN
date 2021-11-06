@@ -11,7 +11,7 @@ export interface IAccess {
   id?: string;
   access_name?: string;
   parent?: IAccess;
-  Customer_route?: string;
+  customer_route?: string;
 }
 export enum ModalStateType {
   add = 1,

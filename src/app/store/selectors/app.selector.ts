@@ -34,7 +34,7 @@ export const getCustomerAccessSelector = createSelector(
         value: String(a.id),
         parent: a.parent,
         children,
-        Customer_route: a.Customer_route
+        customer_route: a.customer_route
       }
     }).sort((a, b) => sortByDesc(a, b, 'position'))
   }
