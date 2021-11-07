@@ -9,8 +9,8 @@ import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/c
 import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { getCustomersSelector } from 'src/app/store/selectors/app.selector';
 import { addCustomerAction } from '../../store/actions/customer.actions';
+import { getCustomersSelector } from '../../store/selectors/customer.selector';
 @Component({
   selector: 'il-customer-table',
   templateUrl: './customer-table.component.html',
@@ -18,7 +18,7 @@ import { addCustomerAction } from '../../store/actions/customer.actions';
 })
 export class CustomerTableComponent implements OnInit {
   public customers: any[];
-  public $Customers: Observable<ICustomer[]>;
+  public $customers: Observable<ICustomer[]>;
   public columnHeaders: ISimpleItem[] = [{
     label: 'Date',
     value: 'created_at'
@@ -44,7 +44,8 @@ export class CustomerTableComponent implements OnInit {
   public CustomerStatusType = CustomerStatusType;
 
   constructor(private dialog: MatDialog, private store: Store<RootState>) {
-    this.$Customers = this.store.pipe(select(getCustomersSelector));
+    this.$customers = this.store.pipe(select(getCustomersSelector));
+    this.$customers.subscribe(res => console.log(res))
   }
 
   ngOnInit() { }

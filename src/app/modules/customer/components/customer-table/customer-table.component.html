@@ -1,5 +1,5 @@
-<div *ngIf="($Customers | async) as Customers" class="customer-table-container" fxLayout="column" fxLayoutAlign="start start">
-  <p-table #dt1 [value]="Customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines" [paginator]="true" selectionMode="single"
+<div *ngIf="($customers | async) as customers" class="customer-table-container" fxLayout="column" fxLayoutAlign="start start">
+  <p-table #dt1 [value]="customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines" [paginator]="true" selectionMode="single"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['name','date','email','status']">
     <ng-template pTemplate="caption">
       <div fxLayout="row" fxFlex="100">

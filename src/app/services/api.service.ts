@@ -2,7 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { BaseService } from 'src/app/services/base.service';
 import { Injectable } from '@angular/core';
-import { IAccess, ICustomer, ICustomerPayload, ICustomerUser } from '../models/customer.model';
+import { IAccess, ICustomer, ICustomerPayload, ICustomerResponse, ICustomerUser } from '../models/customer.model';
 import { StorageService } from '../modules/service/storage.service';
 import { IRole } from '../models/generic.model';
 @Injectable({ providedIn: 'root' })
@@ -12,7 +12,7 @@ export class CustomerUserService extends BaseService<ICustomer | ICustomerPayloa
   }
 }
 @Injectable({ providedIn: 'root' })
-export class CustomerService extends BaseService<ICustomer | ICustomerPayload | ICustomer[]> {
+export class CustomerService extends BaseService<ICustomerResponse | ICustomer | ICustomerPayload> {
   constructor(http: HttpClient, storageSrv: StorageService) {
     super(http, 'customer', storageSrv);
   }

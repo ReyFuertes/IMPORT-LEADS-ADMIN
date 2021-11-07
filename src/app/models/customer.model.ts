@@ -55,6 +55,14 @@ export interface ICustomerPayload {
   customer_information: ICustomer
   email_password: { username: string, password: string }
 }
+export interface ICustomerResponse {
+  id?: string;
+  username?: string;
+  customer_user?: ICustomer[];
+  profile?: ICustomerProfile
+  status?: number;
+  created_at?: string;
+}
 export interface ICustomer {
   firstname?: string;
   lastname?: string;

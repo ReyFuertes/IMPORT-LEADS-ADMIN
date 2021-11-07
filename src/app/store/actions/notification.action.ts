@@ -10,12 +10,12 @@ export interface INotification {
 
 export enum NotificationActionTypes {
   notificationSuccess = '[Notification] Success',
-  removeNotification = '[Notification] Remove',
+  removeNotificationAction = '[Notification] Remove',
 }
-export const appNotificationAction = createAction(
+export const notificationAction = createAction(
   NotificationActionTypes.notificationSuccess,
   props<{ notification: INotification }>()
 );
-export const removeNotification = createAction(
-  NotificationActionTypes.removeNotification,
+export const removeNotificationAction = createAction(
+  NotificationActionTypes.removeNotificationAction,
 );

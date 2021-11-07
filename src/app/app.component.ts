@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LoaderService } from './services/http-token-interceptor';
 import { loadAllRolesAction, loadCustomerAccessAction } from './store/actions/app.action';
+import { removeNotificationAction } from './store/actions/notification.action';
 import { RootState } from './store/root.reducer';
+import { getSuccessSelector } from './store/selectors/notification.selector';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +15,7 @@ import { RootState } from './store/root.reducer';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public title: string = 'Import Leads Wizard';
+  public title: string = 'Import Leads Admin';
   public $notify: Observable<any>;
   public isLoggedIn: boolean = false;
   public svgPath: string = environment.svgPath;
@@ -24,6 +27,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.$notify = this.store.pipe(select(getSuccessSelector), delay(100));
+  }
 
+  public onClose(): void {
+    this.store.dispatch(removeNotificationAction());
+    this.loaderSrv.isLoading.next(false);
   }
 }
