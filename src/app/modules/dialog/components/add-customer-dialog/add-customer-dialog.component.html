@@ -80,14 +80,16 @@
               </td>
               <td fxFlex="30">
                 <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
-                  <span *ngFor="let access of getAccesses(user?.access)" class="badge default">
+                  <span *ngFor="let access of getAccesses(user?.accesses)" class="badge default">
                     {{ access?.label | titlecase }}
                   </span>
                 </div>
               </td>
-              <td fxFlex="70px" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
-                <i (click)="onEditCustomerUser(user)" pTooltip="Edit" tooltipPosition="top" class="pi pi-pencil"></i>
-                <i (click)="onDeleteCustomerUser(user)" pTooltip="Delete" tooltipPosition="top" class="pi pi-times"></i>
+              <td fxFlex="70px">
+                <div class="actions-icon">
+                  <i (click)="onEditCustomerUser(user)" pTooltip="Edit" tooltipPosition="top" class="pi pi-pencil"></i>
+                  <i (click)="onDeleteCustomerUser(user)" pTooltip="Delete" tooltipPosition="top" class="pi pi-times"></i>
+                </div>
               </td>
             </tr>
           </ng-template>

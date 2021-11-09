@@ -46,18 +46,18 @@ export abstract class BaseService<T> {
     return ret;
   }
 
-  public post(object?: T | T[], param?: string): Observable<any> {
+  public post(object?: T | T[], param?: string): Observable<T | any> {
     return this.http.post<any>(`${this.baseUrl}${this.entity}${this.fmtParam(param)}`,
       this.removeNullProps(object),
       { headers: this.commonHeaders() });
   }
 
-  public delete(id?: string, param?: string): Observable<any> {
+  public delete(id?: string, param?: string): Observable<T | any> {
     return this.http.delete(`${this.baseUrl}${this.entity}/${id}${this.fmtParam(param)}`,
       { headers: this.commonHeaders() });
   }
 
-  public patch(object: T | any, addtnlParam?: string): Observable<T> {
+  public patch(object: T | any, addtnlParam?: string): Observable<T | any> {
     return this.http.patch<T>(`${this.baseUrl}${this.entity}${this.fmtParam(addtnlParam)}`,
       this.removeNullProps(object),
       { headers: this.commonHeaders() }
@@ -68,12 +68,12 @@ export abstract class BaseService<T> {
     return `${param ? '/' + param : ''}`
   }
 
-  public getAll(param?: string): Observable<T[]> {
+  public getAll(param?: string): Observable<T[] | any> {
     return this.http.get<T[]>(`${this.baseUrl}${this.entity}${this.fmtParam(param)}`,
       { headers: this.commonHeaders() });
   }
 
-  public getById(id: string, addtnlParam?: string): Observable<T> {
+  public getById(id: string, addtnlParam?: string): Observable<T | any> {
     return this.http.get<T>(`${this.baseUrl}${this.entity}/${id}${this.fmtParam(addtnlParam)}`, { headers: this.commonHeaders() });
   }
 

@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CustomerStatusType } from 'src/app/models/generic.model';
+import { CustomerStatusType, FormStateType } from 'src/app/models/generic.model';
 import { ICustomer, ICustomerPayload } from 'src/app/models/customer.model';
 import { AddCustomerDialogComponent } from 'src/app/modules/dialog/components/add-customer-dialog/add-customer-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
 import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction } from '../../store/actions/customer.actions';
+import { addCustomerAction, updateCustomerAction } from '../../store/actions/customer.actions';
 import { getCustomersSelector } from '../../store/selectors/customer.selector';
 @Component({
   selector: 'il-customer-table',
@@ -99,15 +99,15 @@ export class CustomerTableComponent implements OnInit {
     });
   }
 
-  public onEditCustomer(): void {
+  public onEditCustomer(id: string): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '690px',
       height: '487px',
-      data: { action: 1 }
+      data: { action: 1, formState: FormStateType.Edit, id }
     });
-    dialogRef.afterClosed().subscribe((result: ICustomer) => {
-      if (result) {
-
+    dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
+      if (payload) {
+        this.store.dispatch(updateCustomerAction({ payload }));
       }
     });
   }

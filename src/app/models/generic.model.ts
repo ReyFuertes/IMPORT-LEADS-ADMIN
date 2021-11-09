@@ -1,3 +1,7 @@
+export enum FormStateType {
+  Add = 0,
+  Edit = 1
+}
 export enum CustomerStatusType {
   Pending = 0,
   Approved = 1,

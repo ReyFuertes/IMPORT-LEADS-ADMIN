@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { IAccess, ICustomer, ICustomerUser, IRole } from 'src/app/models/customer.model';
-import { addCustomerUserAction } from 'src/app/modules/customer/store/actions/customer-user.actions';
+import { IAccess, ICustomer, ICustomerPayload, ICustomerUser, IRole } from 'src/app/models/customer.model';
+import { FormStateType } from 'src/app/models/generic.model';
+import { getCustomerByIdAction, updateCustomerAction } from 'src/app/modules/customer/store/actions/customer.actions';
+import { getCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
-import { generatePassword } from 'src/app/shared/util/password';
 import { RootState } from 'src/app/store/root.reducer';
 import { getCustomerAccessSelector, getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
 import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
@@ -33,37 +33,64 @@ export class AddCustomerDialogComponent implements OnInit {
     value: 'cn'
   }];
   public customerUsers: any[] = [];
+  public selectedCustomer: ICustomer;
 
   constructor(private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+
     this.form = this.fb.group({
+      id: [null],
       email_password: this.fb.group({
-        username: ['reynelfuertes@gmail.com', Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
-        password: [generatePassword(), Validators.required]
+        username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+        password: [null, Validators.required]
       }),
-      customer_information: this.fb.group({
-        firstname: ['rey', Validators.required],
-        lastname: ['fuertes', Validators.required],
-        phone_number: ['09339690655', Validators.required],
-        address: ['cebu city', Validators.required],
-        company_name: ['import leads', Validators.required],
-        company_address: ['hongkong', Validators.required],
+      customer_profile: this.fb.group({
+        id: [null],
+        firstname: [null, Validators.required],
+        lastname: [null, Validators.required],
+        phone_number: [null, Validators.required],
+        address: [null, Validators.required],
+        company_name: [null, Validators.required],
+        company_address: [null, Validators.required],
         language: ['en', Validators.required]
       }),
       users: new FormArray([])
     });
+
+    if (this.data?.formState === FormStateType.Edit && this.data?.id) {
+      this.store.dispatch(getCustomerByIdAction({ id: this.data?.id }));
+    }
   }
 
   ngOnInit(): void {
     this.store.pipe(select(getCustomerAccessSelector)).subscribe(access => this.access = access);
     this.store.pipe(select(getCustomerRolesSelector)).subscribe(roles => this.roles = roles);
+    this.store.pipe(select(getCustomerByIdSelector)).subscribe(customer => {
+      if (customer) {
+        this.form.patchValue({
+          id: customer?.id,
+          email_password: { username: customer?.username },
+          customer_profile: customer?.customer_profile,
+          users: customer?.customer_users
+        }, { emitEvent: false });
+        this.getCustomerUsersFormValues.push(...customer?.customer_users);
+        this.getEmailPasswordForm.get('password').setValidators(null);
+      } else {
+        this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
+      }
+      this.getEmailPasswordForm.get('password').updateValueAndValidity();
+    });
+    setTimeout(() => {
+      console.log('form', this.form.value)
+      console.log('access', this.access)
+    }, 1000);
   }
 
-  public getRoles(roles: string[]): any[] {
-    return this.roles.filter(role => roles.includes(role?.value));
+  public getRoles(roles: string[]): IRole[] {
+    return this.roles?.filter(role => roles?.includes(role?.value));
   }
 
   public getAccesses(accesses: string[]): IAccess[] {
-    return this.access.filter(access => accesses.includes(access?.value))
+    return this.access?.filter(access => accesses?.includes(access?.value));
   }
 
   public onDeleteCustomerUser(user: ICustomerUser): void {
@@ -92,9 +119,9 @@ export class AddCustomerDialogComponent implements OnInit {
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '265px', data: { action: 1, user }
     });
-    dialogRef.afterClosed().subscribe((result: ICustomer) => {
-      if (result) {
-
+    dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
+      if (payload) {
+        this.store.dispatch(updateCustomerAction({ payload }))
       }
     });
   }
@@ -125,7 +152,7 @@ export class AddCustomerDialogComponent implements OnInit {
     return this.getCustomerInformationForm.value;
   }
   public get getCustomerInformationForm(): FormGroup {
-    return this.form.get('customer_information') as FormGroup;
+    return this.form.get('customer_profile') as FormGroup;
   }
 
   public onAdd(): void {

@@ -53,6 +53,13 @@ label {
   }
 }
 :host ::ng-deep {
+  .p-tabview-panel {
+    .actions-icon {
+      i {
+        width: 24px;
+      }
+    }
+  }
   .p-datatable-wrapper {
     border: thin $color-gray-3 solid;
   }
