@@ -3,7 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IAccess } from 'src/app/models/generic.model';
+import { ICustomerUser } from 'src/app/models/customer.model';
+import { FormStateType, IAccess } from 'src/app/models/generic.model';
+import { getCustomerUserByIdAction } from 'src/app/modules/customer/store/actions/customer-user.actions';
+import { getCustomerUserByIdSelector } from 'src/app/modules/customer/store/selectors/customer-user.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
 import { generatePassword } from 'src/app/shared/util/password';
@@ -20,19 +23,36 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
   public form: FormGroup;
   public $access: Observable<IAccess[]>;
   public $roles: Observable<ISimpleItem[]>;
+  public selectedCustomerUser: ICustomerUser;
 
   constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditCustomerUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
-      username: ['user1@gmail.com', Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+      id: [null],
+      username: [`user${Math.floor(Math.random() * (1000 - 100) + 1000)}@gmail.com`, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
       password: [generatePassword(), Validators.required],
       roles: [null, Validators.required],
-      access: [null, Validators.required]
+      accesses: [null, Validators.required],
+      profile: [null]
     });
+
+    if (this.data?.formState === FormStateType.Edit && this.data?.id) {
+      this.store.dispatch(getCustomerUserByIdAction({ id: this.data?.id }));
+    };
   }
 
   ngOnInit(): void {
     this.$access = this.store.pipe(select(getCustomerAccessSelector));
     this.$roles = this.store.pipe(select(getCustomerRolesSelector));
+
+    this.store.pipe(select(getCustomerUserByIdSelector)).subscribe(customerUser => {
+      if (customerUser) {
+        this.form.patchValue(customerUser, { emitEvent: false });
+        this.form.get('password').setValidators(null);
+      } else {
+        this.form.get('password').setValidators([Validators.required]);
+      }
+      this.form.get('password').updateValueAndValidity();
+    });
   }
 
   public onSave(): void {

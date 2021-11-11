@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ICustomer, ICustomerPayload, ICustomerResponse } from 'src/app/models/customer.model';
+import { ICustomer, ICustomerPayload, ICustomerResponse, ICustomerUser } from 'src/app/models/customer.model';
 
 export enum CustomerActionTypes {
   addCustomerAction = '[Customer] add customer',
@@ -10,7 +10,17 @@ export enum CustomerActionTypes {
   getCustomerByIdSuccessAction = '[Customer] get customer by id (success)',
   updateCustomerAction = '[Customer] update customer',
   updateCustomerSuccessAction = '[Customer] update customer (success)',
+  deleteCustomerUserAction = '[Customer] delete customer',
+  deleteCustomerUserSuccessAction = '[Customer] delete customer (success)',
 }
+export const deleteCustomerUserAction = createAction(
+  CustomerActionTypes.deleteCustomerUserAction,
+  props<{ id: string }>()
+);
+export const deleteCustomerUserSuccessAction = createAction(
+  CustomerActionTypes.deleteCustomerUserSuccessAction,
+  props<{ response: ICustomerUser }>()
+);
 export const updateCustomerAction = createAction(
   CustomerActionTypes.updateCustomerAction,
   props<{ payload: ICustomerPayload }>()

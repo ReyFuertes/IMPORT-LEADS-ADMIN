@@ -16,10 +16,10 @@
     </div>
     <div fxLayoutGap="20px">
       <div fxFlex fxLayoutAlign="end end">
-        <il-dropdown-multi-select label="Access" placeholder="Select Access" [form]="form" controlName="access" [options]="$access | async"></il-dropdown-multi-select>
+        <il-dropdown-multi-select label="Access" placeholder="Select Access" [form]="form" controlName="accesses" [options]="($access | async)"></il-dropdown-multi-select>
       </div>
       <div fxFlex fxLayoutAlign="end end">
-        <il-dropdown-multi-select label="Role" placeholder="Select Role" [form]="form" controlName="roles" [options]="$roles | async"></il-dropdown-multi-select>
+        <il-dropdown-multi-select label="Role" placeholder="Select Role" [form]="form" controlName="roles" [options]="($roles | async)"></il-dropdown-multi-select>
       </div>
     </div>
   </div>

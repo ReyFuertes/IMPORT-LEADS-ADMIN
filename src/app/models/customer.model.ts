@@ -5,7 +5,7 @@ export interface ICustomerAccess {
   customer: ICustomer;
   access: any;
 }
-export interface ICustomerProfile {
+export interface IProfile {
   id?: string;
   firstname?: string;
   lastname?: string;
@@ -32,7 +32,7 @@ export interface ICustomerUser {
   status?: number;
   is_master_admin?: boolean;
   created_at?: string;
-  user_profile?: ICustomerProfile;
+  user_profile?: IProfile;
   user_access?: ICustomerUserAccess[];
   user_role?: ICustomerUserRole[];
 }
@@ -55,15 +55,24 @@ export interface ICustomerPayload {
   customer_profile: ICustomer
   email_password: { username: string, password: string }
 }
+export interface ICustomerUserResponse {
+  accesses?: string[]
+  created_at?: string;
+  id?: string;
+  roles?: string[];
+  status?: number;
+  username?: string
+}
 export interface ICustomerResponse {
   id?: string;
   username?: string;
   customer_users?: ICustomer[];
-  customer_profile?: ICustomerProfile
+  customer_profile?: IProfile
   status?: number;
   created_at?: string;
 }
 export interface ICustomer {
+  id?: string;
   firstname?: string;
   lastname?: string;
   password?: string;
@@ -71,7 +80,7 @@ export interface ICustomer {
   image?: string;
   customer_role?: ICustomerRole[];
   customer_access?: ICustomerAccess[];
-  users?: ICustomerUser[]
+  customer_users?: ICustomerUser[]
 }
 export interface IAccess extends ISimpleItem {
   id?: string;

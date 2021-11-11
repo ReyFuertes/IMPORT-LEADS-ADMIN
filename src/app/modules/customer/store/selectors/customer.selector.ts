@@ -2,7 +2,11 @@ import { createSelector } from '@ngrx/store';
 import { RootState } from 'src/app/store/root.reducer';
 
 export const selectedState = (state: RootState) => state.customer;
-export const getCustomerByIdSelector = createSelector(
+export const getCustomerByIdSelector = (id: string) => createSelector(
+  selectedState,
+  state => state.entities[id]
+);
+export const editCustomerByIdSelector = createSelector(
   selectedState,
   state => state?.selectedCustomer
 );

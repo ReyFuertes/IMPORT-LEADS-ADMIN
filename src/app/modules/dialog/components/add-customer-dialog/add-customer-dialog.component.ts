@@ -2,16 +2,17 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
-import { IAccess, ICustomer, ICustomerPayload, ICustomerUser, IRole } from 'src/app/models/customer.model';
+import { IAccess, ICustomer, ICustomerUser, ICustomerUserResponse, IRole } from 'src/app/models/customer.model';
 import { FormStateType } from 'src/app/models/generic.model';
-import { getCustomerByIdAction, updateCustomerAction } from 'src/app/modules/customer/store/actions/customer.actions';
-import { getCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
+import { deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
+import { editCustomerByIdSelector, getCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
 import { RootState } from 'src/app/store/root.reducer';
 import { getCustomerAccessSelector, getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
 import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation/confirmation.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'il-add-customer-dialog',
@@ -64,7 +65,7 @@ export class AddCustomerDialogComponent implements OnInit {
   ngOnInit(): void {
     this.store.pipe(select(getCustomerAccessSelector)).subscribe(access => this.access = access);
     this.store.pipe(select(getCustomerRolesSelector)).subscribe(roles => this.roles = roles);
-    this.store.pipe(select(getCustomerByIdSelector)).subscribe(customer => {
+    this.store.pipe(select(editCustomerByIdSelector)).subscribe(customer => {
       if (customer) {
         this.form.patchValue({
           id: customer?.id,
@@ -72,6 +73,7 @@ export class AddCustomerDialogComponent implements OnInit {
           customer_profile: customer?.customer_profile,
           users: customer?.customer_users
         }, { emitEvent: false });
+
         this.getCustomerUsersFormValues.push(...customer?.customer_users);
         this.getEmailPasswordForm.get('password').setValidators(null);
       } else {
@@ -79,10 +81,6 @@ export class AddCustomerDialogComponent implements OnInit {
       }
       this.getEmailPasswordForm.get('password').updateValueAndValidity();
     });
-    setTimeout(() => {
-      console.log('form', this.form.value)
-      console.log('access', this.access)
-    }, 1000);
   }
 
   public getRoles(roles: string[]): IRole[] {
@@ -100,6 +98,8 @@ export class AddCustomerDialogComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe(result => {
         if (result) {
+          this.store.dispatch(deleteCustomerUserAction({ id: user?.id }));
+          _.remove(this.getCustomerUsersFormValues, { id: user?.id });
         }
       });
   }
@@ -115,18 +115,21 @@ export class AddCustomerDialogComponent implements OnInit {
     });
   }
 
-  public onEditCustomerUser(user: ICustomerUser): void {
+  public onEditCustomerUser(id: string): void {
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
-      width: '430px', height: '265px', data: { action: 1, user }
+      width: '430px', height: '265px',
+      data: { action: 1, formState: FormStateType.Edit, id }
     });
-    dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
+    dialogRef.afterClosed().subscribe((payload: ICustomerUserResponse) => {
       if (payload) {
-        this.store.dispatch(updateCustomerAction({ payload }))
+        const itemToRemove = this.getCustomerUsersFormValues.find(value => value.id === id);
+        _.remove(this.getCustomerUsersFormValues, { id: itemToRemove.id });
+        this.getCustomerUsersFormValues.unshift(payload);
       }
     });
   }
 
-  public removeCustomerUser(item: any): void {
+  public removeCustomerUser(item: ICustomerUser): void {
     this.getCustomerUsersFormValues.removeAt(item);
   }
 
@@ -135,8 +138,9 @@ export class AddCustomerDialogComponent implements OnInit {
   }
 
   public get getCustomerUsersFormValues(): any {
-    return this.getCustomerUsersForm.value;
+    return this.getCustomerUsersForm.value as FormArray;
   }
+
   public get getCustomerUsersForm(): FormGroup {
     return this.form.get('users') as FormGroup;
   }
@@ -144,6 +148,7 @@ export class AddCustomerDialogComponent implements OnInit {
   public get getEmailPasswordFormValues(): any {
     return this.getEmailPasswordForm.value;
   }
+
   public get getEmailPasswordForm(): FormGroup {
     return this.form.get('email_password') as FormGroup;
   }
@@ -151,6 +156,7 @@ export class AddCustomerDialogComponent implements OnInit {
   public get getCustomerInformationFormValues(): any {
     return this.getCustomerInformationForm.value;
   }
+
   public get getCustomerInformationForm(): FormGroup {
     return this.form.get('customer_profile') as FormGroup;
   }
