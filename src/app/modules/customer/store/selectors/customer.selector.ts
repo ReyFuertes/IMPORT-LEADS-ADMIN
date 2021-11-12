@@ -15,11 +15,11 @@ export const getCustomersSelector = createSelector(
   state => Object.values(state?.entities).map(customer => {
     return {
       ...customer,
-      ...customer.customer_profile,
-      customer_profile_id: customer.customer_profile?.id,
+      ...customer.profile,
+      profile_id: customer.profile?.id,
       id: customer?.id,
-      name: `${customer?.customer_profile?.firstname} ${customer?.customer_profile?.lastname}`,
-      phone: `${customer?.customer_profile?.phone_number}`
+      name: `${customer?.profile?.firstname} ${customer?.profile?.lastname}`,
+      phone: `${customer?.profile?.phone_number}`
     }
   })
 );

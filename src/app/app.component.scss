@@ -1,4 +1,7 @@
 @import "src/styleguide/shared";
+.router-outlet {
+  height: auto;
+}
 .notification {
   position: absolute;
   z-index: 999999;

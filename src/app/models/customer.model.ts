@@ -52,7 +52,7 @@ export interface ICustomerRole {
   customer_user?: ICustomerUser
 }
 export interface ICustomerPayload {
-  customer_profile: ICustomer
+  profile: ICustomer
   email_password: { username: string, password: string }
 }
 export interface ICustomerUserResponse {
@@ -67,7 +67,7 @@ export interface ICustomerResponse {
   id?: string;
   username?: string;
   customer_users?: ICustomer[];
-  customer_profile?: IProfile
+  profile?: IProfile
   status?: number;
   created_at?: string;
 }

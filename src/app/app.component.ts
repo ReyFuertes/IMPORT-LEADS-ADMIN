@@ -27,7 +27,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.$notify = this.store.pipe(select(getSuccessSelector), delay(100));
+    this.$notify = this.store.pipe(select(getSuccessSelector), delay(300));
+    this.$notify.subscribe(notified => {
+      if(notified) {
+        setTimeout(() => {
+          this.onClose();
+        }, 3000);
+      }
+    });
   }
 
   public onClose(): void {

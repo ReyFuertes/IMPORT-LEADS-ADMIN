@@ -1,7 +1,7 @@
 import { createReducer, on, Action } from "@ngrx/store";
 import { ICustomer, ICustomerResponse, ICustomerUser, ICustomerUserResponse } from "src/app/models/customer.model";
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
-import { addCustomerSuccessAction, deleteCustomerUserSuccessAction, getCustomerByIdSuccessAction, loadCustomersSuccessAction, updateCustomerSuccessAction } from "../actions/customer.actions";
+import { addCustomerSuccessAction, clearSelectedCustomerAction, deleteCustomerAction, deleteCustomerSuccessAction, deleteCustomerUserSuccessAction, getCustomerByIdSuccessAction, loadCustomersSuccessAction, updateCustomerSuccessAction } from "../actions/customer.actions";
 import * as _ from 'lodash';
 
 export interface CustomerState extends EntityState<ICustomerResponse> {
@@ -14,6 +14,12 @@ export const initialState: CustomerState = adapter.getInitialState({
 
 const customerReducer = createReducer(
   initialState,
+  on(deleteCustomerSuccessAction, (state, action) => {
+    return adapter.removeOne(action?.response?.id, state)
+  }),
+  on(clearSelectedCustomerAction, (state) => {
+    return Object.assign({}, state, { selectedCustomer: null})
+  }),
   on(deleteCustomerUserSuccessAction, (state, action) => {
     const entities: ICustomer[] = Object.assign([], Object.values(state.entities));
     let match = entities.find(t => t?.customer_users?.find(u => u.id === action.response.id));

@@ -10,9 +10,23 @@ export enum CustomerActionTypes {
   getCustomerByIdSuccessAction = '[Customer] get customer by id (success)',
   updateCustomerAction = '[Customer] update customer',
   updateCustomerSuccessAction = '[Customer] update customer (success)',
-  deleteCustomerUserAction = '[Customer] delete customer',
-  deleteCustomerUserSuccessAction = '[Customer] delete customer (success)',
+  deleteCustomerUserAction = '[Customer] delete customer user',
+  deleteCustomerUserSuccessAction = '[Customer] delete customer user (success)',
+  clearSelectedCustomerAction = '[Customer] clear selected customer',
+  deleteCustomerAction = '[Customer] delete customer',
+  deleteCustomerSuccessAction = '[Customer] delete customer (success)',
 }
+export const deleteCustomerAction = createAction(
+  CustomerActionTypes.deleteCustomerAction,
+  props<{ id: string }>()
+);
+export const deleteCustomerSuccessAction = createAction(
+  CustomerActionTypes.deleteCustomerSuccessAction,
+  props<{ response: ICustomer }>()
+);
+export const clearSelectedCustomerAction = createAction(
+  CustomerActionTypes.clearSelectedCustomerAction
+);
 export const deleteCustomerUserAction = createAction(
   CustomerActionTypes.deleteCustomerUserAction,
   props<{ id: string }>()

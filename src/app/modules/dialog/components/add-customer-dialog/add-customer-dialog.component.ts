@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { select, Store } from '@ngrx/store';
 import { IAccess, ICustomer, ICustomerUser, ICustomerUserResponse, IRole } from 'src/app/models/customer.model';
 import { FormStateType } from 'src/app/models/generic.model';
-import { deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
+import { clearSelectedCustomerAction, deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
 import { editCustomerByIdSelector, getCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
@@ -44,7 +44,7 @@ export class AddCustomerDialogComponent implements OnInit {
         username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
         password: [null, Validators.required]
       }),
-      customer_profile: this.fb.group({
+      profile: this.fb.group({
         id: [null],
         firstname: [null, Validators.required],
         lastname: [null, Validators.required],
@@ -59,7 +59,14 @@ export class AddCustomerDialogComponent implements OnInit {
 
     if (this.data?.formState === FormStateType.Edit && this.data?.id) {
       this.store.dispatch(getCustomerByIdAction({ id: this.data?.id }));
+    } else {
+      this.formReset();
     }
+  }
+
+  private formReset(): void {
+    this.form.reset();
+    this.store.dispatch(clearSelectedCustomerAction());
   }
 
   ngOnInit(): void {
@@ -70,7 +77,7 @@ export class AddCustomerDialogComponent implements OnInit {
         this.form.patchValue({
           id: customer?.id,
           email_password: { username: customer?.username },
-          customer_profile: customer?.customer_profile,
+          profile: customer?.profile,
           users: customer?.customer_users
         }, { emitEvent: false });
 
@@ -158,7 +165,7 @@ export class AddCustomerDialogComponent implements OnInit {
   }
 
   public get getCustomerInformationForm(): FormGroup {
-    return this.form.get('customer_profile') as FormGroup;
+    return this.form.get('profile') as FormGroup;
   }
 
   public onAdd(): void {

@@ -5,12 +5,23 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { CustomerService } from 'src/app/services/api.service';
 import { ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, addCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerSuccessAction } from '../actions/customer.actions';
+import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerSuccessAction } from '../actions/customer.actions';
 import { notificationAction } from 'src/app/store/actions/notification.action';
 import { of } from 'rxjs';
 
 @Injectable()
 export class CustomerEffects {
+  deleteCustomerAction$ = createEffect(() => this.actions$.pipe(
+    ofType(deleteCustomerAction),
+    switchMap(({ id }) => {
+      return this.customerService.delete(id).pipe(
+        map((response: ICustomer) => {
+          this.store.dispatch(notificationAction({ notification: { success: true, message: 'Successfully deleted!' } }));
+          return deleteCustomerSuccessAction({ response });
+        })
+      )
+    })
+  ));
   updateCustomerAction$ = createEffect(() => this.actions$.pipe(
     ofType(updateCustomerAction),
     switchMap(({ payload }) => {

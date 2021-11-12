@@ -9,7 +9,7 @@ import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/c
 import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, updateCustomerAction } from '../../store/actions/customer.actions';
+import { addCustomerAction, deleteCustomerAction, updateCustomerAction } from '../../store/actions/customer.actions';
 import { getCustomersSelector } from '../../store/selectors/customer.selector';
 @Component({
   selector: 'il-customer-table',
@@ -74,14 +74,14 @@ export class CustomerTableComponent implements OnInit {
       });
   }
 
-  public onDelete(): void {
+  public onDeleteCustomer(id: string): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '410px',
-      data: { action: 0 }
+      width: '410px', data: { action: 0 }
     });
     dialogRef.afterClosed()
-      .subscribe(result => {
+      .subscribe((result: boolean) => {
         if (result) {
+          this.store.dispatch(deleteCustomerAction({ id }));
         }
       });
   }
