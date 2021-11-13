@@ -53,6 +53,7 @@ export const getCustomerByIdSuccessAction = createAction(
 );
 export const loadCustomersAction = createAction(
   CustomerActionTypes.loadCustomersAction,
+  props<{ params?: string }>()
 );
 export const loadCustomersSuccessAction = createAction(
   CustomerActionTypes.loadCustomersSuccessAction,

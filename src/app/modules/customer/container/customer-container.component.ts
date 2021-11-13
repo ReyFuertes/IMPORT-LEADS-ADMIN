@@ -10,6 +10,6 @@ import { loadCustomersAction } from '../store/actions/customer.actions';
 })
 export class CustomerContainerComponent {
   constructor(private store: Store<RootState>) {
-    this.store.dispatch(loadCustomersAction());
+    this.store.dispatch(loadCustomersAction({}));
   }
 }

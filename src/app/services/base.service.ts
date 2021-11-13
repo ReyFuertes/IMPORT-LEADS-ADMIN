@@ -68,8 +68,12 @@ export abstract class BaseService<T> {
     return `${param ? '/' + param : ''}`
   }
 
+  private fmtGetParam(param?: string): string {
+    return param ? `?${param}` : ''
+  }
+
   public getAll(param?: string): Observable<T[] | any> {
-    return this.http.get<T[]>(`${this.baseUrl}${this.entity}${this.fmtParam(param)}`,
+    return this.http.get<T[]>(`${this.baseUrl}${this.entity}${this.fmtGetParam(param)}`,
       { headers: this.commonHeaders() });
   }
 

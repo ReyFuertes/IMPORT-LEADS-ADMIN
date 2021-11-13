@@ -3,10 +3,10 @@
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['name','date','email','status']">
     <ng-template pTemplate="caption">
       <div fxLayout="row" fxFlex="100">
-        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="start center">
           <span class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
-            <input pInputText type="text" placeholder="Search keyword" />
+            <input pInputText type="text" (input)="onSearch($event)" placeholder="Search keyword" />
           </span>
         </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">

@@ -19,6 +19,9 @@ tr {
   top: 1px;
 }
 :host ::ng-deep {
+  .p-input-icon-left, .p-input-icon-right {
+    width: 100%;
+  }
   .p-column-filter-overlay-menu .p-column-filter-add-rule {
     display: none !important;
   }
