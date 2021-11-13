@@ -1,5 +1,6 @@
 
 import { ActionReducerMap } from '@ngrx/store';
+import { AuthReducer, AuthState } from '../modules/auth/store/auth.reducer';
 import { CustomerUserReducer, CustomerUserState } from '../modules/customer/store/reducers/customer-user.reducer';
 import { CustomerReducer, CustomerState } from '../modules/customer/store/reducers/customer.reducer';
 import { AppReducer, appState } from './reducers/app-reducer';
@@ -8,11 +9,13 @@ export interface RootState {
   appState: appState,
   notification?: NotificationState,
   customer?: CustomerState,
-  customerUser?: CustomerUserState
+  customerUser?: CustomerUserState,
+  auth: AuthState
 }
 export const reducers: ActionReducerMap<RootState> = {
   appState: AppReducer,
   notification: NotificationReducer,
   customer: CustomerReducer,
-  customerUser: CustomerUserReducer
+  customerUser: CustomerUserReducer,
+  auth: AuthReducer
 };

@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { GenericDestroyPageComponent } from '../shared/generics/generic-destroy-page';
 import { RootState } from '../store/root.reducer';
 import { notificationAction } from '../store/actions/notification.action';
+import { logoutAction } from '../modules/auth/store/auth.action';
 @Injectable({ providedIn: 'root' })
 export class LoaderService {
   public isLoading = new BehaviorSubject(false);
@@ -46,11 +47,8 @@ export class TokenInterceptor extends GenericDestroyPageComponent implements Htt
             from(this.handleHttpErrorRequest(request, 'Timeout error, please try again!'));
             return throwError(error);
           };
-
           this.removeRequest(request);
-
           observer.error(error);
-
           return null;
         }, () => {
           this.removeRequest(request);
@@ -78,6 +76,6 @@ export class TokenInterceptor extends GenericDestroyPageComponent implements Htt
     console.log('%c SESSION EXPIRED!', 'background: red; color: white');
 
     this.loaderSrv.isLoading.next(false);
-    // this.store.dispatch(logoutAction());
+    this.store.dispatch(logoutAction());
   }
 }

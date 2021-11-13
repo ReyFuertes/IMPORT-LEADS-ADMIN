@@ -12,13 +12,10 @@
     </div>
     <div class="settings" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
       <img class="profile-pic" [src]="getProfilePic" />
-      <div class="Customername" fxLayout="row" fxLayoutAlign="start center" [matMenuTriggerFor]="menu">Customer</div>
+      <div class="username" fxLayout="row" fxLayoutAlign="start center" [matMenuTriggerFor]="menu">Customer</div>
       <i class="pi pi-chevron-down" [matMenuTriggerFor]="menu"></i>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>{{ 'Profile' }}</button>
-        <button mat-menu-item>{{ 'Settings' }}</button>
         <button mat-menu-item>{{ 'Change Password' }}</button>
-        <button mat-menu-item>{{ 'Customer Management' }}</button>
         <button mat-menu-item (click)="onLogout()">{{ 'Logout' }}</button>
       </mat-menu>
     </div>

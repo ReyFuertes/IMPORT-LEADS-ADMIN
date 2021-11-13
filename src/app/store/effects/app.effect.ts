@@ -5,8 +5,10 @@ import { tap, map, switchMap } from 'rxjs/operators';
 import { loadAllRolesAction, loadAllRolesSuccessAction, loadCustomerAccessAction, loadCustomerAccessSuccessAction } from '../actions/app.action';
 import { RootState } from '../root.reducer';
 import { IAccess, IRole } from 'src/app/models/generic.model';
-import { AccessService, RolesService, CustomerService } from 'src/app/services/api.service';
-import { ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
+import { AccessService, RolesService } from 'src/app/services/api.service';
+import { logoutAction, logoutSuccessAction } from 'src/app/modules/auth/store/auth.action';
+import { Router } from '@angular/router';
+import { LOGINROUTE } from 'src/app/shared/constants/routes';
 
 @Injectable()
 export class AppEffects {
@@ -30,10 +32,17 @@ export class AppEffects {
       )
     })
   ));
-
+  logoutAction$ = createEffect(() => this.actions$.pipe(
+    ofType(logoutAction),
+    tap(() => {
+      localStorage.clear();
+      this.router.navigateByUrl(LOGINROUTE);
+    }),
+    map(() => logoutSuccessAction())
+  ));
   constructor(private store: Store<RootState>,
     private actions$: Actions,
     private roleService: RolesService,
     private accessService: AccessService,
-    private customerService: CustomerService) { }
+    private router: Router) { }
 }

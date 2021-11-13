@@ -51,7 +51,7 @@ export class CustomerTableComponent implements OnInit {
     this.$customers = this.store.pipe(select(getCustomersSelector));
     this.$searchKeyword.pipe(debounceTime(500)).subscribe(keyword => {
       if (keyword) {
-        const criteria: string = `firstname=${keyword}&lastname=${keyword}&username=${keyword}`;
+        const criteria: string = `firstname=${keyword}&lastname=${keyword}&username=${keyword}&company_name=${keyword}&company_address=${keyword}`;
         this.store.dispatch(loadCustomersAction({ params: `take=${this.take}&skip=${this.skip}&${criteria}` }));
       }
     });

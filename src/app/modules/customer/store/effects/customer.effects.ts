@@ -43,7 +43,7 @@ export class CustomerEffects {
       )
     })
   ));
-  loadCustomerAction$ = createEffect(() => this.actions$.pipe(
+  loadCustomersAction$ = createEffect(() => this.actions$.pipe(
     ofType(loadCustomersAction),
     switchMap(({ params }) => {
       return this.customerService.getAll(params).pipe(

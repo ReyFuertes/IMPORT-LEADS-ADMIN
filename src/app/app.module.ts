@@ -18,6 +18,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { reducers } from './store/root.reducer';
 import { BlockUIModule } from 'primeng/blockui';
 import { TokenInterceptor } from './services/http-token-interceptor';
+import { AuthModule } from './modules/auth/auth.module';
+import { AuthGuard } from './modules/service/auth.guard';
 
 const materialModules = [
   MatFormFieldModule,
@@ -53,8 +55,10 @@ const services = [
     AppRoutingModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([AppEffects]),
+    AuthModule
   ],
   providers: [
+    AuthGuard,
     ...directives,
     ...services,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }

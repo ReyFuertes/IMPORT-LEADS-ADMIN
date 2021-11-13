@@ -80,3 +80,8 @@ img.logo {
 .p-blockui {
   z-index: 99999 !important;
 }
+.error {
+  color: $color-red;
+  font-size: 14px;
+  font-weight: 500;
+}

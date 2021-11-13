@@ -11,6 +11,7 @@ export class GenericControl<T> extends GenericDestroyPageComponent {
   @Input() public controlName: any;
   @Input() public form: FormGroup;
   @Input() public selectedItem: T;
+  @Input() public type: string = 'text';
 
   @Output() public valueEmitter = new EventEmitter<T>();
 

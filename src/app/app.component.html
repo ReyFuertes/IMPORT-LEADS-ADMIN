@@ -15,7 +15,7 @@
 
 <div fxFlexFill>
   <div class="contents" fxFlex>
-    <il-topnav></il-topnav>
+    <il-topnav *ngIf="isLoggedIn && !hideTopNav"></il-topnav>
     <div class="router-outlet" fxFlexFill>
       <router-outlet></router-outlet>
     </div>

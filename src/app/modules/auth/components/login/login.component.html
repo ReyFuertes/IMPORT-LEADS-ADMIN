@@ -1,0 +1,29 @@
+<div [formGroup]="form" class="login-container" fxLayoutAlign="center center" fxFlexFill>
+  <div fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <img class="logo" [src]="imgPath + 'logo.png'" />
+    </div>
+    <mat-card>
+      <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="5px">
+        <div class="content" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px">
+          <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="15px">
+            <div fxLayout="column">
+              <label>{{ 'Email' }}</label>
+              <il-input fxFlex="50" [form]="form" hasBorder="true" isFloatLabel="true" controlName="username" [placeholder]="'Enter Username or Email'"></il-input>
+            </div>
+            <div fxLayout="column">
+              <label>{{ 'Password' }}</label>
+              <il-input class="password" type="password" fxFlex="50" [form]="form" hasBorder="true" isFloatLabel="true" controlName="password" placeholder="Password"></il-input>
+            </div>
+          </div>
+          <div fxLayoutAlign="start center">
+            <p-checkbox [label]="'Remember Me'" [binary]="true"></p-checkbox>
+          </div>
+          <button [disabled]="!form.valid" pButton type="button" class="primary medium" (click)="onSubmit()" label="LOGIN"></button>
+          <div fxLayout="row" fxLayoutAlign="center center" class="error"><span *ngIf="loginError">{{ 'Login Failed' }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

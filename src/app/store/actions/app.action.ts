@@ -3,10 +3,10 @@ import { IRole } from 'src/app/models/generic.model';
 import { IAccess, ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 
 export enum AppActionTypes {
-  loadCustomerAccessAction = '[Customer] load Customer access',
+  loadCustomerAccessAction = '[App] load Customer access',
   loadCustomerAccessSuccessAction = '[Customer] load Customer access (success)',
-  loadAllRolesAction = '[Customer Mgmt] load roles',
-  loadAllRolesSuccessAction = '[Customer Mgmt] load roles (success)'
+  loadAllRolesAction = '[App] load roles',
+  loadAllRolesSuccessAction = '[App] load roles (success)'
 }
 export const loadAllRolesAction = createAction(
   AppActionTypes.loadAllRolesAction,

@@ -4,6 +4,22 @@ import { sortByDesc } from 'src/app/shared/util/sort';
 import { RootState } from '../root.reducer';
 
 export const selectedState = (state: RootState) => state.appState;
+export const getIsLoginFailedSelector = createSelector(
+  selectedState,
+  state => state?.isLoginFailed
+);
+export const getIsLoggingInSelector = createSelector(
+  selectedState,
+  state => state?.isLoggingIn
+);
+export const getIsLoggedInSelector = createSelector(
+  selectedState,
+  state => state?.isLoggedIn
+);
+export const getAuthTokenSelector = createSelector(
+  selectedState,
+  state => state?.token
+);
 export const getCustomerRolesSelector = createSelector(
   selectedState,
   state => {

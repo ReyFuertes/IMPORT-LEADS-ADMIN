@@ -35,7 +35,6 @@ export class CustomerUserEffects {
     switchMap(({ payload }) => {
       return this.customerUserService.post(payload).pipe(
         map((response: ICustomerUser) => {
-          debugger
           return addCustomerUserSuccessAction({ response });
         })
       )
