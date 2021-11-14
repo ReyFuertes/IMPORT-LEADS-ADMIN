@@ -5,7 +5,7 @@ import { delay, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LoaderService } from './services/http-token-interceptor';
 import { GenericDestroyPageComponent } from './shared/generics/generic-destroy-page';
-import { loadAllRolesAction, loadCustomerAccessAction } from './store/actions/app.action';
+import { loadAllRolesAction, loadAccessAction, initAppAction } from './store/actions/app.action';
 import { removeNotificationAction } from './store/actions/notification.action';
 import { RootState } from './store/root.reducer';
 import { getIsLoggedInSelector } from './store/selectors/app.selector';
@@ -25,8 +25,7 @@ export class AppComponent extends GenericDestroyPageComponent implements OnInit 
 
   constructor(public loaderSrv: LoaderService, private store: Store<RootState>) {
     super();
-    this.store.dispatch(loadCustomerAccessAction());
-    this.store.dispatch(loadAllRolesAction());
+    this.store.dispatch(initAppAction());
   }
 
   ngOnInit(): void {

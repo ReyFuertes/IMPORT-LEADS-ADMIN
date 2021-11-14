@@ -11,3 +11,9 @@
   font-size: 0.85rem;
   color: $color-black-0;
 }
+input {
+  &:read-only {
+    background-color: $color-gray-4;
+    cursor: not-allowed;
+  }
+}

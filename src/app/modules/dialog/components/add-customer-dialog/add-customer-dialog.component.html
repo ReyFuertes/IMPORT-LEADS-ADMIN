@@ -54,7 +54,10 @@
           <div fxFlex="50">
             <il-dropdown-select label="Language" [form]="getCustomerInformationForm" controlName="language" [options]="languageOptions"></il-dropdown-select>
           </div>
-          <div fxFlex="50"></div>
+          <div>
+            <label>{{ 'Website URL' }}</label>
+            <il-input [form]="getCustomerInformationForm" [readonly]="true" placeholder="Website URL" controlName="website_url"></il-input>
+          </div>
         </div>
       </p-tabPanel>
 
@@ -102,6 +105,6 @@
   </div>
   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
     <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>
-    <button [disabled]="!form.valid" (click)="onAdd()" pButton type="button" class="primary medium" [label]="actionText[data?.action]"></button>
+    <button [disabled]="!form.valid" (click)="onAdd()" pButton type="button" class="purple medium" [label]="actionText[data?.action]"></button>
   </div>
 </div>

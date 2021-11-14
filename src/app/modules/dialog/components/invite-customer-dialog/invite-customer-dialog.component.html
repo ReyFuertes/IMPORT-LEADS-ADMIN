@@ -2,13 +2,13 @@
   <div class="header" fxLayoutAlign="end end" fxLayout="row">
     <div fxLayout="row">
       <div fxFlex fxFlexOffset="20px">
-        <h4>{{ 'INVITE Customer' }}</h4>
+        <h4>{{ 'EMAIL INVITE' }}</h4>
       </div>
       <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
     </div>
   </div>
   <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
-    <p-chips [(ngModel)]="emails" separator=","></p-chips>
+    <p-chips placeholder="Emails" [(ngModel)]="emails" separator=","></p-chips>
   </div>
   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
     <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>

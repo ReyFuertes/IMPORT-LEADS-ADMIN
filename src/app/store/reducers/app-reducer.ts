@@ -1,10 +1,10 @@
 import { createReducer, on, Action } from "@ngrx/store";
 import { IRole } from "src/app/models/generic.model";
 import { IAccess, ICustomer, ICustomerResponse } from "src/app/models/customer.model";
-import { loadAllRolesSuccessAction, loadCustomerAccessSuccessAction } from "../actions/app.action";
+import { loadAllRolesSuccessAction, loadAccessSuccessAction, initAppSuccessAction } from "../actions/app.action";
 import { loginSuccessAction, logoutSuccessAction } from "src/app/modules/auth/store/auth.action";
 export interface appState {
-  token?: string,
+  authVar?: string,
   access?: IAccess[],
   roles?: IRole[],
   isLoggedIn?: boolean,
@@ -12,7 +12,7 @@ export interface appState {
   isLoginFailed?: boolean,
 }
 export const initialState: appState = {
-  token: null,
+  authVar: null,
   access: null,
   roles: null,
   isLoggedIn: null,
@@ -26,13 +26,25 @@ const appReducer = createReducer(
     return Object.assign({}, state)
   }),
   on(loginSuccessAction, (state, action) => {
-    return Object.assign({}, state, { token: action.token, isLoggedIn: true, isLoggingIn: null, isLoginFailed: null })
+    return Object.assign({}, state, { authVar: action.response, isLoggedIn: true, isLoggingIn: null, isLoginFailed: null })
   }),
   on(loadAllRolesSuccessAction, (state, action) => {
     return Object.assign({}, state, { roles: action.response });
   }),
-  on(loadCustomerAccessSuccessAction, (state, action) => {
+  on(loadAccessSuccessAction, (state, action) => {
     return Object.assign({}, state, { access: action.response });
+  }),
+  on(initAppSuccessAction, (state, action) => {
+    let isLoggedIn: boolean = false;
+    let token = action.response || null;
+    if (token) {
+      isLoggedIn = true;
+    }
+    else {
+      isLoggedIn = false;
+    }
+    debugger
+    return Object.assign({}, state, { token, isLoggedIn })
   }),
 );
 export function AppReducer(state: appState, action: Action) {

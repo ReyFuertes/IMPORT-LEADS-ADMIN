@@ -28,5 +28,5 @@ export const loginAction = createAction(
 );
 export const loginSuccessAction = createAction(
   LoginActionTypes.loginSuccessAction,
-  props<{ token: any }>()
+  props<{ response: any }>()
 );

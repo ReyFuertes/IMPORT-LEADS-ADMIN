@@ -23,7 +23,7 @@ export class AddCustomerDialogComponent implements OnInit {
   public form: FormGroup;
   public accessOptions: any[];
   public roleOptions: any[];
-  public actionText: string[] = ['ADD', 'UPDATE'];
+  public actionText: string[] = ['ADD', 'UPDATE', 'REVIEW'];
   public access: IAccess[];
   public roles: ISimpleItem[];
   public languageOptions: ISimpleItem[] = [{
@@ -52,16 +52,21 @@ export class AddCustomerDialogComponent implements OnInit {
         address: [null, Validators.required],
         company_name: [null, Validators.required],
         company_address: [null, Validators.required],
-        language: ['en', Validators.required]
+        language: ['en', Validators.required],
+        website_url: ['https://ilcustomeradmin.azurewebsites.net']
       }),
       users: new FormArray([])
     });
 
-    if (this.data?.formState === FormStateType.Edit && this.data?.id) {
+    if (this.isEditMode && this.data?.id) {
       this.store.dispatch(getCustomerByIdAction({ id: this.data?.id }));
     } else {
       this.formReset();
     }
+  }
+
+  public get isEditMode(): boolean {
+    return this.data?.formState === FormStateType.Edit;
   }
 
   private formReset(): void {
@@ -88,6 +93,10 @@ export class AddCustomerDialogComponent implements OnInit {
       }
       this.getEmailPasswordForm.get('password').updateValueAndValidity();
     });
+  }
+
+  public onReview(): void {
+
   }
 
   public getRoles(roles: string[]): IRole[] {

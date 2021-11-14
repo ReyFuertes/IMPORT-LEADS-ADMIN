@@ -12,7 +12,9 @@ export class GenericControl<T> extends GenericDestroyPageComponent {
   @Input() public form: FormGroup;
   @Input() public selectedItem: T;
   @Input() public type: string = 'text';
-
+  @Input() public disabled: boolean;
+  @Input() public readonly: boolean;
+  
   @Output() public valueEmitter = new EventEmitter<T>();
 
   public get hasError(): boolean {

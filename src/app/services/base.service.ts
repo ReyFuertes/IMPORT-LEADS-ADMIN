@@ -19,7 +19,7 @@ export abstract class BaseService<T> {
 
   private getToken(): string {
     return JSON.parse(this.storageSrv.get('at') || null) ?
-      JSON.parse(this.storageSrv.get('at')).accessToken : null;
+      JSON.parse(this.storageSrv.get('at')).token : null;
   }
 
   protected commonHeaders(): HttpHeaders {

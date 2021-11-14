@@ -19,7 +19,8 @@ import { reducers } from './store/root.reducer';
 import { BlockUIModule } from 'primeng/blockui';
 import { TokenInterceptor } from './services/http-token-interceptor';
 import { AuthModule } from './modules/auth/auth.module';
-import { AuthGuard } from './modules/service/auth.guard';
+import { AuthGuard } from './services/auth.guard';
+import { AuthEffect } from './modules/auth/store/auth.effect';
 
 const materialModules = [
   MatFormFieldModule,
@@ -54,7 +55,7 @@ const services = [
     ...primeNgModules,
     AppRoutingModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([AppEffects]),
+    EffectsModule.forRoot([AppEffects, AuthEffect]),
     AuthModule
   ],
   providers: [

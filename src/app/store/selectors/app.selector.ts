@@ -18,7 +18,7 @@ export const getIsLoggedInSelector = createSelector(
 );
 export const getAuthTokenSelector = createSelector(
   selectedState,
-  state => state?.token
+  state => state?.authVar
 );
 export const getCustomerRolesSelector = createSelector(
   selectedState,

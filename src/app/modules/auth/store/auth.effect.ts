@@ -12,13 +12,15 @@ export class AuthEffect {
     ofType(loginAction),
     switchMap(({ payload }) => this.authService.post(payload, 'signin')
       .pipe(
-        map((token: any) => {
-          return loginSuccessAction({ token });
+        map((response: any) => {
+          return loginSuccessAction({ response });
         }),
         catchError((error: any) => {
           return of(loginFailedAction({ error: error.message }));
         }),
-        tap(token => this.storageSrv.set('at', JSON.stringify(token))),
+        tap(({ response }: any) => {
+          this.storageSrv.set('at', JSON.stringify(response))
+        }),
       ))
   ));
 
