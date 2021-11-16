@@ -85,3 +85,7 @@ img.logo {
   font-size: 14px;
   font-weight: 500;
 }
+.disabled {
+  color: $color-gray-2 !important;
+  cursor: not-allowed !important;
+}

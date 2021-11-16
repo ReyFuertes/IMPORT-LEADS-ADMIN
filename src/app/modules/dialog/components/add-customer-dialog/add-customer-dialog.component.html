@@ -51,12 +51,22 @@
           </div>
         </div>
         <div fxLayout="row" fxLayoutGap="20px">
-          <div fxFlex="50">
+          <div>
             <il-dropdown-select label="Language" [form]="getCustomerInformationForm" controlName="language" [options]="languageOptions"></il-dropdown-select>
           </div>
           <div>
             <label>{{ 'Website URL' }}</label>
             <il-input [form]="getCustomerInformationForm" placeholder="Website URL" controlName="website_url"></il-input>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div>
+            <label>{{ 'API URL' }}</label>
+            <il-input [form]="getCustomerInformationForm" placeholder="API URL" controlName="api_url"></il-input>
+          </div>
+          <div>
+            <label>{{ 'Datebase Name' }}</label>
+            <il-input [form]="getCustomerInformationForm" placeholder="Datebase Name" controlName="database_name"></il-input>
           </div>
         </div>
       </p-tabPanel>

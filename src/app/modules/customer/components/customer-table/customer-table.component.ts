@@ -71,6 +71,10 @@ export class CustomerTableComponent implements OnInit {
       });
   }
 
+  public isApproved(status: number): boolean {
+    return status === CustomerStatusType.Approved;
+  }
+
   public onApprove(customer: ICustomer): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '410px',
@@ -110,10 +114,22 @@ export class CustomerTableComponent implements OnInit {
       });
   }
 
+  public onSendEmail(customer: ICustomer): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '410px', data: { action: 2 }
+    });
+    dialogRef.afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+ 
+        }
+      });
+  }
+
   public onAddCustomer(): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '690px',
-      height: '487px',
+      height: '545px',
       data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
@@ -126,7 +142,7 @@ export class CustomerTableComponent implements OnInit {
   public onEditCustomer(id: string): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '690px',
-      height: '487px',
+      height: '545px',
       data: { action: 1, formState: FormStateType.Edit, id }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {

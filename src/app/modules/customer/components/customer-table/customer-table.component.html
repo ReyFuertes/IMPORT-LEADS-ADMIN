@@ -39,9 +39,18 @@
         </td>
         <td>
           <div class="actions" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
-            <i pTooltip="Approve" (click)="onApprove(customer)" tooltipPosition="top" class="pi pi-check"></i>
-            <i pTooltip="Edit" (click)="onEditCustomer(customer?.id)" tooltipPosition="top" class="pi pi-pencil"></i>
-            <i pTooltip="Delete" (click)="onDeleteCustomer(customer?.id)" tooltipPosition="top" class="pi pi-trash"></i>
+            <div>
+              <i [pTooltip]="!isApproved(customer?.status) ? 'Approve' : ''" [ngClass]="{'disabled': isApproved(customer?.status)}" (click)="!isApproved(customer?.status) ? onApprove(customer): null" tooltipPosition="top" class="pi pi-check"></i>
+            </div>
+            <div>
+              <i pTooltip="Edit" (click)="onEditCustomer(customer?.id)" tooltipPosition="top" class="pi pi-pencil"></i>
+            </div>
+            <div>
+              <i [pTooltip]="!isApproved(customer?.status) ? 'Delete' : ''" [ngClass]="{'disabled': isApproved(customer?.status)}" (click)="!isApproved(customer?.status) ?onDeleteCustomer(customer?.id): null" tooltipPosition="top" class="pi pi-trash"></i>
+            </div>
+            <div>
+              <i pTooltip="Send Email" (click)="onSendEmail(customer)" tooltipPosition="top" class="pi pi-send"></i>
+            </div>
           </div>
         </td>
       </tr>

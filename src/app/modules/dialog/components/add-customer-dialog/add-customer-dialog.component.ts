@@ -53,7 +53,9 @@ export class AddCustomerDialogComponent implements OnInit {
         company_name: [null, Validators.required],
         company_address: [null, Validators.required],
         language: ['en', Validators.required],
-        website_url: ['https://ilcustomeradmin.azurewebsites.net']
+        website_url: ['https://ilcustomeradmin.azurewebsites.net'],
+        api_url: [null],
+        database_name: [null]
       }),
       users: new FormArray([])
     });
@@ -64,7 +66,7 @@ export class AddCustomerDialogComponent implements OnInit {
       this.formReset();
     }
   }
-  
+
   public get isEditMode(): boolean {
     return this.data?.formState === FormStateType.Edit;
   }

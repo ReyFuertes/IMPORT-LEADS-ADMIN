@@ -3,6 +3,9 @@
   margin-top: 70px;
 }
 .actions {
+  div {
+    width: 33%;
+  }
   i {
     cursor: pointer;
     color: $color-gray-1;
@@ -16,13 +19,11 @@
   background-color: $color-gray-4;
   border-radius: 20px;
   font-size: 0.7rem;
+  font-weight: 500;
   &.approved {
     background-color: $color-green;
     color: $color-white;
   }
-}
-tr {
-  cursor: pointer;
 }
 .pi-plus {
   position: relative;
@@ -39,6 +40,13 @@ tr {
   .p-datatable .p-datatable-thead > tr > th {
     padding: 0.56rem;
     font-size: 0.86rem;
+    vertical-align: top;
+    .p-d-flex {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      flex-direction: column;
+    }
   }
   .p-datatable-customers {
     padding: 20px;

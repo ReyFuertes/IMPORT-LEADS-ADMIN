@@ -63,10 +63,6 @@ label {
   .p-datatable-wrapper {
     border: thin $color-gray-3 solid;
   }
-  .p-tabview .p-tabview-panels {
-    padding: 0.5rem 0.5rem 0 0.5rem;
-    min-height: 322px;
-  }
   .p-datatable .p-datatable-tbody > tr  {
     &:hover {
       background-color: $color-gray-3;
@@ -93,7 +89,8 @@ label {
     padding: 0.5rem 1.5rem;
   }
   .p-tabview .p-tabview-panels {
-    min-height: 314px;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    min-height: 370px;
   }
   .p-dropdown, p-dropdown {
     width: 100%;

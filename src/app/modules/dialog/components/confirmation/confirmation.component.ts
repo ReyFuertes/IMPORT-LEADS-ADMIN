@@ -16,6 +16,9 @@ export class ConfirmationDialogComponent {
   }, {
     label: 'APPROVE',
     message: 'Are you sure to approve this item?'
+  }, {
+    label: 'SEND EMAIL',
+    message: 'Do you want to send onboarded email?'
   }];
 
   constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
