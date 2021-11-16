@@ -21,11 +21,6 @@ export class AppEffects {
         map(() => {
           const response = JSON.parse(this.storageSrv.get('at')) || null;
           const isUserLoggedIn = !!response?.user;
-
-          if (isUserLoggedIn) {
-            this.store.dispatch(loadAccessAction());
-            this.store.dispatch(loadAllRolesAction());
-          }
           this.isInloginpage(isUserLoggedIn);
 
           return initAppSuccessAction({ response });

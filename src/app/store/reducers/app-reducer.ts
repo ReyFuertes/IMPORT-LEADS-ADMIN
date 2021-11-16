@@ -43,7 +43,6 @@ const appReducer = createReducer(
     else {
       isLoggedIn = false;
     }
-    debugger
     return Object.assign({}, state, { token, isLoggedIn })
   }),
 );

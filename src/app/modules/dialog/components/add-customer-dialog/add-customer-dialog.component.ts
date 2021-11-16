@@ -64,7 +64,7 @@ export class AddCustomerDialogComponent implements OnInit {
       this.formReset();
     }
   }
-
+  
   public get isEditMode(): boolean {
     return this.data?.formState === FormStateType.Edit;
   }

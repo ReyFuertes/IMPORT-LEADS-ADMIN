@@ -11,6 +11,16 @@
     }
   }
 }
+.status {
+  padding: 2px 7px;
+  background-color: $color-gray-4;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  &.approved {
+    background-color: $color-green;
+    color: $color-white;
+  }
+}
 tr {
   cursor: pointer;
 }

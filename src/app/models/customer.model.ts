@@ -1,5 +1,9 @@
 import { ISimpleItem } from "../shared/generics/generic.model";
-
+import { CustomerStatusType } from "./generic.model";
+export interface CustomerUpdateStatus {
+  customer: ICustomer;
+  status: CustomerStatusType;
+}
 export interface ICustomerAccess {
   id: string;
   customer: ICustomer;
@@ -80,7 +84,8 @@ export interface ICustomer {
   image?: string;
   customer_role?: ICustomerRole[];
   customer_access?: ICustomerAccess[];
-  customer_users?: ICustomerUser[]
+  customer_users?: ICustomerUser[];
+  status?: number;
 }
 export interface IAccess extends ISimpleItem {
   id?: string;

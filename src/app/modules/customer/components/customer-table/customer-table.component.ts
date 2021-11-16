@@ -9,7 +9,7 @@ import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/c
 import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, deleteCustomerAction, loadCustomersAction, updateCustomerAction } from '../../store/actions/customer.actions';
+import { addCustomerAction, deleteCustomerAction, loadCustomersAction, updateCustomerAction, updateCustomerStatusAction } from '../../store/actions/customer.actions';
 import { getCustomersSelector } from '../../store/selectors/customer.selector';
 import { debounceTime } from 'rxjs/operators';
 @Component({
@@ -71,7 +71,7 @@ export class CustomerTableComponent implements OnInit {
       });
   }
 
-  public onApprove(): void {
+  public onApprove(customer: ICustomer): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '410px',
       data: { action: 1 }
@@ -79,6 +79,12 @@ export class CustomerTableComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe(result => {
         if (result) {
+          this.store.dispatch(updateCustomerStatusAction({
+            payload: {
+              customer,
+              status: CustomerStatusType.Approved
+            }
+          }));
         }
       });
   }

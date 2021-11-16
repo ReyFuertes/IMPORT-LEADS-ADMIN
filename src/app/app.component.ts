@@ -40,9 +40,15 @@ export class AppComponent extends GenericDestroyPageComponent implements OnInit 
 
     this.store.pipe(select(getIsLoggedInSelector),
       takeUntil(this.$unsubscribe))
-      .subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
+      .subscribe(isLoggedIn => {
+        this.isLoggedIn = isLoggedIn;
+        if (this.isLoggedIn) {
+          this.store.dispatch(loadAccessAction());
+          this.store.dispatch(loadAllRolesAction());
+        }
+      });
   }
-
+  
   public onClose(): void {
     this.store.dispatch(removeNotificationAction());
     this.loaderSrv.isLoading.next(false);
