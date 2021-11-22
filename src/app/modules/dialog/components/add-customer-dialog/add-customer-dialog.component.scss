@@ -62,6 +62,8 @@ label {
   }
   .p-datatable-wrapper {
     border: thin $color-gray-3 solid;
+    min-height: 310px;
+    background-color: $color-white;
   }
   .p-datatable .p-datatable-tbody > tr  {
     &:hover {

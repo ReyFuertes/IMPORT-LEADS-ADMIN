@@ -1,3 +1,7 @@
+export enum ChangePasswordType {
+  NotChangePassword = 0,
+  ChangePassword = 1,
+}
 export enum FormStateType {
   Add = 0,
   Edit = 1
@@ -23,4 +27,12 @@ export enum ModalStateType {
 }
 export interface QueryParam {
   query: string
+}
+export interface IUserAccess {
+  id: number;
+  title: string;
+}
+export interface IUserRole {
+  value: any;
+  label: string;
 }

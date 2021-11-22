@@ -20,11 +20,11 @@ export enum CustomerActionTypes {
 }
 export const updateCustomerStatusAction = createAction(
   CustomerActionTypes.updateCustomerStatusAction,
-  props<{ payload: CustomerUpdateStatus }>()
+  props<{ payload: CustomerUpdateStatus, customer?: ICustomerPayload }>()
 );
 export const updateCustomerStatusSuccessAction = createAction(
   CustomerActionTypes.updateCustomerStatusSuccessAction,
-  props<{ response: ICustomer }>()
+  props<{ response: ICustomer, customer?: ICustomerPayload }>()
 );
 export const deleteCustomerAction = createAction(
   CustomerActionTypes.deleteCustomerAction,

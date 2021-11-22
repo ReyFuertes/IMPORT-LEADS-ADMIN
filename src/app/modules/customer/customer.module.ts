@@ -22,8 +22,8 @@ import { SliderModule } from 'primeng/slider';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { CustomerUserEffects } from './store/effects/customer-user.effects';
-import { CustomerReducer } from './store/reducers/customer.reducer';
 import { CustomerEffects } from './store/effects/customer.effects';
+import { reducers } from './store/reducers';
 
 const primengModules = [
   InputTextModule,
@@ -70,7 +70,7 @@ const routes: Routes = [{
     ...primengModules,
     ...materialModules,
     RouterModule.forChild(routes),
-    StoreModule.forFeature('customers', CustomerReducer),
+    StoreModule.forFeature('customerModule', reducers),
     EffectsModule.forFeature([CustomerEffects, CustomerUserEffects]),
   ],
   exports: [],

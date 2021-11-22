@@ -1,5 +1,5 @@
 import { ISimpleItem } from "../shared/generics/generic.model";
-import { CustomerStatusType } from "./generic.model";
+import { CustomerStatusType, IUserAccess, IUserRole } from "./generic.model";
 export interface CustomerUpdateStatus {
   customer: ICustomer;
   status: CustomerStatusType;
@@ -56,8 +56,45 @@ export interface ICustomerRole {
   customer_user?: ICustomerUser
 }
 export interface ICustomerPayload {
-  profile: ICustomer
-  email_password: { username: string, password: string }
+  profile?: ICustomer;
+  email_password?: { username: string, password: string };
+  api_url?: string;
+  user?: {
+    id?: number;
+    name?: string;
+    firstname?: string;
+    lastname?: string;
+    position?: string;
+    role?: IUserRole;
+    company?: string;
+    phone?: string;
+    image?: string;
+    access?: IUserAccess[];
+    is_change_password?: number;
+    username?: string;
+  },
+  user_profile?: {
+    id?: string;
+    firstname?: string;
+    lastname?: string;
+    phone?: string;
+    email?: string;
+    linkedin?: string;
+    facebook?: string;
+    twitter?: string;
+    wechatid?: string;
+    qqid?: string;
+    company_name?: string;
+    company_linkedin?: string;
+    company_address?: string;
+    self_intro?: string;
+    position?: string;
+    image?: string;
+    language?: string;
+    api_url?: string;
+    website_url?: string;
+    database_name?: string;
+  }
 }
 export interface ICustomerUserResponse {
   accesses?: string[]
@@ -86,6 +123,7 @@ export interface ICustomer {
   customer_access?: ICustomerAccess[];
   customer_users?: ICustomerUser[];
   status?: number;
+  profile?: IProfile
 }
 export interface IAccess extends ISimpleItem {
   id?: string;

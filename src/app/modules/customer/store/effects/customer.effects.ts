@@ -1,26 +1,35 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { CustomerService } from 'src/app/services/api.service';
 import { ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
 import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction } from '../actions/customer.actions';
 import { notificationAction } from 'src/app/store/actions/notification.action';
-import { of } from 'rxjs';
+import { of, zip } from 'rxjs';
+import { TenantUserService } from 'src/app/services/tenant.service';
 
 @Injectable()
 export class CustomerEffects {
   updateCustomerStatusAction$ = createEffect(() => this.actions$.pipe(
     ofType(updateCustomerStatusAction),
-    switchMap(({ payload }) => {
-      return this.customerService.patch(payload, 'status').pipe(
-        map((response: ICustomer) => {
-          this.showNofication('Successfully approved!');
-          return updateCustomerStatusSuccessAction({ response });
-        })
-      )
-    })
+      mergeMap(({ payload, customer }) => {
+        return zip(
+          this.customerService.patch(payload, 'status'),
+          this.customerService.post(customer, 'user', customer?.api_url) //make sure this is authenticated in the future
+        ).pipe(
+          map(([response, tenant]) => {
+            this.showNofication('Successfully updated customer status!');
+            return updateCustomerStatusSuccessAction({ response });
+          }),
+          catchError(() => {
+            return of(notificationAction({
+              notification: { error: true, message: 'Failed to add tenant.' }
+            }));
+          })
+        )
+      })
   ));
   deleteCustomerAction$ = createEffect(() => this.actions$.pipe(
     ofType(deleteCustomerAction),
@@ -63,7 +72,7 @@ export class CustomerEffects {
         }),
         catchError(() => {
           return of(notificationAction({
-            notification: { error: true, message: 'Failed to load customers' }
+            notification: { error: true, message: 'Failed to load customers.' }
           }));
         })
       )
@@ -87,5 +96,6 @@ export class CustomerEffects {
 
   constructor(private store: Store<RootState>,
     private actions$: Actions,
-    private customerService: CustomerService) { }
+    private customerService: CustomerService,
+    private tenantUserService: TenantUserService) { }
 }

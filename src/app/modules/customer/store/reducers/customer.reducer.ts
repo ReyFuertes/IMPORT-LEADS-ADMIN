@@ -1,5 +1,5 @@
 import { createReducer, on, Action } from "@ngrx/store";
-import { ICustomer, ICustomerResponse, ICustomerUser, ICustomerUserResponse } from "src/app/models/customer.model";
+import { ICustomer, ICustomerResponse } from "src/app/models/customer.model";
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { addCustomerSuccessAction, clearSelectedCustomerAction, deleteCustomerAction, deleteCustomerSuccessAction, deleteCustomerUserSuccessAction, getCustomerByIdSuccessAction, loadCustomersSuccessAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction } from "../actions/customer.actions";
 import * as _ from 'lodash';

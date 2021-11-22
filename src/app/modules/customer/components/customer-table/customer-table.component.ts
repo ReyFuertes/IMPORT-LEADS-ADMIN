@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CustomerStatusType, FormStateType } from 'src/app/models/generic.model';
+import { ChangePasswordType, CustomerStatusType, FormStateType } from 'src/app/models/generic.model';
 import { ICustomer, ICustomerPayload } from 'src/app/models/customer.model';
 import { AddCustomerDialogComponent } from 'src/app/modules/dialog/components/add-customer-dialog/add-customer-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
@@ -12,6 +12,8 @@ import { RootState } from 'src/app/store/root.reducer';
 import { addCustomerAction, deleteCustomerAction, loadCustomersAction, updateCustomerAction, updateCustomerStatusAction } from '../../store/actions/customer.actions';
 import { getCustomersSelector } from '../../store/selectors/customer.selector';
 import { debounceTime } from 'rxjs/operators';
+import { notificationAction } from 'src/app/store/actions/notification.action';
+import { LoaderService } from 'src/app/services/http-token-interceptor';
 @Component({
   selector: 'il-customer-table',
   templateUrl: './customer-table.component.html',
@@ -47,7 +49,7 @@ export class CustomerTableComponent implements OnInit {
   public take: number = 10;
   public skip: number = 0;
 
-  constructor(private dialog: MatDialog, private store: Store<RootState>) {
+  constructor(public loaderSrv: LoaderService, private dialog: MatDialog, private store: Store<RootState>) {
     this.$customers = this.store.pipe(select(getCustomersSelector));
     this.$searchKeyword.pipe(debounceTime(500)).subscribe(keyword => {
       if (keyword) {
@@ -57,7 +59,8 @@ export class CustomerTableComponent implements OnInit {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   public onInvite(): void {
     const dialogRef = this.dialog.open(InviteCustomerDialogComponent, {
@@ -75,7 +78,7 @@ export class CustomerTableComponent implements OnInit {
     return status === CustomerStatusType.Approved;
   }
 
-  public onApprove(customer: ICustomer): void {
+  public onApprove(customer: any): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '410px',
       data: { action: 1 }
@@ -83,12 +86,43 @@ export class CustomerTableComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe(result => {
         if (result) {
-          this.store.dispatch(updateCustomerStatusAction({
-            payload: {
-              customer,
-              status: CustomerStatusType.Approved
-            }
-          }));
+          if(customer?.api_url) {
+            this.store.dispatch(updateCustomerStatusAction({
+              payload: {
+                customer,
+                status: CustomerStatusType.Approved
+              },
+              customer: {
+                api_url: customer?.api_url,
+                user: {
+                  username: customer?.email,
+                  name: customer?.name,
+                  firstname: customer?.firstname,
+                  lastname: customer?.lastname,
+                  company: customer?.company,
+                  phone: customer?.phone,
+                  access: customer?.access,
+                  is_change_password: ChangePasswordType.ChangePassword
+                },
+                user_profile: {
+                  firstname: customer?.profile?.firstname,
+                  lastname: customer?.profile?.lastname,
+                  phone: customer?.profile?.phone,
+                  email: customer?.profile?.email,
+                  company_name: customer?.profile?.company_name,
+                  company_address: customer?.profile?.company_address,
+                  language: customer?.profile?.language,
+                  api_url: customer?.profile?.api_url,
+                  website_url: customer?.profile?.website_url,
+                  database_name: customer?.profile?.database_name
+                }
+              }
+            }));
+          } else {
+            this.store.dispatch(notificationAction({
+              notification: { error: true, message: 'Failed to approve customer, api url not defined.' }
+            }))
+          }
         }
       });
   }
@@ -121,7 +155,7 @@ export class CustomerTableComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
- 
+
         }
       });
   }

@@ -46,10 +46,9 @@ export abstract class BaseService<T> {
     return ret;
   }
 
-  public post(object?: T | T[], param?: string): Observable<T | any> {
-    return this.http.post<any>(`${this.baseUrl}${this.entity}${this.fmtParam(param)}`,
-      this.removeNullProps(object),
-      { headers: this.commonHeaders() });
+  public post(object?: T | T[], param?: string, overrideUrl?: string): Observable<T | any> {
+    const url: string = `${overrideUrl ?? this.baseUrl}${this.entity}${this.fmtParam(param)}`;
+    return this.http.post<any>(url, this.removeNullProps(object), { headers: this.commonHeaders() });
   }
 
   public delete(id?: string, param?: string): Observable<T | any> {
