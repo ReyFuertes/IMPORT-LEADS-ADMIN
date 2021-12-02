@@ -6,6 +6,8 @@ import { GenericDestroyPageComponent } from '../../generics/generic-destroy-page
 import { RootState } from 'src/app/store/root.reducer';
 import { logoutAction } from 'src/app/modules/auth/store/auth.action';
 import { IUser } from 'src/app/modules/auth/auth.models';
+import { ROLESROUTE } from '../../constants/routes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'il-topnav',
@@ -26,8 +28,12 @@ export class TopNavComponent extends GenericDestroyPageComponent {
     value: '/customer'
   }];
 
-  constructor(private store: Store<RootState>) {
+  constructor(private router: Router, private store: Store<RootState>) {
     super();
+  }
+
+  public gotoRoles(): void {
+    this.router.navigateByUrl(ROLESROUTE);
   }
 
   public get getProfilePic(): string {

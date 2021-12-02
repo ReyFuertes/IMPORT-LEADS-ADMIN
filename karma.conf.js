@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/IMPORT-LEADS-ACCOUNT'),
+      dir: require('path').join(__dirname, './coverage/iaad-admin-client'),
       subdir: '.',
       reporters: [
         { type: 'html' },

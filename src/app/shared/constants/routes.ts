@@ -1,3 +1,4 @@
+export const ROLESROUTE = '/roles';
 export const LOGINROUTE = '/login';
 export const CUSTOMERROUTE = '/customer';
 export const SETTINGSROUTE = '/setting';

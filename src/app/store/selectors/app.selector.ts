@@ -20,7 +20,7 @@ export const getAuthTokenSelector = createSelector(
   selectedState,
   state => state?.authVar
 );
-export const getCustomerRolesSelector = createSelector(
+export const getRolesSelector = createSelector(
   selectedState,
   state => {
     const fmtRoles = state?.roles;

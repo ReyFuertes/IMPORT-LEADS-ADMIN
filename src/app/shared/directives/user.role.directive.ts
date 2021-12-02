@@ -1,10 +1,10 @@
 import { Directive, Input, OnInit, ViewContainerRef, TemplateRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AppState } from 'src/app/modules/contracts/store/reducers';
 import { Store, select } from '@ngrx/store';
-import { getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
+import { getRolesSelector } from 'src/app/store/selectors/app.selector';
 import { GenericDestroyPageComponent } from '../generics/generic-destroy-page';
+import { RootState } from 'src/app/store/root.reducer';
 
 export enum Roles {
   admin = 1,
@@ -20,13 +20,13 @@ export class HasRoleDirective extends GenericDestroyPageComponent implements OnI
   public isVisible = false;
   public roles = Roles;
 
-  constructor(private viewContainerRef: ViewContainerRef, private templateRef: TemplateRef<any>, private store: Store<AppState>) {
+  constructor(private viewContainerRef: ViewContainerRef, private templateRef: TemplateRef<any>, private store: Store<RootState>) {
     super();
   }
 
   ngOnInit() {
     //  We subscribe to the roles$ to know the roles the Customer has
-    this.store.pipe(select(getCustomerRolesSelector),
+    this.store.pipe(select(getRolesSelector),
       takeUntil(this.$unsubscribe)
     ).subscribe(roles => {
     

@@ -1,3 +1,6 @@
+export interface ISettings {
+  
+}
 export enum ChangePasswordType {
   NotChangePassword = 0,
   ChangePassword = 1,

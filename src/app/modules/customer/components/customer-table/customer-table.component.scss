@@ -47,6 +47,10 @@
       align-content: center;
       flex-direction: column;
     }
+    &:last-child {
+      max-width: 140px !important;
+      width: 140px !important;
+    }
   }
   .p-datatable-customers {
     padding: 20px;

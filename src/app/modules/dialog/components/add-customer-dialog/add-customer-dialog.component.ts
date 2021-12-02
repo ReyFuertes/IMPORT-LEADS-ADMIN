@@ -9,7 +9,7 @@ import { editCustomerByIdSelector, getCustomerByIdSelector } from 'src/app/modul
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
 import { RootState } from 'src/app/store/root.reducer';
-import { getCustomerAccessSelector, getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
+import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
 import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation/confirmation.component';
 import * as _ from 'lodash';
@@ -78,7 +78,7 @@ export class AddCustomerDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.pipe(select(getCustomerAccessSelector)).subscribe(access => this.access = access);
-    this.store.pipe(select(getCustomerRolesSelector)).subscribe(roles => this.roles = roles);
+    this.store.pipe(select(getRolesSelector)).subscribe(roles => this.roles = roles);
     this.store.pipe(select(editCustomerByIdSelector)).subscribe(customer => {
       if (customer) {
         this.form.patchValue({

@@ -11,7 +11,7 @@ import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
 import { generatePassword } from 'src/app/shared/util/password';
 import { RootState } from 'src/app/store/root.reducer';
-import { getCustomerAccessSelector, getCustomerRolesSelector } from 'src/app/store/selectors/app.selector';
+import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
 
 @Component({
   selector: 'il-add-edit-customer-user-dialog',
@@ -42,7 +42,7 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.$access = this.store.pipe(select(getCustomerAccessSelector));
-    this.$roles = this.store.pipe(select(getCustomerRolesSelector));
+    this.$roles = this.store.pipe(select(getRolesSelector));
 
     this.store.pipe(select(getCustomerUserByIdSelector)).subscribe(customerUser => {
       if (customerUser) {
