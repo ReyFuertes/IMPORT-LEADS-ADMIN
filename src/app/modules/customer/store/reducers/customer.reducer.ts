@@ -41,10 +41,10 @@ const customerReducer = createReducer(
     return ({ ...adapter.updateOne({ id: action.response.id, changes: action.response }, state) })
   }),
   on(getCustomerByIdSuccessAction, (state, action) => {
-    return Object.assign({}, state, { selectedCustomer: action?.response })
+    return Object.assign({}, state, { selectedCustomer: action?.response });
   }),
   on(loadCustomersSuccessAction, (state, action) => {
-    return ({ ...adapter.setAll(action.response, state) })
+    return ({ ...adapter.setAll(action.response, state) });
   }),
   on(addCustomerSuccessAction, (state, action) => {
     return adapter.addOne(action.response, state)

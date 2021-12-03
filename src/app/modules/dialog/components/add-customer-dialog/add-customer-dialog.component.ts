@@ -124,7 +124,7 @@ export class AddCustomerDialogComponent implements OnInit {
 
   public onAddCustomerUser(): void {
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
-      width: '430px', height: '265px', data: { action: 0 }
+      width: '430px', height: '275px', data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((user: ICustomerUser) => {
       if (user) {
@@ -135,7 +135,7 @@ export class AddCustomerDialogComponent implements OnInit {
 
   public onEditCustomerUser(id: string): void {
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
-      width: '430px', height: '265px',
+      width: '430px', height: '275px',
       data: { action: 1, formState: FormStateType.Edit, id }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerUserResponse) => {

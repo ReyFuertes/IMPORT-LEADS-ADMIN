@@ -3,7 +3,10 @@ export interface ILoginCredential {
   password: string;
 }
 export interface IUser {
+  id?: string;
   username?: string;
   password?: string;
-  image?: string;
+  is_master_admin?: boolean;
+  is_change_password?: number;
+  created_at?: string;
 }

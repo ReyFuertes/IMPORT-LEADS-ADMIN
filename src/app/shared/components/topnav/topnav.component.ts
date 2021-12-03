@@ -6,7 +6,7 @@ import { GenericDestroyPageComponent } from '../../generics/generic-destroy-page
 import { RootState } from 'src/app/store/root.reducer';
 import { logoutAction } from 'src/app/modules/auth/store/auth.action';
 import { IUser } from 'src/app/modules/auth/auth.models';
-import { ROLESROUTE } from '../../constants/routes';
+import { ROLESROUTE, SETTINGSROUTE } from '../../constants/routes';
 import { Router } from '@angular/router';
 
 @Component({
@@ -32,13 +32,16 @@ export class TopNavComponent extends GenericDestroyPageComponent {
     super();
   }
 
+  public gotoSettings(): void {
+    this.router.navigateByUrl(SETTINGSROUTE);
+  }
+
   public gotoRoles(): void {
     this.router.navigateByUrl(ROLESROUTE);
   }
 
   public get getProfilePic(): string {
-    return this.user?.image ? this.apiImagePath + this.user?.image
-      : this.imgPath + 'default-profile-pic.png';
+    return this.imgPath + 'default-profile-pic.png'; //this.user?.image ? this.apiImagePath + this.user?.image :
   }
 
   public onLogout(): void {

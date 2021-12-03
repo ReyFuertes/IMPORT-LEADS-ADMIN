@@ -7,6 +7,7 @@ import { RoleReducer, RoleState } from '../modules/role/store/role.reducer';
 import { SettingsReducer, SettingsState } from '../modules/settings/store/settings.reducer';
 import { AppReducer, appState } from './reducers/app-reducer';
 import { NotificationReducer, NotificationState } from './reducers/notification.reducer';
+import { UserReducer, UsersState } from './reducers/user.reducer';
 export interface RootState {
   appState: appState,
   notification?: NotificationState,
@@ -14,7 +15,8 @@ export interface RootState {
   customerUser?: CustomerUserState,
   auth: AuthState,
   role: RoleState,
-  settings: SettingsState
+  settings: SettingsState,
+  user: UsersState
 }
 export const reducers: ActionReducerMap<RootState> = {
   appState: AppReducer,
@@ -23,5 +25,6 @@ export const reducers: ActionReducerMap<RootState> = {
   customerUser: CustomerUserReducer,
   auth: AuthReducer,
   role: RoleReducer,
-  settings: SettingsReducer
+  settings: SettingsReducer,
+  user: UserReducer
 };

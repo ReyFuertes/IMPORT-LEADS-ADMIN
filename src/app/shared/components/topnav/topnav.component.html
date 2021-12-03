@@ -17,7 +17,7 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="gotoRoles()">{{ 'Access' }}</button>
         <button mat-menu-item (click)="gotoRoles()">{{ 'Roles' }}</button>
-        <button mat-menu-item>{{ 'Settings' }}</button>
+        <button mat-menu-item (click)="gotoSettings()">{{ 'Settings' }}</button>
         <button mat-menu-item>{{ 'Change Password' }}</button>
         <button mat-menu-item (click)="onLogout()">{{ 'Logout' }}</button>
       </mat-menu>

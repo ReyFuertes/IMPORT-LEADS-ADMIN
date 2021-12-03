@@ -46,12 +46,3 @@ label {
   padding-top: 15px;
   padding-left: 20px;
 }
-:host ::ng-deep {
-  .p-multiselect-panel .p-multiselect-items:not(.p-multiselect-virtualscroll) {
-    padding: 0 !important;
-  }
-  .p-multiselect, p-multiselect, il-dropdown-multi-select {
-    width: 100% !important;
-    max-width: 189px;
-  }
-}

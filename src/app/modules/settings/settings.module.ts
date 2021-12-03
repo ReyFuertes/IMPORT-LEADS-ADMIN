@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { SharedModule } from 'primeng/api';
 import { DialogModule } from '../dialog/dialog.module';
 import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
@@ -13,17 +12,27 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SettingsContainerComponent } from './container/settings-container.component';
 import { SettingsPageComponent } from './components/settings-page/settings-page.component';
-import { SettingsTableComponent } from './components/access-table/settings-table.component';
+import { SettingsTableComponent } from './components/settings-table/settings-table.component';
 import { SettingsReducer } from './store/settings.reducer';
+import { TableModule } from 'primeng/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { SettingsEffect } from './store/settings.effect';
+import { UsersEffect } from 'src/app/store/effects/user.effects';
+import { MenuModule } from 'primeng/menu';
 
 const primengModules = [
   InputTextModule,
   CardModule,
   ButtonModule,
   CheckboxModule,
+  TableModule,
+  MenuModule
 ];
 
-const materialModules = [];
+const materialModules = [
+  MatDialogModule,
+];
 
 const routes: Routes = [{
   path: '',
@@ -51,7 +60,7 @@ const routes: Routes = [{
     ...materialModules,
     RouterModule.forChild(routes),
     StoreModule.forFeature('settings', SettingsReducer),
-    EffectsModule.forFeature([]),
+    EffectsModule.forFeature([SettingsEffect, UsersEffect]),
   ],
   exports: [],
   providers: [],

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, tap, catchError, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { StorageService } from '../../service/storage.service';
+import { map, switchMap } from 'rxjs/operators';
+import { UserService } from 'src/app/services/api.service';
 
 @Injectable()
-export class AccessEffect {
-
+export class SettingsEffect {
 
   constructor(
-    private actions$: Actions
+    private actions$: Actions,
+    private userService: UserService
   ) { }
 }

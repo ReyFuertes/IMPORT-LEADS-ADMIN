@@ -14,12 +14,14 @@ import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { AddEditCustomerUserDialogComponent } from './components/add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
+import { AddUserDialogComponent } from './components/add-user-dialog/add-user-dialog.component';
 
 const dialogComponents = [
   AddCustomerDialogComponent,
   ConfirmationDialogComponent,
   InviteCustomerDialogComponent,
-  AddEditCustomerUserDialogComponent
+  AddEditCustomerUserDialogComponent,
+  AddUserDialogComponent
 ];
 
 const materialModules = [

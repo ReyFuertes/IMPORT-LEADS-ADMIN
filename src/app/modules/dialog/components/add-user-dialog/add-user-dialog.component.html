@@ -1,0 +1,30 @@
+<div class="il-dialog" fxLayout="column" fxLayoutAlign="center center">
+  <div class="header" fxLayoutAlign="end end" fxLayout="row">
+    <div fxLayout="row">
+      <div fxFlex fxFlexOffset="20px">
+        <h4>{{ actionText[data?.action] }} {{ 'USER' }}</h4>
+      </div>
+      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
+    </div>
+  </div>
+  <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+    <div fxLayout="column" fxLayoutGap="10px">
+      <div>
+        <label>{{ 'Username' }}</label>
+        <il-input [form]="form" placeholder="Username" controlName="username"></il-input>
+      </div>
+      <div>
+        <label>{{ 'Password' }}</label>
+        <il-input-password [form]="form" placeholder="Password" controlName="password"></il-input-password>
+      </div>
+      <div>
+        <label>{{ 'Confirm Password' }}</label>
+        <il-input-password [form]="form" placeholder="Confirm Password" controlName="confirm_password"></il-input-password>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
+    <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>
+    <button [disabled]="!form.valid" (click)="onSave()" pButton type="button" class="primary medium" [label]="actionText[data?.action]"></button>
+  </div>
+</div>

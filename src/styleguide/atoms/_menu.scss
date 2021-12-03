@@ -1,0 +1,13 @@
+.p-menu.p-menu-overlay {
+  width: fit-content !important;
+}
+.p-menu .p-menuitem-link {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover {
+  background-color: $color-primary;
+  span {
+    color: $color-white !important;
+  }
+}
