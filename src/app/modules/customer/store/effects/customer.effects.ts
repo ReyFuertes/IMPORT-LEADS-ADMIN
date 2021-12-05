@@ -1,35 +1,50 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
-import { CustomerService } from 'src/app/services/api.service';
+import { catchError, debounceTime, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { AccessService, CustomerService, RolesService } from 'src/app/services/api.service';
 import { ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction } from '../actions/customer.actions';
+import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction } from '../actions/customer.actions';
 import { notificationAction } from 'src/app/store/actions/notification.action';
 import { of, zip } from 'rxjs';
-import { TenantUserService } from 'src/app/services/tenant.service';
 
 @Injectable()
 export class CustomerEffects {
+  inviteAction$ = createEffect(() => this.actions$.pipe(
+    ofType(inviteAction),
+    switchMap(({ payload }) => {
+      return this.customerService.post(payload, 'invite').pipe(
+        map((response: ICustomer[]) => {
+          this.showNofication('Successfully invite new customer!');
+          return inviteSuccessAction({ response });
+        }),
+        debounceTime(1000),
+        tap(() => this.store.dispatch(loadCustomersAction({})))
+      )
+    })
+  ));
   updateCustomerStatusAction$ = createEffect(() => this.actions$.pipe(
     ofType(updateCustomerStatusAction),
-      mergeMap(({ payload, customer }) => {
-        return zip(
-          this.customerService.patch(payload, 'status'),
-          this.customerService.post(customer, 'user', customer?.api_url) //make sure this is authenticated in the future
-        ).pipe(
-          map(([response, tenant]) => {
-            this.showNofication('Successfully updated customer status!');
-            return updateCustomerStatusSuccessAction({ response });
-          }),
-          catchError(() => {
-            return of(notificationAction({
-              notification: { error: true, message: 'Failed to add tenant.' }
-            }));
-          })
-        )
-      })
+    mergeMap(({ payload, customer, access, role, customer_users }) => {
+      return zip(
+        this.customerService.patch(payload, 'status'),
+        this.accessService.post(access, 'migrate', customer?.api_url),
+        this.roleService.post(role, 'migrate', customer?.api_url),
+        this.customerService.post(customer, 'user', customer?.api_url),
+        this.customerService.post(customer_users, 'multiple', customer?.api_url)
+      ).pipe(
+        map(([response]) => {
+          this.showNofication('Successfully updated customer status!');
+          return updateCustomerStatusSuccessAction({ response });
+        }),
+        catchError(() => {
+          return of(notificationAction({
+            notification: { error: true, message: 'Failed to add tenant.' }
+          }));
+        })
+      )
+    })
   ));
   deleteCustomerAction$ = createEffect(() => this.actions$.pipe(
     ofType(deleteCustomerAction),
@@ -97,5 +112,6 @@ export class CustomerEffects {
   constructor(private store: Store<RootState>,
     private actions$: Actions,
     private customerService: CustomerService,
-    private tenantUserService: TenantUserService) { }
+    private accessService: AccessService,
+    private roleService: RolesService) { }
 }

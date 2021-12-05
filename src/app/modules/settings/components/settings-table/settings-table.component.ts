@@ -19,7 +19,7 @@ import { getUsersSelector } from 'src/app/store/selectors/user.selector';
 export class SettingsTableComponent implements OnInit {
   public $users: Observable<IUser[]>;
   public items: MenuItem[];
-  public selectedItem: any;
+  public selectedItem: IUser;
 
   constructor(private store: Store<RootState>, private dialog: MatDialog) {
     this.$users = this.store.pipe(select(getUsersSelector));

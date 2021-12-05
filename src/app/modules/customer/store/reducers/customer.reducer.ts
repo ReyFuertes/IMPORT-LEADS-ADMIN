@@ -5,11 +5,13 @@ import { addCustomerSuccessAction, clearSelectedCustomerAction, deleteCustomerAc
 import * as _ from 'lodash';
 
 export interface CustomerState extends EntityState<ICustomerResponse> {
-  selectedCustomer: ICustomerResponse
+  selectedCustomer: ICustomerResponse;
+  isUserMigrated: boolean;
 }
 export const adapter: EntityAdapter<ICustomerResponse> = createEntityAdapter<ICustomerResponse>({});
 export const initialState: CustomerState = adapter.getInitialState({
-  selectedCustomer: null
+  selectedCustomer: null,
+  isUserMigrated: null
 });
 
 const customerReducer = createReducer(
@@ -21,11 +23,14 @@ const customerReducer = createReducer(
 
     return adapter.updateOne({ id: match.id, changes: match }, state);
   }),
+  on(updateCustomerStatusSuccessAction, (state) => {
+    return Object.assign({}, state, { isUserMigrated: true});
+  }),
   on(deleteCustomerSuccessAction, (state, action) => {
-    return adapter.removeOne(action?.response?.id, state)
+    return adapter.removeOne(action?.response?.id, state);
   }),
   on(clearSelectedCustomerAction, (state) => {
-    return Object.assign({}, state, { selectedCustomer: null})
+    return Object.assign({}, state, { selectedCustomer: null});
   }),
   on(deleteCustomerUserSuccessAction, (state, action) => {
     const entities: ICustomer[] = Object.assign([], Object.values(state.entities));

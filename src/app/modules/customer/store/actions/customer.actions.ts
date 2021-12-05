@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { CustomerUpdateStatus, ICustomer, ICustomerPayload, ICustomerResponse, ICustomerUser } from 'src/app/models/customer.model';
+import { CustomerUpdateStatus, IAccess, ICustomer, ICustomerPayload, ICustomerResponse, ICustomerUser } from 'src/app/models/customer.model';
+import { IRole } from 'src/app/models/generic.model';
+import { IUser } from 'src/app/modules/auth/auth.models';
 
 export enum CustomerActionTypes {
   addCustomerAction = '[Customer] add customer',
@@ -17,10 +19,40 @@ export enum CustomerActionTypes {
   deleteCustomerSuccessAction = '[Customer] delete customer (success)',
   updateCustomerStatusAction = '[Customer] update customer status',
   updateCustomerStatusSuccessAction = '[Customer] add customer status (success)',
+  migrateAccessAction = '[Customer] migrate access',
+  migrateAccessSuccessAction = '[Customer] migrate access (success)',
+  migrateRoleAction = '[Customer] migrate role',
+  migrateRoleSuccessAction = '[Customer] migrate role (success)',
+  inviteAction = '[Customer] invite',
+  inviteSuccessAction = '[Customer] invite (success)'
 }
+export const inviteAction = createAction(
+  CustomerActionTypes.inviteAction,
+  props<{ payload: ICustomer[] }>()
+);
+export const inviteSuccessAction = createAction(
+  CustomerActionTypes.inviteSuccessAction,
+  props<{ response: ICustomer[] }>()
+);
+export const migrateRoleAction = createAction(
+  CustomerActionTypes.migrateRoleAction,
+  props<{ payload: IRole[] }>()
+);
+export const migrateRoleSuccessAction = createAction(
+  CustomerActionTypes.migrateRoleSuccessAction,
+  props<{ response: IRole[] }>()
+);
+export const migrateAccessAction = createAction(
+  CustomerActionTypes.migrateAccessAction,
+  props<{ payload: IAccess[] }>()
+);
+export const migrateAccessSuccessAction = createAction(
+  CustomerActionTypes.migrateAccessSuccessAction,
+  props<{ response: IAccess[] }>()
+);
 export const updateCustomerStatusAction = createAction(
   CustomerActionTypes.updateCustomerStatusAction,
-  props<{ payload: CustomerUpdateStatus, customer?: ICustomerPayload }>()
+  props<{ payload: CustomerUpdateStatus, customer?: ICustomerPayload, access?: IAccess[], role?: IRole[], customer_users: IUser[] }>()
 );
 export const updateCustomerStatusSuccessAction = createAction(
   CustomerActionTypes.updateCustomerStatusSuccessAction,

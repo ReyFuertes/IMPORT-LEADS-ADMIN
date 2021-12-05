@@ -10,7 +10,8 @@ import { RootState } from 'src/app/store/root.reducer';
   styleUrls: ['./invite-customer-dialog.component.scss']
 })
 export class InviteCustomerDialogComponent implements OnInit {
-  public emails: any;
+  public emails: string[];
+  public actionText: string[] = ['ADD', 'UPDATE'];
   
   constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<InviteCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
   }
@@ -18,6 +19,8 @@ export class InviteCustomerDialogComponent implements OnInit {
   ngOnInit(): void { }
 
   public onInvite(): void {
-
+    if(this.emails?.length > 0) {
+      this.dialogRef.close(this.emails);
+    }
   }
 }

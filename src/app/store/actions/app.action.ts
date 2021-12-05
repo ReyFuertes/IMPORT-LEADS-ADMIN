@@ -5,13 +5,13 @@ import { IAccess, ICustomer, ICustomerResponse } from 'src/app/models/customer.m
 export enum AppActionTypes {
   loadAccessAction = '[App] load Customer access',
   loadAccessSuccessAction = '[Customer] load Customer access (success)',
-  loadAllRolesAction = '[App] load roles',
+  loadAllRoleAction = '[App] load roles',
   loadAllRolesSuccessAction = '[App] load roles (success)',
   initAppAction = '[App] init',
   initAppSuccessAction = '[App] init (success)',
 }
-export const loadAllRolesAction = createAction(
-  AppActionTypes.loadAllRolesAction,
+export const loadAllRoleAction = createAction(
+  AppActionTypes.loadAllRoleAction,
 );
 export const loadAllRolesSuccessAction = createAction(
   AppActionTypes.loadAllRolesSuccessAction,

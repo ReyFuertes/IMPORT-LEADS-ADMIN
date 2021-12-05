@@ -5,7 +5,7 @@ import { delay, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LoaderService } from './services/http-token-interceptor';
 import { GenericDestroyPageComponent } from './shared/generics/generic-destroy-page';
-import { loadAllRolesAction, loadAccessAction, initAppAction } from './store/actions/app.action';
+import { loadAllRoleAction, loadAccessAction, initAppAction } from './store/actions/app.action';
 import { removeNotificationAction } from './store/actions/notification.action';
 import { RootState } from './store/root.reducer';
 import { getIsLoggedInSelector } from './store/selectors/app.selector';
@@ -44,7 +44,7 @@ export class AppComponent extends GenericDestroyPageComponent implements OnInit 
         this.isLoggedIn = isLoggedIn;
         if (this.isLoggedIn) {
           this.store.dispatch(loadAccessAction());
-          this.store.dispatch(loadAllRolesAction());
+          this.store.dispatch(loadAllRoleAction());
         }
       });
   }

@@ -17,12 +17,7 @@ export enum CustomerStatusType {
 export interface IRole {
   id?: string;
   role_name?: string;
-}
-export interface IAccess {
-  id?: string;
-  access_name?: string;
-  parent?: IAccess;
-  customer_route?: string;
+  level?: number;
 }
 export enum ModalStateType {
   add = 1,
