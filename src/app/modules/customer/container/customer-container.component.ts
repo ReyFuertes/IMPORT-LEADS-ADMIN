@@ -5,8 +5,7 @@ import { loadCustomersAction } from '../store/actions/customer.actions';
 
 @Component({
   selector: 'il-customer-container',
-  templateUrl: './customer-container.component.html',
-  styleUrls: ['./customer-container.component.scss']
+  templateUrl: './customer-container.component.html'
 })
 export class CustomerContainerComponent {
   constructor(private store: Store<RootState>) {

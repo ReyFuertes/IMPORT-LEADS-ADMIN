@@ -18,8 +18,8 @@ export const getCustomersSelector = createSelector(
       ...customer.profile,
       profile_id: customer.profile?.id,
       id: customer?.id,
-      name: `${customer?.profile?.firstname} ${customer?.profile?.lastname}`,
-      phone: `${customer?.profile?.phone_number}`
+      name: `${customer?.profile?.firstname || '-'} ${customer?.profile?.lastname || '-'}`,
+      phone: `${customer?.profile?.phone_number  || '-'}`
     }
   })
 );

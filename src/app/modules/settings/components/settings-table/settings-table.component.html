@@ -12,7 +12,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-user>
       <tr>
-        <td>{{user?.username}}</td>
+        <td>{{user?.username | titlecase}}</td>
         <td>{{user?.created_at | date: 'dd/MM/yyyy'}}</td>
         <td [pSelectableRow]="user">
           <p-menu #menu [popup]="true" [model]="items" appendTo="body"></p-menu>

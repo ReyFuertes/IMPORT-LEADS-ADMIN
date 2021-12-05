@@ -17,8 +17,10 @@ export interface ISimpleAttribute {
   id?: string;
   parent?: ISimpleItem;
   children?: ISimpleItem[];
-  customer_route?: string;
-  changed?: boolean
+  access_route?: string;
+  changed?: boolean;
+  position?: number;
+  level?: number;
 }
 export interface Menu {
   label?: string;

@@ -1,0 +1,14 @@
+p-table {
+  width: 100%;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  &:last-child {
+    width: 10px;
+  }
+}
+.p-datatable .p-datatable-thead > tr > th {
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}

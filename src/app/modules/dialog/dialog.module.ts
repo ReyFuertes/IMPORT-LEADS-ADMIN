@@ -21,7 +21,7 @@ const dialogComponents = [
   ConfirmationDialogComponent,
   InviteCustomerDialogComponent,
   AddEditCustomerUserDialogComponent,
-  AddUserDialogComponent
+  AddUserDialogComponent,
 ];
 
 const materialModules = [

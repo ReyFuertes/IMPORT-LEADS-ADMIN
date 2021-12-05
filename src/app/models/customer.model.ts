@@ -129,7 +129,7 @@ export interface IAccess extends ISimpleItem {
   id?: string;
   access_name?: string;
   parent?: IAccess;
-  customer_route?: string;
+  access_route?: string;
 }
 export interface IRole extends ISimpleItem {
   id?: string;

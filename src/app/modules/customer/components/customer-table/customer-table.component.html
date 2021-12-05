@@ -34,7 +34,7 @@
       <tr>
         <td *ngFor="let header of columnHeaders; let i = index">
           <span *ngIf="i === 0">{{customer[header?.value] | date: 'dd/MM/yyyy' }}</span>
-          <span *ngIf="i !== 0 && i !== 6">{{customer[header?.value] | titlecase }}</span>
+          <span *ngIf="i !== 0 && i !== 6">{{ customer[header?.value] ? customer[header?.value]: '-' | titlecase }}</span>
           <span class="status" [ngClass]="{'approved': customer?.status === 1}" *ngIf="i === 6">{{ CustomerStatusType[customer?.status] }}</span>
         </td>
         <td>

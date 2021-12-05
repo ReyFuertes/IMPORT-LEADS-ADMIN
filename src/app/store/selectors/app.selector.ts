@@ -26,8 +26,9 @@ export const getRolesSelector = createSelector(
     const fmtRoles = state?.roles;
     const roles = fmtRoles?.map((u: IRole) => {
       return {
-        label: u.role_name,
-        value: String(u.id)
+        label: u?.role_name,
+        value: String(u?.id),
+        level: u?.level
       };
     }) || [];
     return roles;
@@ -46,7 +47,7 @@ export const getCustomerAccessSelector = createSelector(
         value: String(a.id),
         parent: a.parent,
         children,
-        customer_route: a.customer_route
+        access_route: a.access_route
       }
     }).sort((a, b) => sortByDesc(a, b, 'position'))
   }
