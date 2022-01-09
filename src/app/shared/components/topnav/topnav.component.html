@@ -15,8 +15,8 @@
       <div class="username" fxLayout="row" fxLayoutAlign="start center" [matMenuTriggerFor]="menu">Customer</div>
       <i class="pi pi-chevron-down" [matMenuTriggerFor]="menu"></i>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="gotoSettings()">{{ 'Settings' }}</button>
-        <button mat-menu-item>{{ 'Change Password' }}</button>
+        <!-- <button mat-menu-item (click)="gotoSettings()">{{ 'Settings' }}</button>
+        <button mat-menu-item>{{ 'Change Password' }}</button> -->
         <button mat-menu-item (click)="onLogout()">{{ 'Logout' }}</button>
       </mat-menu>
     </div>
