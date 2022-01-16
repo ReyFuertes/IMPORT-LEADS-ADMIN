@@ -123,16 +123,21 @@ export interface ICustomer {
   customer_access?: ICustomerAccess[];
   customer_users?: ICustomerUser[];
   status?: number;
-  profile?: IProfile
+  profile?: IProfile;
+  name?: string;
+  is_change_password?: number;
 }
 export interface IAccess extends ISimpleItem {
   id?: string;
   access_name?: string;
   parent?: IAccess;
   access_route?: string;
+  position?: number;
 }
 export interface IRole extends ISimpleItem {
   id?: string;
   role_name?: string;
   level?: number;
+  value?: string;
+  label?: string;
 }

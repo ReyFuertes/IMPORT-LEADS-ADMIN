@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ChangePasswordType, CustomerStatusType, FormStateType, IAccess, IRole } from 'src/app/models/generic.model';
-import { ICustomer, ICustomerPayload } from 'src/app/models/customer.model';
+import { ChangePasswordType, CustomerStatusType, FormStateType } from 'src/app/models/generic.model';
+import { IAccess, ICustomer, ICustomerPayload } from 'src/app/models/customer.model';
 import { AddCustomerDialogComponent } from 'src/app/modules/dialog/components/add-customer-dialog/add-customer-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
 import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
@@ -15,6 +15,8 @@ import { debounceTime } from 'rxjs/operators';
 import { notificationAction } from 'src/app/store/actions/notification.action';
 import { LoaderService } from 'src/app/services/http-token-interceptor';
 import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
+import { ICustomerUser } from 'src/app/models/customer.model';
+
 @Component({
   selector: 'il-customer-table',
   templateUrl: './customer-table.component.html',
@@ -62,6 +64,7 @@ export class CustomerTableComponent implements OnInit {
         this.store.dispatch(loadCustomersAction({ params: `take=${this.take}&skip=${this.skip}&${criteria}` }));
       }
     });
+
   }
 
   ngOnInit() { }
@@ -94,39 +97,19 @@ export class CustomerTableComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe(result => {
         if (result) {
-          if (customer?.api_url) {
-            
+          const { api_url, customer_users, profile } = customer;
+          if (api_url) {
             const bulkPayload = {
-              payload: {
-                customer,
-                status: CustomerStatusType.Approved
-              },
+              payload: { customer, status: CustomerStatusType.Approved },
               customer: {
-                api_url: customer?.api_url,
+                api_url,
                 user: {
-                  username: customer?.email,
-                  name: customer?.name,
-                  firstname: customer?.firstname,
-                  lastname: customer?.lastname,
-                  company: customer?.company,
-                  phone: customer?.phone,
-                  access: customer?.access,
+                  ...customer,
                   is_change_password: ChangePasswordType.ChangePassword,
                 },
-                user_profile: {
-                  firstname: customer?.profile?.firstname,
-                  lastname: customer?.profile?.lastname,
-                  phone: customer?.profile?.phone,
-                  email: customer?.profile?.email,
-                  company_name: customer?.profile?.company_name,
-                  company_address: customer?.profile?.company_address,
-                  language: customer?.profile?.language,
-                  api_url: customer?.profile?.api_url,
-                  website_url: customer?.profile?.website_url,
-                  database_name: customer?.profile?.database_name
-                }
+                user_profile: profile
               },
-              access: this.access?.map(access => {
+              access: this.access?.map((access: IAccess) => {
                 return {
                   id: access?.value,
                   access_name: access?.label,
@@ -136,22 +119,19 @@ export class CustomerTableComponent implements OnInit {
                 }
               }),
               role: this.role?.map(r => {
-                return {
-                  id: r?.value,
-                  role_name: r?.label,
-                  level: r?.level
-                }
+                return { id: r?.value, role_name: r?.label, level: r?.level }
               }),
-              customer_users: customer?.customer_users?.map(customer_user => {
+              customer_users: customer_users?.map((cu: ICustomerUser) => {
                 return {
-                  ...customer_user,
+                  ...cu,
                   user_profile: {
-                    email: customer_user?.username,
-                    company_name: customer?.profile?.company_name,
-                    company_address: customer?.profile?.company_address,
-                    language: customer?.profile?.language,
-                    api_url: customer?.profile?.api_url,
-                    website_url: customer?.profile?.website_url
+                    ...cu?.user_profile,
+                    website_url: customer?.website_url,
+                    api_url: customer?.api_url,
+                    database_name: customer?.database_name,
+                    email: cu?.username,
+                    company_name: customer?.company_name,
+                    company_address: customer?.company_address
                   }
                 }
               })
@@ -160,7 +140,7 @@ export class CustomerTableComponent implements OnInit {
           } else {
             this.store.dispatch(notificationAction({
               notification: { error: true, message: 'Failed to approve customer, api url not defined.' }
-            }))
+            }));
           }
         }
       });

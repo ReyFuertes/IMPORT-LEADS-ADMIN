@@ -29,10 +29,10 @@ export class CustomerEffects {
     mergeMap(({ payload, customer, access, role, customer_users }) => {
       return zip(
         this.customerService.patch(payload, 'status'),
-        this.customerService.post(customer, 'user', customer?.api_url), //make sure this is authenticated in the future
-        this.customerService.post(customer_users, 'multiple', customer?.api_url), // customer user
         this.accessService.post(access, 'migrate', customer?.api_url),
-        this.roleService.post(role, 'migrate', customer?.api_url)
+        this.roleService.post(role, 'migrate', customer?.api_url),
+        this.customerService.post(customer, 'user', customer?.api_url),
+        this.customerService.post(customer_users, 'multiple', customer?.api_url)
       ).pipe(
         map(([response]) => {
           this.showNofication('Successfully updated customer status!');

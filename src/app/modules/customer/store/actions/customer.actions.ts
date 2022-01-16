@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { CustomerUpdateStatus, ICustomer, ICustomerPayload, ICustomerResponse, ICustomerUser } from 'src/app/models/customer.model';
-import { IAccess, IRole } from 'src/app/models/generic.model';
+import { CustomerUpdateStatus, IAccess, ICustomer, ICustomerPayload, ICustomerResponse, ICustomerUser } from 'src/app/models/customer.model';
+import { IRole } from 'src/app/models/generic.model';
 import { IUser } from 'src/app/modules/auth/auth.models';
 
 export enum CustomerActionTypes {
@@ -24,7 +24,7 @@ export enum CustomerActionTypes {
   migrateRoleAction = '[Customer] migrate role',
   migrateRoleSuccessAction = '[Customer] migrate role (success)',
   inviteAction = '[Customer] invite',
-  inviteSuccessAction = '[Customer] invite (success)',
+  inviteSuccessAction = '[Customer] invite (success)'
 }
 export const inviteAction = createAction(
   CustomerActionTypes.inviteAction,

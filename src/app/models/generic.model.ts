@@ -19,13 +19,6 @@ export interface IRole {
   role_name?: string;
   level?: number;
 }
-export interface IAccess {
-  id?: string;
-  access_name?: string;
-  parent?: IAccess;
-  access_route?: string;
-  position?: number;
-}
 export enum ModalStateType {
   add = 1,
   edit = 2

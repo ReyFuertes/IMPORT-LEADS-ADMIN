@@ -4,13 +4,14 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { tap, map, switchMap, filter } from 'rxjs/operators';
 import { initAppAction, initAppSuccessAction, loadAllRoleAction, loadAllRolesSuccessAction, loadAccessAction, loadAccessSuccessAction } from '../actions/app.action';
 import { RootState } from '../root.reducer';
-import { IAccess, IRole } from 'src/app/models/generic.model';
+import { IRole } from 'src/app/models/generic.model';
 import { AccessService, RoleService, RolesService } from 'src/app/services/api.service';
 import { logoutAction, logoutSuccessAction } from 'src/app/modules/auth/store/auth.action';
 import { NavigationEnd, Router } from '@angular/router';
 import { CUSTOMERROUTE, LOGINROUTE } from 'src/app/shared/constants/routes';
 import { StorageService } from 'src/app/modules/service/storage.service';
 import { of } from 'rxjs';
+import { IAccess } from 'src/app/models/customer.model';
 
 @Injectable()
 export class AppEffects {

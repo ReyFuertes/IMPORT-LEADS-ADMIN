@@ -20,7 +20,6 @@
         <th *ngFor="let header of columnHeaders">
           <div class="p-d-flex">
             <span>{{ header?.label }}</span>
-            <p-columnFilter type="date" [field]="header?.value" display="menu"></p-columnFilter>
           </div>
         </th>
         <th>
