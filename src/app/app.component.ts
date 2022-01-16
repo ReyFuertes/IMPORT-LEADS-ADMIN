@@ -7,6 +7,7 @@ import { LoaderService } from './services/http-token-interceptor';
 import { GenericDestroyPageComponent } from './shared/generics/generic-destroy-page';
 import { loadAllRoleAction, loadAccessAction, initAppAction } from './store/actions/app.action';
 import { removeNotificationAction } from './store/actions/notification.action';
+import { getSubscriptionsAction } from './store/actions/subscription.action';
 import { RootState } from './store/root.reducer';
 import { getIsLoggedInSelector } from './store/selectors/app.selector';
 import { getSuccessSelector } from './store/selectors/notification.selector';
@@ -45,6 +46,7 @@ export class AppComponent extends GenericDestroyPageComponent implements OnInit 
         if (this.isLoggedIn) {
           this.store.dispatch(loadAccessAction());
           this.store.dispatch(loadAllRoleAction());
+          this.store.dispatch(getSubscriptionsAction());
         }
       });
   }

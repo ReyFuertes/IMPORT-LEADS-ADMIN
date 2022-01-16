@@ -1,0 +1,15 @@
+
+@import "src/styleguide/shared";
+.card {
+  div {
+    width: 100%;
+  }
+}
+:host ::ng-deep {
+  .p-datatable .p-datatable-tbody > tr > td,
+  .p-datatable .p-datatable-thead > tr > th {
+    &:last-child {
+      width: 10px;
+    }
+  }
+}

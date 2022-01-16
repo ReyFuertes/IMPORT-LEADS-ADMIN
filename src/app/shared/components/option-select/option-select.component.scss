@@ -1,0 +1,16 @@
+:host {
+  min-height: 35px;
+}
+div {
+  height: 100%;
+  min-height: 100%;
+}
+label {
+  cursor: pointer;
+}
+:host ::ng-deep {
+  .p-element {
+    margin-right: 5px !important;
+    text-transform: capitalize !important;
+  }
+}

@@ -1,6 +1,6 @@
 import { createReducer, on, Action } from "@ngrx/store";
 import { IRole } from "src/app/models/generic.model";
-import { IAccess, ICustomer, ICustomerResponse } from "src/app/models/customer.model";
+import { IAccess } from "src/app/models/customer.model";
 import { loadAllRolesSuccessAction, loadAccessSuccessAction, initAppSuccessAction } from "../actions/app.action";
 import { loginSuccessAction, logoutSuccessAction } from "src/app/modules/auth/store/auth.action";
 export interface appState {

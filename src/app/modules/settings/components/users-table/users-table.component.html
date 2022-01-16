@@ -1,6 +1,6 @@
 <div class="card" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
   <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-    <button (click)="onAddUser()" pButton type="button" class="primary medium" label="ADD"><i class="pi pi-plus"></i></button>
+    <button (click)="onAddUser()" pButton type="button" class="primary semi-medium" label="ADD"><i class="pi pi-plus"></i></button>
   </div>
   <p-table [value]="$users | async" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" selectionMode="single" [(selection)]="selectedItem">
     <ng-template pTemplate="header">

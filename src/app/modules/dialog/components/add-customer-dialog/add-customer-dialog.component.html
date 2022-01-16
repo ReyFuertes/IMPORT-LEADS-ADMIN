@@ -11,6 +11,10 @@
     <p-tabView>
       <p-tabPanel header="General Info">
         <div fxLayout="row" fxLayoutGap="20px">
+          <il-dropdown-select fxFlex="50" label="Subscriptions" [form]="form" controlName="subscription" [options]="subscriptions"></il-dropdown-select>
+          <div fxFlex="50"></div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
           <div>
             <label>{{ 'Firstname' }}</label>
             <il-input [form]="getCustomerInformationForm" placeholder="Firstname" controlName="firstname"></il-input>
@@ -108,7 +112,11 @@
           </ng-template>
         </p-table>
         <div class="actions" fxLayout="row" fxLayoutAlign="end center">
-          <button (click)="onAddCustomerUser()" pButton type="button" class="default small" label="Add a User"></button>
+          <div fxFlex>
+            <div fxLayout="row" fxLayoutAlign="start center" *ngIf="!subscriberMaxUserReached"><i class="pi pi-info-circle"></i> Your plan is {{subscriber?.name}} with a limit of {{ subscriber?.max_users }} users.</div>
+            <div *ngIf="subscriberMaxUserReached" class="notice"><i class="pi pi-times-circle"></i> Max users reached, please upgrade your Subscription.</div>
+          </div>
+          <button [disabled]="subscriberMaxUserReached" (click)="onAddCustomerUser()" pButton type="button" class="default semi-medium" label="Add a User"></button>
         </div>
       </p-tabPanel>
     </p-tabView>

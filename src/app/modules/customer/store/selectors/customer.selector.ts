@@ -23,7 +23,8 @@ export const getCustomersSelector = createSelector(
       profile_id: customer.profile?.id,
       id: customer?.id,
       name: `${customer?.profile?.firstname || '-'} ${customer?.profile?.lastname || '-'}`,
-      phone: `${customer?.profile?.phone_number  || '-'}`
+      phone: `${customer?.profile?.phone_number  || '-'}`,
+      subscription_name: customer?.subscription?.name
     }
   })
 );

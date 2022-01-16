@@ -27,6 +27,21 @@
 }
 .actions {
   height: 50px;
+  div {
+    font-size: 12px;
+    color: $color-black-2;
+    padding: 2px 4px;
+    display: flex;
+    width: fit-content;
+    place-content: center flex-start;
+    align-items: center;
+    .notice {
+      background-color: $color-yellow-2;
+    }
+    i {
+      margin-right: 3px;
+    }
+  }
 }
 .pi-times {
   color: $color-black-3;
@@ -43,7 +58,7 @@ label {
 .footer {
   width: 100%;
   border-top: thin $color-gray-3 solid;
-  padding-top: 20px;
+  padding-top: 15px;
 }
 .pi-pencil, .pi-times {
   cursor: pointer;
@@ -53,6 +68,13 @@ label {
   }
 }
 :host ::ng-deep {
+  il-option-select {
+    label {
+      &:first-child {
+        width: 30px !important;
+      }
+    }
+  }
   .p-tabview-panel {
     .actions-icon {
       i {
@@ -62,7 +84,7 @@ label {
   }
   .p-datatable-wrapper {
     border: thin $color-gray-3 solid;
-    min-height: 310px;
+    min-height: 367px;
     background-color: $color-white;
   }
   .p-datatable .p-datatable-tbody > tr  {
@@ -92,7 +114,7 @@ label {
   }
   .p-tabview .p-tabview-panels {
     padding: 0.5rem 0.5rem 0 0.5rem;
-    min-height: 370px;
+    min-height: 425px;
   }
   .p-dropdown, p-dropdown {
     width: 100%;

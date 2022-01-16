@@ -1,11 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { IAccess, ICustomer, ICustomerUser, ICustomerUserResponse, IRole } from 'src/app/models/customer.model';
-import { FormStateType } from 'src/app/models/generic.model';
+import { FormStateType, ISubscription } from 'src/app/models/generic.model';
 import { clearSelectedCustomerAction, deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
-import { editCustomerByIdSelector, getCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
+import { editCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
 import { RootState } from 'src/app/store/root.reducer';
@@ -13,13 +13,17 @@ import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selec
 import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation/confirmation.component';
 import * as _ from 'lodash';
+import { getSubscriptionsSelector } from 'src/app/store/selectors/subscription.selector';
+import { takeUntil } from 'rxjs/operators';
+import { GenericDestroyPageComponent } from 'src/app/shared/generics/generic-destroy-page';
+import { getSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';
 
 @Component({
   selector: 'il-add-customer-dialog',
   templateUrl: './add-customer-dialog.component.html',
   styleUrls: ['./add-customer-dialog.component.scss']
 })
-export class AddCustomerDialogComponent implements OnInit {
+export class AddCustomerDialogComponent extends GenericDestroyPageComponent implements OnInit {
   public form: FormGroup;
   public accessOptions: any[];
   public roleOptions: any[];
@@ -33,11 +37,14 @@ export class AddCustomerDialogComponent implements OnInit {
     label: 'Chinese',
     value: 'cn'
   }];
+  public subscriptions: ISimpleItem[];
   public customerUsers: any[] = [];
   public selectedCustomer: ICustomer;
+  public subscriber: ISubscription;
+  public subscriberMaxUserReached: boolean;
 
-  constructor(private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-
+  constructor(private cdRef: ChangeDetectorRef, private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    super();
     this.form = this.fb.group({
       id: [null],
       email_password: this.fb.group({
@@ -57,7 +64,8 @@ export class AddCustomerDialogComponent implements OnInit {
         api_url: [null, Validators.required],
         database_name: [null, Validators.required]
       }),
-      users: new FormArray([])
+      users: new FormArray([]),
+      subscription: [null, Validators.required]
     });
 
     if (this.isEditMode && this.data?.id) {
@@ -65,6 +73,13 @@ export class AddCustomerDialogComponent implements OnInit {
     } else {
       this.formReset();
     }
+
+    this.form.get('subscription').valueChanges.subscribe(subscriberId => {
+      if (subscriberId) {
+        this.store.pipe(select(getSubscriptionByIdSelector(subscriberId)))
+          .subscribe(subscriber => this.subscriber = subscriber)
+      }
+    });
   }
 
   public get isEditMode(): boolean {
@@ -88,6 +103,7 @@ export class AddCustomerDialogComponent implements OnInit {
           users: customer?.customer_users
         }, { emitEvent: false });
 
+        this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
         this.getCustomerUsersFormValues.push(...customer?.customer_users);
         this.getEmailPasswordForm.get('password').setValidators(null);
       } else {
@@ -97,9 +113,17 @@ export class AddCustomerDialogComponent implements OnInit {
     });
   }
 
-  public onReview(): void {
-
+  ngAfterViewInit(): void {
+    this.store.pipe(select(getSubscriptionsSelector), takeUntil(this.$unsubscribe))
+      .subscribe(subscriptions => {
+        this.subscriptions = subscriptions?.map(sub => ({ label: sub.name, value: sub.id }));
+        this.form.get('subscription').patchValue(this.subscriptions[0]?.value);
+        this.subscriberMaxUserReached = false;
+        this.cdRef.detectChanges();
+      });
   }
+
+  public onReview(): void { }
 
   public getRoles(roles: string[]): IRole[] {
     return this.roles?.filter(role => roles?.includes(role?.value));
@@ -122,13 +146,23 @@ export class AddCustomerDialogComponent implements OnInit {
       });
   }
 
+  private get getUsersLength(): number {
+    return this.form.get('users')?.value?.length || 0;
+  }
+
   public onAddCustomerUser(): void {
+    if (this.getUsersLength >= Number(this.subscriber?.max_users)) {
+      return;
+    }
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '275px', data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((user: ICustomerUser) => {
       if (user) {
         this.addCustomerUser(user);
+        if (this.getUsersLength >= Number(this.subscriber?.max_users)) {
+          this.subscriberMaxUserReached = true;
+        }
       }
     });
   }

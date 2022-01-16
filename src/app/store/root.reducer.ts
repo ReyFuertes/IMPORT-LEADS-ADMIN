@@ -6,6 +6,7 @@ import { CustomerReducer, CustomerState } from '../modules/customer/store/reduce
 import { SettingsReducer, SettingsState } from '../modules/settings/store/settings.reducer';
 import { AppReducer, appState } from './reducers/app-reducer';
 import { NotificationReducer, NotificationState } from './reducers/notification.reducer';
+import { SubscriptionReducer, SubscriptionsState } from './reducers/subscription.reducer';
 import { UserReducer, UsersState } from './reducers/user.reducer';
 export interface RootState {
   appState: appState,
@@ -14,7 +15,8 @@ export interface RootState {
   customerUser?: CustomerUserState,
   auth: AuthState,
   settings: SettingsState,
-  user: UsersState
+  user: UsersState,
+  subscription: SubscriptionsState
 }
 export const reducers: ActionReducerMap<RootState> = {
   appState: AppReducer,
@@ -23,5 +25,6 @@ export const reducers: ActionReducerMap<RootState> = {
   customerUser: CustomerUserReducer,
   auth: AuthReducer,
   settings: SettingsReducer,
-  user: UserReducer
+  user: UserReducer,
+  subscription: SubscriptionReducer
 };

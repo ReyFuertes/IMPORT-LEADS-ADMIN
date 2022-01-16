@@ -36,7 +36,7 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
   constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditCustomerUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       id: [null],
-      username: [`user${Math.floor(Math.random() * (1000 - 100) + 1000)}@gmail.com`, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+      username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
       password: [generatePassword(), Validators.required],
       roles: [this.userPreSelectedRole, Validators.required],
       accesses: [this.userPreSelectedAccess, Validators.required],

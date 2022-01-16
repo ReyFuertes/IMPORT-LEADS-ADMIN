@@ -1,0 +1,6 @@
+<div *ngIf="form" fxLayout="row" fxLayoutAlign="center center" [formGroup]="form" fxLayout="row" fxLayoutGap="20px">
+  <ng-container *ngFor="let option of options">
+    <p-radioButton [inputId]="option.value" [name]="controlName" [formControlName]="controlName" [value]="option?.value"></p-radioButton>
+    <label [for]="option.value">{{option.label}}</label>
+  </ng-container>
+</div>

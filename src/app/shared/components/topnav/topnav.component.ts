@@ -21,13 +21,15 @@ export class TopNavComponent extends GenericDestroyPageComponent {
   public imgPath: string = environment.imgPath;
   public user: IUser;
   public menus: ISimpleItem[] = [
-    // {
-    //   label: 'Dashboard',
-    //   value: '/dashboard'
-    // },
     {
       label: 'Customers',
       value: '/customer'
+    }, {
+      label: 'Billing',
+      value: '/billing'
+    }, {
+      label: 'Invoice',
+      value: '/invoice'
     }];
 
   constructor(private router: Router, private store: Store<RootState>) {

@@ -12,11 +12,11 @@ import { RootState } from 'src/app/store/root.reducer';
 import { getUsersSelector } from 'src/app/store/selectors/user.selector';
 
 @Component({
-  selector: 'il-settings-table',
-  templateUrl: './settings-table.component.html',
-  styleUrls: ['./settings-table.component.scss']
+  selector: 'il-users-table',
+  templateUrl: './users-table.component.html',
+  styleUrls: ['./users-table.component.scss']
 })
-export class SettingsTableComponent implements OnInit {
+export class UsersTableComponent implements OnInit {
   public $users: Observable<IUser[]>;
   public items: MenuItem[];
   public selectedItem: IUser;

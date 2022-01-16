@@ -1,7 +1,7 @@
 @import "src/styleguide/shared";
 .content {
   width: 100%;
-  padding: 15px 20px 0 20px;
+  padding: 0.5rem 1.5rem 1.5rem;
   > div {
     flex-direction: row;
     display: flex;
@@ -25,6 +25,9 @@
     }
   }
 }
+.actions {
+  height: 50px;
+}
 .pi-times {
   color: $color-black-3;
   cursor: pointer;
@@ -38,26 +41,13 @@ label {
   color: $color-black-2;
 }
 .footer {
-  margin: 20px;
   width: 100%;
   border-top: thin $color-gray-3 solid;
-  padding-top: 20px;
+  padding-top: 15px;
+  padding-left: 20px;
 }
 :host ::ng-deep {
-  button.danger {
-    min-width: 40px;
-    margin-top: 18px;
-  }
-  button.primary {
-    min-width: 40px;
-  }
-  .p-dropdown, p-dropdown {
+  il-input, p-inputNumber {
     width: 100%;
-  }
-  .p-multiselect, .p-inputtext {
-    width: 100%;
-  }
-  .mat-form-field-appearance-legacy .mat-form-field-wrapper {
-    padding-bottom: 0;
   }
 }

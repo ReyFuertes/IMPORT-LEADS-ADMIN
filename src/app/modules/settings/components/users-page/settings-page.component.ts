@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./settings-page.component.scss']
 })
 export class SettingsPageComponent implements OnInit {
+  public activeIndex: number = 0;
   constructor() { }
 
   ngOnInit(): void { }

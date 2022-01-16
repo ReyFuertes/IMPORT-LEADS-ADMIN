@@ -21,6 +21,7 @@ import { TokenInterceptor } from './services/http-token-interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './services/auth.guard';
 import { AuthEffect } from './modules/auth/store/auth.effect';
+import { SubscriptionsEffect } from './store/effects/subscription.effects';
 
 const materialModules = [
   MatFormFieldModule,
@@ -55,7 +56,7 @@ const services = [
     ...primeNgModules,
     AppRoutingModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([AppEffects, AuthEffect]),
+    EffectsModule.forRoot([AppEffects, AuthEffect, SubscriptionsEffect]),
     AuthModule
   ],
   providers: [

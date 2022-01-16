@@ -47,9 +47,9 @@
             <div>
               <i [pTooltip]="!isApproved(customer?.status) ? 'Delete' : ''" [ngClass]="{'disabled': isApproved(customer?.status)}" (click)="!isApproved(customer?.status) ?onDeleteCustomer(customer?.id): null" tooltipPosition="top" class="pi pi-trash"></i>
             </div>
-            <div>
+            <!-- <div>
               <i pTooltip="Send Email" (click)="onSendEmail(customer)" tooltipPosition="top" class="pi pi-send"></i>
-            </div>
+            </div> -->
           </div>
         </td>
       </tr>

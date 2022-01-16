@@ -41,8 +41,8 @@ export class CustomerTableComponent implements OnInit {
     label: 'Company Name',
     value: 'company_name'
   }, {
-    label: 'Company Address',
-    value: 'company_address'
+    label: 'Subscription',
+    value: 'subscription_name'
   }, {
     label: 'Status',
     value: 'status'
@@ -71,16 +71,15 @@ export class CustomerTableComponent implements OnInit {
 
   public onInvite(): void {
     const dialogRef = this.dialog.open(InviteCustomerDialogComponent, {
-      width: '410px',
+      width: '500px',
       data: { action: 0 }
     });
     dialogRef.afterClosed()
-      .subscribe((emails: string[]) => {
-        if (emails?.length > 0) {
-          const payload = emails?.map(email => {
-            return { username: email }
-          })
-          this.store.dispatch(inviteAction({ payload }));
+      .subscribe((customers: ICustomer[]) => {
+        if (customers?.length > 0) {
+          this.store.dispatch(inviteAction({ payload: customers?.map(value => {
+            return { username: value.email, subscription: value?.subscription }
+          }) }));
         }
       });
   }
@@ -182,7 +181,7 @@ export class CustomerTableComponent implements OnInit {
   public onAddCustomer(): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '690px',
-      height: '545px',
+      height: '590px',
       data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
@@ -195,7 +194,7 @@ export class CustomerTableComponent implements OnInit {
   public onEditCustomer(id: string): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '690px',
-      height: '545px',
+      height: '590px',
       data: { action: 1, formState: FormStateType.Edit, id }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {

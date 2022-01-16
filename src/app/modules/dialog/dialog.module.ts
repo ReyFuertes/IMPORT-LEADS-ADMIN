@@ -15,6 +15,9 @@ import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { AddEditCustomerUserDialogComponent } from './components/add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
 import { AddUserDialogComponent } from './components/add-user-dialog/add-user-dialog.component';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { AddSubscriptionDialogComponent } from './components/add-subscription-dialog/add-subscription-dialog.component';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 const dialogComponents = [
   AddCustomerDialogComponent,
@@ -22,6 +25,7 @@ const dialogComponents = [
   InviteCustomerDialogComponent,
   AddEditCustomerUserDialogComponent,
   AddUserDialogComponent,
+  AddSubscriptionDialogComponent
 ];
 
 const materialModules = [
@@ -34,7 +38,9 @@ const primeNgModules = [
   ButtonModule,
   TabViewModule,
   TableModule,
-  TooltipModule
+  TooltipModule,
+  RadioButtonModule,
+  InputNumberModule
 ];
 
 @NgModule({

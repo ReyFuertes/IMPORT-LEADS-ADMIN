@@ -1,5 +1,5 @@
 import { ISimpleItem } from "../shared/generics/generic.model";
-import { CustomerStatusType, IUserAccess, IUserRole } from "./generic.model";
+import { CustomerStatusType, ISubscription, IUserAccess, IUserRole } from "./generic.model";
 export interface CustomerUpdateStatus {
   customer: ICustomer;
   status: CustomerStatusType;
@@ -111,6 +111,7 @@ export interface ICustomerResponse {
   profile?: IProfile
   status?: number;
   created_at?: string;
+  subscription?: ISubscription | any
 }
 export interface ICustomer {
   id?: string;
@@ -118,6 +119,7 @@ export interface ICustomer {
   lastname?: string;
   password?: string;
   username?: string;
+  email?: string;
   image?: string;
   customer_role?: ICustomerRole[];
   customer_access?: ICustomerAccess[];
@@ -126,6 +128,7 @@ export interface ICustomer {
   profile?: IProfile;
   name?: string;
   is_change_password?: number;
+  subscription?: string;
 }
 export interface IAccess extends ISimpleItem {
   id?: string;

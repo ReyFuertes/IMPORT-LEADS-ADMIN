@@ -60,6 +60,12 @@
     @include btn;
     background-color: $color-red;
     color: $color-white;
+    border: thin solid $color-red;
+    &:hover {
+      background-color: $color-red;
+      opacity: 0.9;
+      border: thin solid $color-red;
+    }
   }
   &.large {
     min-width: 176px;
@@ -72,6 +78,12 @@
     height: 35px !important;
     font-size: 14px;
   }
+  &.semi-medium {
+    width: fit-content;
+    height: 30px !important;
+    font-size: 14px;
+    min-width: 110px;
+  }
   &.small {
     min-width: 80px;
     width: fit-content;
@@ -81,6 +93,13 @@
   &.purple {
     @include btn;
     background-color: $color-purple !important;
+    color: $color-white !important;
+    width: fit-content;
+    border: none !important;
+  }
+  &.success {
+    @include btn;
+    background-color: $color-green !important;
     color: $color-white !important;
     width: fit-content;
     border: none !important;

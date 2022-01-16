@@ -1,0 +1,36 @@
+<div class="il-dialog" fxLayout="column" fxLayoutAlign="center center">
+  <div class="header" fxLayoutAlign="end end" fxLayout="row">
+    <div fxLayout="row">
+      <div fxFlex fxFlexOffset="20px">
+        <h4>{{ actionText[data?.action] }} {{ 'SUBSCRIPTION' }}</h4>
+      </div>
+      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
+    </div>
+  </div>
+  <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+    <div fxLayout="column" fxLayoutGap="10px">
+      <div fxLayout="column" fxLayoutAlign="start start">
+        <label>{{ 'Name' }}</label>
+        <il-input [form]="form" placeholder="Name" controlName="name"></il-input>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div [formGroup]="form" fxFlex="50" fxLayout="column" fxLayoutAlign="start start">
+          <label>{{ 'Max Users' }}</label>
+          <p-inputNumber mode="decimal" [minFractionDigits]="0" formControlName="max_users" [maxlength]="2" placeholder="Max Users"></p-inputNumber>
+        </div>
+        <div fxFlex="50" fxLayout="column" fxLayoutAlign="start start">
+          <label>{{ 'Rates' }}</label>
+          <il-input [form]="form" placeholder="Rates" controlName="rate"></il-input>
+        </div>
+      </div>
+      <div>
+        <label>{{ 'Description' }}</label>
+        <il-input [form]="form" placeholder="Description" controlName="description"></il-input>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
+    <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>
+    <button [disabled]="!form.valid" (click)="onSave()" pButton type="button" class="primary medium" [label]="actionText[data?.action]"></button>
+  </div>
+</div>

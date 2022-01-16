@@ -33,6 +33,8 @@ import { TopNavComponent } from './components/topnav/topnav.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { InputEmailComponent } from './components/input-email/input-email.component';
+import { OptionSelectComponent } from './components/option-select/option-select.component';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 const materialModules = [
   MatFormFieldModule,
@@ -56,7 +58,8 @@ const primeNgModules = [
   InputSwitchModule,
   MultiSelectModule,
   InputTextModule,
-  PasswordModule
+  PasswordModule,
+  RadioButtonModule
 ];
 
 const sharedComponents = [
@@ -65,7 +68,8 @@ const sharedComponents = [
   DropdownMultiSelectComponent,
   InputPasswordComponent,
   TopNavComponent,
-  InputEmailComponent
+  InputEmailComponent,
+  OptionSelectComponent
 ];
 
 const directives = [

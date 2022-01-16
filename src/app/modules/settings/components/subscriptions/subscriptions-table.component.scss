@@ -1,8 +1,6 @@
 
 @import "src/styleguide/shared";
 .card {
-  margin-top: 85px;
-  padding: 5px 30px;
   div {
     width: 100%;
   }
@@ -10,6 +8,9 @@
 :host ::ng-deep {
   .p-datatable .p-datatable-tbody > tr > td,
   .p-datatable .p-datatable-thead > tr > th {
+    &:nth-child(1), &:nth-child(2), &:nth-child(3) {
+      min-width: 120px;
+    }
     &:last-child {
       width: 10px;
     }
