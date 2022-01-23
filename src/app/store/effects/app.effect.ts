@@ -20,7 +20,11 @@ export class AppEffects {
     switchMap(() => of(this.storageSrv.get('at'))
       .pipe(
         map(() => {
-          const response = JSON.parse(this.storageSrv.get('at')) || null;
+          const at = this.storageSrv.get('at');
+          let response: any;
+          if(at) {
+            response = JSON.parse(at) || null;
+          }
           const isUserLoggedIn = !!response?.user;
           this.isInloginpage(isUserLoggedIn);
 

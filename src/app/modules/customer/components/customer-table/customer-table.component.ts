@@ -9,13 +9,14 @@ import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/c
 import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, deleteCustomerAction, inviteAction, loadCustomersAction, updateCustomerAction, updateCustomerStatusAction } from '../../store/actions/customer.actions';
+import { addCustomerAction, deleteCustomerAction, inviteAction, loadCustomersAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerStatusAction } from '../../store/actions/customer.actions';
 import { getCustomersSelector } from '../../store/selectors/customer.selector';
 import { debounceTime } from 'rxjs/operators';
 import { notificationAction } from 'src/app/store/actions/notification.action';
 import { LoaderService } from 'src/app/services/http-token-interceptor';
 import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
 import { ICustomerUser } from 'src/app/models/customer.model';
+import { cleanUpAction } from 'src/app/modules/settings/store/settings.action';
 
 @Component({
   selector: 'il-customer-table',
@@ -47,7 +48,7 @@ export class CustomerTableComponent implements OnInit {
     label: 'Status',
     value: 'status'
   }];
-  public CustomerStatusType = CustomerStatusType;
+  public customerStatusType = CustomerStatusType;
   public $searchKeyword = new BehaviorSubject(null);
   public take: number = 10;
   public skip: number = 0;
@@ -77,15 +78,25 @@ export class CustomerTableComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe((customers: ICustomer[]) => {
         if (customers?.length > 0) {
-          this.store.dispatch(inviteAction({ payload: customers?.map(value => {
-            return { username: value.email, subscription: value?.subscription }
-          }) }));
+          this.store.dispatch(inviteAction({
+            payload: customers?.map(value => {
+              return { username: value.email, subscription: value?.subscription }
+            })
+          }));
         }
       });
   }
 
   public isApproved(status: number): boolean {
     return status === CustomerStatusType.Approved;
+  }
+
+  public isReady(status: number): boolean {
+    return status === CustomerStatusType.Ready;
+  }
+
+  public isPending(status: number): boolean {
+    return status === CustomerStatusType.Pending;
   }
 
   public onApprove(customer: any): void {
@@ -98,15 +109,23 @@ export class CustomerTableComponent implements OnInit {
         if (result) {
           const { api_url, customer_users, profile } = customer;
           if (api_url) {
-            const bulkPayload = {
+            this.store.dispatch(updateCustomerStatusAction({
               payload: { customer, status: CustomerStatusType.Approved },
               customer: {
                 api_url,
                 user: {
-                  ...customer,
+                  id: customer?.id,
+                  name: customer?.name,
+                  username: customer?.username,
+                  password: customer?.password,
+                  status: customer?.status,
+                  change_password_token: customer?.change_password_token,
                   is_change_password: ChangePasswordType.ChangePassword,
                 },
-                user_profile: profile
+                user_profile: {
+                  ...profile,
+                  email: customer?.username
+                }
               },
               access: this.access?.map((access: IAccess) => {
                 return {
@@ -120,22 +139,22 @@ export class CustomerTableComponent implements OnInit {
               role: this.role?.map(r => {
                 return { id: r?.value, role_name: r?.label, level: r?.level }
               }),
-              customer_users: customer_users?.map((cu: ICustomerUser) => {
+              customer_users: customer_users?.map((_customer_user: ICustomerUser) => {
                 return {
-                  ...cu,
+                  ..._customer_user,
                   user_profile: {
-                    ...cu?.user_profile,
+                    ..._customer_user?.user_profile,
                     website_url: customer?.website_url,
                     api_url: customer?.api_url,
                     database_name: customer?.database_name,
-                    email: cu?.username,
+                    email: _customer_user?.username,
                     company_name: customer?.company_name,
-                    company_address: customer?.company_address
-                  }
+                    company_address: customer?.company_address,
+                    language: 'en'
+                  } 
                 }
               })
-            };
-            this.store.dispatch(updateCustomerStatusAction(bulkPayload));
+            }));
           } else {
             this.store.dispatch(notificationAction({
               notification: { error: true, message: 'Failed to approve customer, api url not defined.' }
@@ -154,14 +173,22 @@ export class CustomerTableComponent implements OnInit {
     }
   }
 
-  public onDeleteCustomer(id: string): void {
+  public onDeleteCustomer(customer: ICustomer): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '410px', data: { action: 0 }
     });
     dialogRef.afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          this.store.dispatch(deleteCustomerAction({ id }));
+          this.store.dispatch(deleteCustomerAction({ id: customer?.id }));
+          if (customer?.profile?.api_url) {
+            this.store.dispatch(cleanUpAction({
+              url: customer?.profile?.api_url,
+              payload: {
+                customer: { username: customer?.username }
+              }
+            }));
+          }
         }
       });
   }
@@ -191,15 +218,19 @@ export class CustomerTableComponent implements OnInit {
     });
   }
 
-  public onEditCustomer(id: string): void {
+  public onEditCustomer(customer: ICustomer): void {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '690px',
       height: '590px',
-      data: { action: 1, formState: FormStateType.Edit, id }
+      data: { action: 1, formState: FormStateType.Edit, id: customer?.id }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
       if (payload) {
-        this.store.dispatch(updateCustomerAction({ payload }));
+        if (customer?.status === this.customerStatusType.Approved) {
+          this.store.dispatch(updateCustomerDetailsAction({ payload }));
+        } else {
+          this.store.dispatch(updateCustomerAction({ payload }));
+        }
       }
     });
   }

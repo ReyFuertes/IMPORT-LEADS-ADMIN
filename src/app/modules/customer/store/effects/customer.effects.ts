@@ -1,16 +1,32 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, debounceTime, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { AccessService, CustomerService, RolesService } from 'src/app/services/api.service';
 import { ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction } from '../actions/customer.actions';
+import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerDetailsSuccessAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction } from '../actions/customer.actions';
 import { notificationAction } from 'src/app/store/actions/notification.action';
 import { of, zip } from 'rxjs';
 
 @Injectable()
 export class CustomerEffects {
+  updateCustomerDetailsAction$ = createEffect(() => this.actions$.pipe(
+    ofType(updateCustomerDetailsAction),
+    mergeMap(({ payload }) => {
+      return this.customerService.patch(payload).pipe(
+        map((response) => {
+          this.showNofication('Successfully updated customer details!');
+          return updateCustomerDetailsSuccessAction({ response });
+        }),
+        catchError(() => {
+          return of(notificationAction({
+            notification: { error: true, message: 'Failed to add tenant, please contact your site administrator' }
+          }));
+        })
+      )
+    })
+  ));
   inviteAction$ = createEffect(() => this.actions$.pipe(
     ofType(inviteAction),
     switchMap(({ payload }) => {
@@ -28,19 +44,19 @@ export class CustomerEffects {
     ofType(updateCustomerStatusAction),
     mergeMap(({ payload, customer, access, role, customer_users }) => {
       return zip(
-        this.customerService.patch(payload, 'status'),
         this.accessService.post(access, 'migrate', customer?.api_url),
         this.roleService.post(role, 'migrate', customer?.api_url),
         this.customerService.post(customer, 'user', customer?.api_url),
-        this.customerService.post(customer_users, 'multiple', customer?.api_url)
+        this.customerService.post(customer_users, 'multiple', customer?.api_url),
+        this.customerService.patch(payload, 'status')
       ).pipe(
-        map(([response]) => {
+        map(([access, role, customer, customer_users, response]) => {
           this.showNofication('Successfully updated customer status!');
           return updateCustomerStatusSuccessAction({ response });
         }),
         catchError(() => {
           return of(notificationAction({
-            notification: { error: true, message: 'Failed to add tenant.' }
+            notification: { error: true, message: 'Failed to add tenant, please contact your site administrator' }
           }));
         })
       )
@@ -82,6 +98,7 @@ export class CustomerEffects {
     ofType(loadCustomersAction),
     switchMap(({ params }) => {
       return this.customerService.getAll(params).pipe(
+        distinctUntilChanged(),
         map((response: ICustomerResponse[]) => {
           return loadCustomersSuccessAction({ response });
         }),
@@ -99,6 +116,7 @@ export class CustomerEffects {
       return this.customerService.post(payload).pipe(
         map((response: ICustomer) => {
           this.showNofication('Successfully added new customer!');
+          this.store.dispatch(loadCustomersAction({})); //quick fix solution
           return addCustomerSuccessAction({ response });
         })
       )

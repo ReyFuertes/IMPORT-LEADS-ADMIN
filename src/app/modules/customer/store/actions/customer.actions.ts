@@ -24,8 +24,18 @@ export enum CustomerActionTypes {
   migrateRoleAction = '[Customer] migrate role',
   migrateRoleSuccessAction = '[Customer] migrate role (success)',
   inviteAction = '[Customer] invite',
-  inviteSuccessAction = '[Customer] invite (success)'
+  inviteSuccessAction = '[Customer] invite (success)',
+  updateCustomerDetailsAction = '[Customer] update customer details',
+  updateCustomerDetailsSuccessAction = '[Customer] update customer details (success)'
 }
+export const updateCustomerDetailsAction = createAction(
+  CustomerActionTypes.updateCustomerDetailsAction,
+  props<{ payload: ICustomer }>()
+);
+export const updateCustomerDetailsSuccessAction = createAction(
+  CustomerActionTypes.updateCustomerDetailsSuccessAction,
+  props<{ response: ICustomer }>()
+);
 export const inviteAction = createAction(
   CustomerActionTypes.inviteAction,
   props<{ payload: ICustomer[] }>()

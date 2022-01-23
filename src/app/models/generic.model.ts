@@ -19,8 +19,9 @@ export enum FormStateType {
 }
 export enum CustomerStatusType {
   Pending = 0,
-  Approved = 1,
-  Cancelled = 2
+  Ready = 1,
+  Approved = 2,
+  Cancelled = 3
 }
 export interface IRole {
   id?: string;

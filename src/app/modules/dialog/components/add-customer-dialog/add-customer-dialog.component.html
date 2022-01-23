@@ -116,13 +116,13 @@
             <div fxLayout="row" fxLayoutAlign="start center" *ngIf="!subscriberMaxUserReached"><i class="pi pi-info-circle"></i> Your plan is {{subscriber?.name}} with a limit of {{ subscriber?.max_users }} users.</div>
             <div *ngIf="subscriberMaxUserReached" class="notice"><i class="pi pi-times-circle"></i> Max users reached, please upgrade your Subscription.</div>
           </div>
-          <button [disabled]="subscriberMaxUserReached" (click)="onAddCustomerUser()" pButton type="button" class="default semi-medium" label="Add a User"></button>
+          <button [disabled]="subscriberMaxUserReached" [ngClass]="{'disabled': subscriberMaxUserReached}" (click)="onAddCustomerUser()" pButton type="button" class="default semi-medium" label="Add a User"></button>
         </div>
       </p-tabPanel>
     </p-tabView>
   </div>
   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
-    <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CANCEL"></button>
-    <button [disabled]="!form.valid" (click)="onAdd()" pButton type="button" class="purple medium" [label]="actionText[data?.action]"></button>
+    <button (click)="onCancel()" pButton type="button" class="default medium" label="CANCEL"></button>
+    <button [disabled]="!form.valid" (click)="onSave()" pButton type="button" class="purple medium" [label]="actionText[data?.action]"></button>
   </div>
 </div>

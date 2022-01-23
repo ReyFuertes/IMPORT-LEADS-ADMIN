@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "iaad-admin-client": {
+    "iaad-customer-client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/iaad-admin-client",
+            "outputPath": "dist/iaad-customer-client",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -81,10 +81,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "iaad-admin-client:build:production"
+              "browserTarget": "iaad-customer-client:build:production"
             },
             "development": {
-              "browserTarget": "iaad-admin-client:build:development"
+              "browserTarget": "iaad-customer-client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "iaad-admin-client:build"
+            "browserTarget": "iaad-customer-client:build"
           }
         },
         "test": {
@@ -117,5 +117,5 @@
       }
     }
   },
-  "defaultProject": "iaad-admin-client"
+  "defaultProject": "iaad-customer-client"
 }

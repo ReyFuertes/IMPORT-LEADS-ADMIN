@@ -1,6 +1,5 @@
-
 export const environment = {
-  production: false,
+  production: true,
   svgPath: 'assets/svg/',
   imgPath: 'assets/images/',
   apiUrl: 'http://localhost:3500/api/v1/',

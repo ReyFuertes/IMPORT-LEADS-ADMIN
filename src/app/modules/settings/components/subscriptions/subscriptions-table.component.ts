@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { FormStateType, ISubscription } from 'src/app/models/generic.model';
 import { AddSubscriptionDialogComponent } from 'src/app/modules/dialog/components/add-subscription-dialog/add-subscription-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
+import { StorageService } from 'src/app/modules/service/storage.service';
 import { addSubscriptionAction, deleteSubscriptionAction, updateSubscriptionAction } from 'src/app/store/actions/subscription.action';
 import { RootState } from 'src/app/store/root.reducer';
 import { getSubscriptionsSelector } from 'src/app/store/selectors/subscription.selector';
@@ -20,7 +21,7 @@ export class SubscriptionsTableComponent implements OnInit {
   public items: MenuItem[];
   public selectedItem: ISubscription;
 
-  constructor(private store: Store<RootState>, private dialog: MatDialog) {
+  constructor(private storageSrv: StorageService, private store: Store<RootState>, private dialog: MatDialog) {
     this.$subscriptions = this.store.pipe(select(getSubscriptionsSelector));
   }
 

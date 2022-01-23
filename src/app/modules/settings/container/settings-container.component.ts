@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { getSubscriptionsAction } from 'src/app/store/actions/subscription.action';
 import { getUsersAction } from 'src/app/store/actions/user.action';
 import { RootState } from 'src/app/store/root.reducer';
+import { loadCustomersAction } from '../../customer/store/actions/customer.actions';
 
 @Component({
   selector: 'il-settings-container',
@@ -12,6 +13,7 @@ import { RootState } from 'src/app/store/root.reducer';
 export class SettingsContainerComponent implements OnInit {
   constructor(private store: Store<RootState>) {
     this.store.dispatch(getUsersAction());
+    this.store.dispatch(loadCustomersAction({}));
   }
 
   ngOnInit(): void { }

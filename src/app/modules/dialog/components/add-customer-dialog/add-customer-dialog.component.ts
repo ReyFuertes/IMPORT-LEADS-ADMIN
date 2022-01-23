@@ -27,7 +27,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   public form: FormGroup;
   public accessOptions: any[];
   public roleOptions: any[];
-  public actionText: string[] = ['ADD', 'UPDATE', 'REVIEW'];
+  public actionText: string[] = ['SAVE', 'UPDATE', 'REVIEW'];
   public access: IAccess[];
   public roles: ISimpleItem[];
   public languageOptions: ISimpleItem[] = [{
@@ -48,30 +48,28 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     this.form = this.fb.group({
       id: [null],
       email_password: this.fb.group({
-        username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
-        password: [null, Validators.required]
+        username: ['rfuertes.importleads@gmail.com', Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+        password: ['123456', Validators.required]
       }),
       profile: this.fb.group({
         id: [null],
-        firstname: [null, Validators.required],
-        lastname: [null, Validators.required],
-        phone_number: [null, Validators.required],
-        address: [null, Validators.required],
-        company_name: [null, Validators.required],
-        company_address: [null, Validators.required],
+        firstname: ['rey', Validators.required],
+        lastname: ['fuertes', Validators.required],
+        phone_number: ['000000000', Validators.required],
+        address: ['cebu city', Validators.required],
+        company_name: ['cil china', Validators.required],
+        company_address: ['cebu city', Validators.required],
         language: ['en', Validators.required],
-        website_url: [null, Validators.required],
-        api_url: [null, Validators.required],
-        database_name: [null, Validators.required]
+        website_url: ['https://cil-china.azurewebsites.net/', Validators.required],
+        api_url: ['https://cil-china-api.azurewebsites.net/api/v1/', Validators.required],
+        database_name: ['cil-china', Validators.required]
       }),
       users: new FormArray([]),
       subscription: [null, Validators.required]
     });
-
+  
     if (this.isEditMode && this.data?.id) {
       this.store.dispatch(getCustomerByIdAction({ id: this.data?.id }));
-    } else {
-      this.formReset();
     }
 
     this.form.get('subscription').valueChanges.subscribe(subscriberId => {
@@ -106,7 +104,10 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
         this.getCustomerUsersFormValues.push(...customer?.customer_users);
         this.getEmailPasswordForm.get('password').setValidators(null);
+
+        this.checkSubscriptionUsersReached();
       } else {
+        this.getCustomerInformationForm.get('language').patchValue('en');
         this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
       }
       this.getEmailPasswordForm.get('password').updateValueAndValidity();
@@ -121,12 +122,17 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         this.subscriberMaxUserReached = false;
         this.cdRef.detectChanges();
       });
-  }
-
-  public onReview(): void { }
+    }
 
   public getRoles(roles: string[]): IRole[] {
     return this.roles?.filter(role => roles?.includes(role?.value));
+  }
+
+  public checkSubscriptionUsersReached(): void {
+    if (this.getUsersLength >= Number(this.subscriber?.max_users)) {
+      this.subscriberMaxUserReached = true;
+      return;
+    }
   }
 
   public getAccesses(accesses: string[]): IAccess[] {
@@ -151,18 +157,15 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   }
 
   public onAddCustomerUser(): void {
-    if (this.getUsersLength >= Number(this.subscriber?.max_users)) {
-      return;
-    }
+    this.checkSubscriptionUsersReached();
+
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '275px', data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((user: ICustomerUser) => {
       if (user) {
         this.addCustomerUser(user);
-        if (this.getUsersLength >= Number(this.subscriber?.max_users)) {
-          this.subscriberMaxUserReached = true;
-        }
+        this.checkSubscriptionUsersReached();
       }
     });
   }
@@ -213,9 +216,22 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     return this.form.get('profile') as FormGroup;
   }
 
-  public onAdd(): void {
+  public onSave(): void {
     if (this.form.valid) {
       this.dialogRef.close(<ICustomer>this.form.value);
     }
+  }
+
+  public onCancel(): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '410px', data: { action: 3 }
+    });
+    dialogRef.afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this.formReset();
+          this.dialogRef.close(false);
+        }
+      });
   }
 }

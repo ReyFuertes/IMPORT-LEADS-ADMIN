@@ -24,13 +24,15 @@ export class TopNavComponent extends GenericDestroyPageComponent {
     {
       label: 'Customers',
       value: '/customer'
-    }, {
-      label: 'Billing',
-      value: '/billing'
-    }, {
-      label: 'Invoice',
-      value: '/invoice'
-    }];
+    },
+    // {
+    //   label: 'Billing',
+    //   value: '/billing'
+    // }, {
+    //   label: 'Invoice',
+    //   value: '/invoice'
+    // }
+  ];
 
   constructor(private router: Router, private store: Store<RootState>) {
     super();

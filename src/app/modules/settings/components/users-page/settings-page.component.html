@@ -1,10 +1,13 @@
 <div class="settings-page-container">
-  <p-tabView [(activeIndex)]="activeIndex">
+  <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
     <p-tabPanel header="Users">
       <il-users-table></il-users-table>
     </p-tabPanel>
     <p-tabPanel header="Subscriptions">
       <il-subscriptions-table></il-subscriptions-table>
+    </p-tabPanel>
+    <p-tabPanel header="Environments">
+      <il-environment></il-environment>
     </p-tabPanel>
   </p-tabView>
 </div>

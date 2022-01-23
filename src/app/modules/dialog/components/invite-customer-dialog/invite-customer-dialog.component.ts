@@ -63,7 +63,13 @@ export class InviteCustomerDialogComponent extends GenericDestroyPageComponent i
 
   public onInvite(): void {
     if (this.hasCustomers) {
-      this.dialogRef.close(this.formCustomersArray.value);
+      const payload = this.formCustomersArray.value?.map(value => {
+        return {
+          email: value?.email.trim(),
+          subscription: value?.subscription.trim()
+        }
+      });
+      this.dialogRef.close(payload);
     }
   }
 }

@@ -1,12 +1,12 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on, Action } from "@ngrx/store";
 import { ISettings } from "src/app/models/generic.model";
+import { cleanUpSuccessAction } from "./settings.action";
 
 export interface SettingsState extends EntityState<ISettings> {
 }
 export const adapter: EntityAdapter<ISettings> = createEntityAdapter<ISettings>({});
 export const initialState: SettingsState = adapter.getInitialState({
-
 });
 const settingsReducer = createReducer(
   initialState,

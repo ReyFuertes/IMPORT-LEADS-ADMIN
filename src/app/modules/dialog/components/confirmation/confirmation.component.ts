@@ -19,6 +19,12 @@ export class ConfirmationDialogComponent {
   }, {
     label: 'SEND EMAIL',
     message: 'Do you want to send onboarded email?'
+  }, {
+    label: 'OK',
+    message: 'Do you want to cancel?'
+  }, {
+    label: 'Reset',
+    message: 'Do you want to reset environment data?'
   }];
 
   constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {

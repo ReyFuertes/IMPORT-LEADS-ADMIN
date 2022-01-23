@@ -27,15 +27,21 @@ export interface IProfile {
   position?: string;
   image?: string;
   created_at?: string;
+  api_url?: string;
+  website_url?: string;
+  database_name?: string;
 }
 export interface ICustomerUser {
   id?: string;
+  name?: string;
   username?: string;
   password?: string;
   salt?: string;
   status?: number;
   is_master_admin?: boolean;
   created_at?: string;
+  change_password_token?: string;
+  is_change_password?: number;
   user_profile?: IProfile;
   user_access?: ICustomerUserAccess[];
   user_role?: ICustomerUserRole[];
@@ -59,42 +65,8 @@ export interface ICustomerPayload {
   profile?: ICustomer;
   email_password?: { username: string, password: string };
   api_url?: string;
-  user?: {
-    id?: number;
-    name?: string;
-    firstname?: string;
-    lastname?: string;
-    position?: string;
-    role?: IUserRole;
-    company?: string;
-    phone?: string;
-    image?: string;
-    access?: IUserAccess[];
-    is_change_password?: number;
-    username?: string;
-  },
-  user_profile?: {
-    id?: string;
-    firstname?: string;
-    lastname?: string;
-    phone?: string;
-    email?: string;
-    linkedin?: string;
-    facebook?: string;
-    twitter?: string;
-    wechatid?: string;
-    qqid?: string;
-    company_name?: string;
-    company_linkedin?: string;
-    company_address?: string;
-    self_intro?: string;
-    position?: string;
-    image?: string;
-    language?: string;
-    api_url?: string;
-    website_url?: string;
-    database_name?: string;
-  }
+  user: ICustomerUser,
+  user_profile?: IProfile
 }
 export interface ICustomerUserResponse {
   accesses?: string[]

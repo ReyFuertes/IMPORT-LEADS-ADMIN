@@ -30,8 +30,8 @@ export class LoginComponent extends GenericDestroyPageComponent implements OnIni
   constructor(private router: Router, private store: Store<RootState>, private fb: FormBuilder) {
     super();
     this.form = this.fb.group({
-      username: ['b.boterkooper@chinaimportleads.com', Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
-      password: ['p@55w0rd', Validators.required]
+      username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+      password: [null, Validators.required]
     });
 
     this.store.pipe(select(getLoginErrorSelector))

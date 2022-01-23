@@ -43,11 +43,12 @@ export const getCustomerAccessSelector = createSelector(
       }) || null;
 
       return {
-        label: a.access_name,
-        value: String(a.id),
-        parent: a.parent,
+        label: a?.access_name,
+        value: String(a?.id),
+        parent: a?.parent,
         children,
-        access_route: a.access_route
+        access_route: a?.access_route,
+        position: a?.position
       }
     }).sort((a, b) => sortByDesc(a, b, 'position'))
   }

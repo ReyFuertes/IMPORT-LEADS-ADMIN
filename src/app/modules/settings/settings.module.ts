@@ -23,6 +23,8 @@ import { MenuModule } from 'primeng/menu';
 import { TabViewModule } from 'primeng/tabview';
 import { SubscriptionsTableComponent } from './components/subscriptions/subscriptions-table.component';
 import { SubscriptionsEffect } from 'src/app/store/effects/subscription.effects';
+import { EnvironmentComponent } from './components/environment/environment.component';
+import { CustomerEffects } from '../customer/store/effects/customer.effects';
 
 const primengModules = [
   InputTextModule,
@@ -44,6 +46,9 @@ const routes: Routes = [{
   children: [{
     path: '',
     component: SettingsPageComponent
+  }, {
+    path: 'environment',
+    component: EnvironmentComponent
   }]
 }];
 
@@ -52,7 +57,8 @@ const routes: Routes = [{
     SettingsContainerComponent,
     SettingsPageComponent,
     UsersTableComponent,
-    SubscriptionsTableComponent
+    SubscriptionsTableComponent,
+    EnvironmentComponent
   ],
   imports: [
     CommonModule,
@@ -65,7 +71,7 @@ const routes: Routes = [{
     ...materialModules,
     RouterModule.forChild(routes),
     StoreModule.forFeature('settings', SettingsReducer),
-    EffectsModule.forFeature([SettingsEffect, UsersEffect, SubscriptionsEffect]),
+    EffectsModule.forFeature([SettingsEffect, UsersEffect, SubscriptionsEffect, CustomerEffects]),
   ],
   exports: [],
   providers: [],

@@ -56,11 +56,9 @@ export abstract class BaseService<T> {
       { headers: this.commonHeaders() });
   }
 
-  public patch(object: T | any, addtnlParam?: string): Observable<T | any> {
-    return this.http.patch<T>(`${this.baseUrl}${this.entity}${this.fmtParam(addtnlParam)}`,
-      this.removeNullProps(object),
-      { headers: this.commonHeaders() }
-    );
+  public patch(object: T | any, addtnlParam?: string, overrideUrl?: string): Observable<T | any> {
+    const url: string = `${overrideUrl ?? this.baseUrl}${this.entity}${this.fmtParam(addtnlParam)}`;
+    return this.http.patch<any>(url, this.removeNullProps(object), { headers: this.commonHeaders() });
   }
 
   private fmtParam(param?: string): string {

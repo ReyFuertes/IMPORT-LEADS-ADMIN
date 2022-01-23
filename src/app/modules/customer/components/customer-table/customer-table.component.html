@@ -34,18 +34,21 @@
         <td *ngFor="let header of columnHeaders; let i = index">
           <span *ngIf="i === 0">{{customer[header?.value] | date: 'dd/MM/yyyy' }}</span>
           <span *ngIf="i !== 0 && i !== 6">{{ customer[header?.value] ? customer[header?.value]: '-' | titlecase }}</span>
-          <span class="status" [ngClass]="{'approved': customer?.status === 1}" *ngIf="i === 6">{{ CustomerStatusType[customer?.status] }}</span>
+          <span class="status" [ngClass]="{'pending': isPending(customer?.status)}" *ngIf="i === 6 && isPending(customer?.status)">{{ customerStatusType[customer?.status] }}</span>
+          <span class="status" [ngClass]="{'ready': isReady(customer?.status)}" *ngIf="i === 6 && isReady(customer?.status)">{{ customerStatusType[customer?.status] }}</span>
+          <span class="status" [ngClass]="{'approved': isApproved(customer?.status)}" *ngIf="i === 6 && isApproved(customer?.status)">{{ customerStatusType[customer?.status] }}</span>
         </td>
         <td>
           <div class="actions" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
             <div>
-              <i [pTooltip]="!isApproved(customer?.status) ? 'Approve' : ''" [ngClass]="{'disabled': isApproved(customer?.status)}" (click)="!isApproved(customer?.status) ? onApprove(customer): null" tooltipPosition="top" class="pi pi-check"></i>
+              <i *ngIf="isReady(customer?.status)" [pTooltip]="isReady(customer?.status) ? 'Approve' : ''" [ngClass]="{'disabled': !isReady(customer?.status)}" (click)="isReady(customer?.status) ? onApprove(customer): null" tooltipPosition="top" class="pi pi-check"></i>
             </div>
             <div>
-              <i pTooltip="Edit" (click)="onEditCustomer(customer?.id)" tooltipPosition="top" class="pi pi-pencil"></i>
+              <i pTooltip="Edit" (click)="onEditCustomer(customer)" tooltipPosition="top" class="pi pi-pencil"></i>
             </div>
             <div>
-              <i [pTooltip]="!isApproved(customer?.status) ? 'Delete' : ''" [ngClass]="{'disabled': isApproved(customer?.status)}" (click)="!isApproved(customer?.status) ?onDeleteCustomer(customer?.id): null" tooltipPosition="top" class="pi pi-trash"></i>
+              <i [pTooltip]="!isApproved(customer?.status) ? 'Delete' : ''" [ngClass]="{'disabled': isApproved(customer?.status)}" (click)="!isApproved(customer?.status) ?onDeleteCustomer(customer): null" tooltipPosition="top"
+                class="pi pi-trash"></i>
             </div>
             <!-- <div>
               <i pTooltip="Send Email" (click)="onSendEmail(customer)" tooltipPosition="top" class="pi pi-send"></i>
