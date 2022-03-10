@@ -109,7 +109,7 @@ export class CustomerTableComponent implements OnInit {
         if (result) {
           const { api_url, customer_users, profile } = customer;
           if (api_url) {
-            this.store.dispatch(updateCustomerStatusAction({
+            const approvePayload = {
               payload: { customer, status: CustomerStatusType.Approved },
               customer: {
                 api_url,
@@ -122,10 +122,7 @@ export class CustomerTableComponent implements OnInit {
                   change_password_token: customer?.change_password_token,
                   is_change_password: ChangePasswordType.ChangePassword,
                 },
-                user_profile: {
-                  ...profile,
-                  email: customer?.username
-                }
+                user_profile: profile
               },
               access: this.access?.map((access: IAccess) => {
                 return {
@@ -154,7 +151,8 @@ export class CustomerTableComponent implements OnInit {
                   } 
                 }
               })
-            }));
+            }
+            this.store.dispatch(updateCustomerStatusAction(approvePayload));
           } else {
             this.store.dispatch(notificationAction({
               notification: { error: true, message: 'Failed to approve customer, api url not defined.' }
@@ -222,7 +220,7 @@ export class CustomerTableComponent implements OnInit {
     const dialogRef = this.dialog.open(AddCustomerDialogComponent, {
       width: '690px',
       height: '590px',
-      data: { action: 1, formState: FormStateType.Edit, id: customer?.id }
+      data: { action: 1, formState: FormStateType.Edit, id: customer?.id, userStatus: customer?.status }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
       if (payload) {

@@ -45,6 +45,8 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
 
     if (this.data?.formState === FormStateType.Edit && this.data?.id) {
       this.store.dispatch(getCustomerUserByIdAction({ id: this.data?.id }));
+    } else if(this.data?.formState === FormStateType.Edit && this.data?.id === null) {
+      this.form.patchValue(this.data?.selectedCustomerUser, { emitEvent: false });
     };
   }
 

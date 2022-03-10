@@ -26,8 +26,18 @@ export enum CustomerActionTypes {
   inviteAction = '[Customer] invite',
   inviteSuccessAction = '[Customer] invite (success)',
   updateCustomerDetailsAction = '[Customer] update customer details',
-  updateCustomerDetailsSuccessAction = '[Customer] update customer details (success)'
+  updateCustomerDetailsSuccessAction = '[Customer] update customer details (success)',
+  createCustomerUsersAction = '[Customer] update customer users details',
+  createCustomerUsersSuccessAction = '[Customer] update customer users details (success)'
 }
+export const createCustomerUsersAction = createAction(
+  CustomerActionTypes.createCustomerUsersAction,
+  props<{ payload: ICustomerUser[], api_url: string }>()
+);
+export const createCustomerUsersSuccessAction = createAction(
+  CustomerActionTypes.createCustomerUsersSuccessAction,
+  props<{ response: ICustomerUser[] }>()
+);
 export const updateCustomerDetailsAction = createAction(
   CustomerActionTypes.updateCustomerDetailsAction,
   props<{ payload: ICustomer }>()

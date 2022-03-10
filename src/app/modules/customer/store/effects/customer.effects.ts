@@ -1,13 +1,13 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, debounceTime, distinctUntilChanged, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { AccessService, CustomerService, RolesService } from 'src/app/services/api.service';
 import { ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerDetailsSuccessAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction } from '../actions/customer.actions';
+import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerDetailsSuccessAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction, createCustomerUsersAction, createCustomerUsersSuccessAction } from '../actions/customer.actions';
 import { notificationAction } from 'src/app/store/actions/notification.action';
-import { of, zip } from 'rxjs';
+import { combineLatest, of, zip } from 'rxjs';
 
 @Injectable()
 export class CustomerEffects {
@@ -40,19 +40,31 @@ export class CustomerEffects {
       )
     })
   ));
+  createCustomerUsersAction$ = createEffect(() => this.actions$.pipe(
+    ofType(createCustomerUsersAction),
+    switchMap(({ payload, api_url }) => {
+      return this.customerService.post(payload, 'multiple', api_url).pipe(
+        map((response: ICustomer[]) => {
+          return createCustomerUsersSuccessAction({ response });
+        })
+      )
+    })
+  ));
   updateCustomerStatusAction$ = createEffect(() => this.actions$.pipe(
     ofType(updateCustomerStatusAction),
-    mergeMap(({ payload, customer, access, role, customer_users }) => {
-      return zip(
+    switchMap(({ payload, customer, access, role, customer_users }) => {
+      return combineLatest([
         this.accessService.post(access, 'migrate', customer?.api_url),
         this.roleService.post(role, 'migrate', customer?.api_url),
         this.customerService.post(customer, 'user', customer?.api_url),
-        this.customerService.post(customer_users, 'multiple', customer?.api_url),
         this.customerService.patch(payload, 'status')
-      ).pipe(
-        map(([access, role, customer, customer_users, response]) => {
+      ]).pipe(
+        map(([access, role, customer, response]) => {
           this.showNofication('Successfully updated customer status!');
           return updateCustomerStatusSuccessAction({ response });
+        }),
+        finalize(() => {
+          this.store.dispatch(createCustomerUsersAction({ payload: customer_users, api_url: customer?.api_url }))
         }),
         catchError(() => {
           return of(notificationAction({

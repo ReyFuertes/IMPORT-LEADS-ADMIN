@@ -44,7 +44,8 @@
               <i *ngIf="isReady(customer?.status)" [pTooltip]="isReady(customer?.status) ? 'Approve' : ''" [ngClass]="{'disabled': !isReady(customer?.status)}" (click)="isReady(customer?.status) ? onApprove(customer): null" tooltipPosition="top" class="pi pi-check"></i>
             </div>
             <div>
-              <i pTooltip="Edit" (click)="onEditCustomer(customer)" tooltipPosition="top" class="pi pi-pencil"></i>
+              <i *ngIf="isApproved(customer?.status)" pTooltip="View" (click)="onEditCustomer(customer)" tooltipPosition="top" class="pi pi-eye"></i>
+              <i *ngIf="!isApproved(customer?.status)" pTooltip="Edit" (click)="onEditCustomer(customer)" tooltipPosition="top" class="pi pi-pencil"></i>
             </div>
             <div>
               <i [pTooltip]="!isApproved(customer?.status) ? 'Delete' : ''" [ngClass]="{'disabled': isApproved(customer?.status)}" (click)="!isApproved(customer?.status) ?onDeleteCustomer(customer): null" tooltipPosition="top"

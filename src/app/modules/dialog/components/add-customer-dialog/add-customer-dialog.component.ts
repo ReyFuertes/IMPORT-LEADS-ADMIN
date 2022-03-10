@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { IAccess, ICustomer, ICustomerUser, ICustomerUserResponse, IRole } from 'src/app/models/customer.model';
-import { FormStateType, ISubscription } from 'src/app/models/generic.model';
+import { CustomerStatusType, FormStateType, ISubscription } from 'src/app/models/generic.model';
 import { clearSelectedCustomerAction, deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
 import { editCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
@@ -41,7 +41,8 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   public customerUsers: any[] = [];
   public selectedCustomer: ICustomer;
   public subscriber: ISubscription;
-  public subscriberMaxUserReached: boolean;
+  public subscriberMaxUserReached: boolean = false;
+  public customerStatus: number;
 
   constructor(private cdRef: ChangeDetectorRef, private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super();
@@ -67,17 +68,27 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       users: new FormArray([]),
       subscription: [null, Validators.required]
     });
-  
+
     if (this.isEditMode && this.data?.id) {
       this.store.dispatch(getCustomerByIdAction({ id: this.data?.id }));
+      this.customerStatus = this.data?.userStatus;
     }
 
     this.form.get('subscription').valueChanges.subscribe(subscriberId => {
       if (subscriberId) {
         this.store.pipe(select(getSubscriptionByIdSelector(subscriberId)))
-          .subscribe(subscriber => this.subscriber = subscriber)
+          .subscribe(subscriber => {
+            this.subscriber = subscriber;
+            this.form.get('users').patchValue([]);
+            this.subscriberMaxUserReached = false;
+          });
+        this.checkSubscriptionUsersReached();
       }
     });
+  }
+
+  public get isCustomerApproved(): boolean {
+    return this.customerStatus === CustomerStatusType.Approved;
   }
 
   public get isEditMode(): boolean {
@@ -122,7 +133,13 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         this.subscriberMaxUserReached = false;
         this.cdRef.detectChanges();
       });
+
+    if (this.isCustomerApproved) {
+      this.form.get('email_password').disable();
+      this.form.get('profile').disable();
+      this.form.get('subscription').disable();
     }
+  }
 
   public getRoles(roles: string[]): IRole[] {
     return this.roles?.filter(role => roles?.includes(role?.value));
@@ -131,7 +148,8 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   public checkSubscriptionUsersReached(): void {
     if (this.getUsersLength >= Number(this.subscriber?.max_users)) {
       this.subscriberMaxUserReached = true;
-      return;
+    } else {
+      this.subscriberMaxUserReached = false;
     }
   }
 
@@ -170,15 +188,17 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     });
   }
 
-  public onEditCustomerUser(id: string): void {
+  public onEditCustomerUser(customerUser: ICustomerUser): void {
+    const selectedCustomerUser = this.getCustomerUsersFormValues.find(value => value.username === customerUser?.username);
+
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '275px',
-      data: { action: 1, formState: FormStateType.Edit, id }
+      data: { action: 1, formState: FormStateType.Edit, id: customerUser?.id, selectedCustomerUser: selectedCustomerUser }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerUserResponse) => {
       if (payload) {
-        const itemToRemove = this.getCustomerUsersFormValues.find(value => value.id === id);
-        _.remove(this.getCustomerUsersFormValues, { id: itemToRemove.id });
+        const itemToRemove = this.getCustomerUsersFormValues.find(value => value.username === customerUser?.username);
+        _.remove(this.getCustomerUsersFormValues, { username: itemToRemove.username });
         this.getCustomerUsersFormValues.unshift(payload);
       }
     });
@@ -216,22 +236,31 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     return this.form.get('profile') as FormGroup;
   }
 
+  public get isFormValid(): boolean {
+    return this.form.valid && this.form.get('users')?.value?.length > 0;
+  }
+
   public onSave(): void {
-    if (this.form.valid) {
+    if (this.isFormValid) {
       this.dialogRef.close(<ICustomer>this.form.value);
     }
   }
 
   public onCancel(): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '410px', data: { action: 3 }
-    });
-    dialogRef.afterClosed()
-      .subscribe((result: boolean) => {
-        if (result) {
-          this.formReset();
-          this.dialogRef.close(false);
-        }
+    if (this.isCustomerApproved) {
+      this.dialogRef.close(false);
+    } else {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '410px', data: { action: 3 }
       });
+      dialogRef.afterClosed()
+        .subscribe((result: boolean) => {
+          if (result) {
+            this.formReset();
+            this.dialogRef.close(false);
+          }
+        });
+    }
+
   }
 }
