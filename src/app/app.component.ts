@@ -6,11 +6,11 @@ import { environment } from 'src/environments/environment';
 import { LoaderService } from './services/http-token-interceptor';
 import { GenericDestroyPageComponent } from './shared/generics/generic-destroy-page';
 import { loadAllRoleAction, loadAccessAction, initAppAction } from './store/actions/app.action';
-import { removeNotificationAction } from './store/actions/notification.action';
+import { removeFailedNotificationAction, removeSuccessNotificationAction } from './store/actions/notification.action';
 import { getSubscriptionsAction } from './store/actions/subscription.action';
 import { RootState } from './store/root.reducer';
 import { getIsLoggedInSelector } from './store/selectors/app.selector';
-import { getSuccessSelector } from './store/selectors/notification.selector';
+import { getNotificationFailedSelector, getNotificationSuccessSelector } from './store/selectors/notification.selector';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +19,8 @@ import { getSuccessSelector } from './store/selectors/notification.selector';
 })
 export class AppComponent extends GenericDestroyPageComponent implements OnInit {
   public title: string = 'Import Leads Admin';
-  public $notify: Observable<any>;
+  public $notifySuccess: Observable<any>;
+  public $notifyFailed: Observable<any>;
   public isLoggedIn: boolean = false;
   public svgPath: string = environment.svgPath;
   public hideTopNav: boolean = false;
@@ -30,12 +31,17 @@ export class AppComponent extends GenericDestroyPageComponent implements OnInit 
   }
 
   ngOnInit(): void {
-    this.$notify = this.store.pipe(select(getSuccessSelector), delay(300));
-    this.$notify.subscribe(notified => {
+    this.$notifySuccess = this.store.pipe(select(getNotificationSuccessSelector), delay(300));
+    this.$notifySuccess.subscribe(notified => {
       if (notified) {
-        setTimeout(() => {
-          this.onClose();
-        }, 3000);
+        setTimeout(() =>  this.onCloseSuccessNotification(), 3000);
+      }
+    });
+
+    this.$notifyFailed = this.store.pipe(select(getNotificationFailedSelector), delay(300));
+    this.$notifyFailed.subscribe(notified => {
+      if (notified) {
+        setTimeout(() =>  this.onCloseFailedNotification(), 3000);
       }
     });
 
@@ -50,9 +56,14 @@ export class AppComponent extends GenericDestroyPageComponent implements OnInit 
         }
       });
   }
+
+  public onCloseFailedNotification(): void {
+    this.store.dispatch(removeFailedNotificationAction());
+    this.loaderSrv.isLoading.next(false);
+  }
   
-  public onClose(): void {
-    this.store.dispatch(removeNotificationAction());
+  public onCloseSuccessNotification(): void {
+    this.store.dispatch(removeSuccessNotificationAction());
     this.loaderSrv.isLoading.next(false);
   }
 }

@@ -12,7 +12,7 @@ import { RootState } from 'src/app/store/root.reducer';
 import { addCustomerAction, deleteCustomerAction, inviteAction, loadCustomersAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerStatusAction } from '../../store/actions/customer.actions';
 import { getCustomersSelector } from '../../store/selectors/customer.selector';
 import { debounceTime } from 'rxjs/operators';
-import { notificationAction } from 'src/app/store/actions/notification.action';
+import { notificationSuccessAction } from 'src/app/store/actions/notification.action';
 import { LoaderService } from 'src/app/services/http-token-interceptor';
 import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
 import { ICustomerUser } from 'src/app/models/customer.model';
@@ -154,7 +154,7 @@ export class CustomerTableComponent implements OnInit {
             }
             this.store.dispatch(updateCustomerStatusAction(approvePayload));
           } else {
-            this.store.dispatch(notificationAction({
+            this.store.dispatch(notificationSuccessAction({
               notification: { error: true, message: 'Failed to approve customer, api url not defined.' }
             }));
           }

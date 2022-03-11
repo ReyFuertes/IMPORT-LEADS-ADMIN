@@ -1,9 +1,12 @@
 import { createSelector } from '@ngrx/store';
-import * as fromNotification from '../reducers/notification.reducer';
 import { RootState } from '../root.reducer';
 
 export const selectedState = (state: RootState) => state.notification;
-export const getSuccessSelector = createSelector(
+export const getNotificationSuccessSelector = createSelector(
   selectedState,
-  fromNotification?.getNotification
+  state => state.notificationSuccess
+);
+export const getNotificationFailedSelector = createSelector(
+  selectedState,
+ state => state.notificationFailed
 );

@@ -6,7 +6,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { GenericDestroyPageComponent } from '../shared/generics/generic-destroy-page';
 import { RootState } from '../store/root.reducer';
-import { notificationAction } from '../store/actions/notification.action';
+import { notificationSuccessAction } from '../store/actions/notification.action';
 import { logoutAction } from '../modules/auth/store/auth.action';
 @Injectable({ providedIn: 'root' })
 export class LoaderService {
@@ -67,7 +67,7 @@ export class TokenInterceptor extends GenericDestroyPageComponent implements Htt
     if (module?.includes('upload')) {
       message = msg;
     }
-    this.store.dispatch(notificationAction({ notification: { error: true, message } }));
+    this.store.dispatch(notificationSuccessAction({ notification: { error: true, message } }));
 
     this.loaderSrv.isLoading.next(true);
   }

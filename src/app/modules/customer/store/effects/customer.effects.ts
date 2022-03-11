@@ -3,24 +3,24 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { AccessService, CustomerService, RolesService } from 'src/app/services/api.service';
-import { ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
+import { CreateStatusType, ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
 import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerDetailsSuccessAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction, createCustomerUsersAction, createCustomerUsersSuccessAction } from '../actions/customer.actions';
-import { notificationAction } from 'src/app/store/actions/notification.action';
+import { notificationFailedAction, notificationSuccessAction } from 'src/app/store/actions/notification.action';
 import { combineLatest, of, zip } from 'rxjs';
 
 @Injectable()
 export class CustomerEffects {
   updateCustomerDetailsAction$ = createEffect(() => this.actions$.pipe(
     ofType(updateCustomerDetailsAction),
-    mergeMap(({ payload }) => {
+    switchMap(({ payload }) => {
       return this.customerService.patch(payload).pipe(
         map((response) => {
-          this.showNofication('Successfully updated customer details!');
+          this.showSuccessNofication('Successfully updated customer details!');
           return updateCustomerDetailsSuccessAction({ response });
         }),
         catchError(() => {
-          return of(notificationAction({
+          return of(notificationSuccessAction({
             notification: { error: true, message: 'Failed to add tenant, please contact your site administrator' }
           }));
         })
@@ -32,11 +32,29 @@ export class CustomerEffects {
     switchMap(({ payload }) => {
       return this.customerService.post(payload, 'invite').pipe(
         map((response: ICustomer[]) => {
-          this.showNofication('Successfully invite new customer!');
+          let failedCustomer: ICustomer[] = [];
+          let invitedCustomer: ICustomer[] = [];
+          response.forEach(customer => {
+            if (customer.create_status === CreateStatusType.Failed) {
+              failedCustomer.push(customer);
+            } else {
+              invitedCustomer.push(customer);
+            }
+          });
+          const failedCustomerNames = failedCustomer.map(value => value.username).join(', ')
+          this.showFailedNofication(`Failed to invite ${failedCustomerNames}!`);
+
+          if (invitedCustomer?.length > 0) {
+            setTimeout(() => {
+              const SuccessCustomerNames = invitedCustomer.map(value => value.username).join(', ')
+              this.showSuccessNofication(`Successfully invite ${SuccessCustomerNames}!`);
+            }, 3000);
+          }
+
           return inviteSuccessAction({ response });
         }),
         debounceTime(1000),
-        tap(() => this.store.dispatch(loadCustomersAction({})))
+        finalize(() => this.store.dispatch(loadCustomersAction({})))
       )
     })
   ));
@@ -60,14 +78,14 @@ export class CustomerEffects {
         this.customerService.patch(payload, 'status')
       ]).pipe(
         map(([access, role, customer, response]) => {
-          this.showNofication('Successfully updated customer status!');
+          this.showSuccessNofication('Successfully updated customer status!');
           return updateCustomerStatusSuccessAction({ response });
         }),
         finalize(() => {
           this.store.dispatch(createCustomerUsersAction({ payload: customer_users, api_url: customer?.api_url }))
         }),
         catchError(() => {
-          return of(notificationAction({
+          return of(notificationSuccessAction({
             notification: { error: true, message: 'Failed to add tenant, please contact your site administrator' }
           }));
         })
@@ -79,7 +97,7 @@ export class CustomerEffects {
     switchMap(({ id }) => {
       return this.customerService.delete(id).pipe(
         map((response: ICustomer) => {
-          this.showNofication('Successfully deleted!');
+          this.showSuccessNofication('Successfully deleted!');
           return deleteCustomerSuccessAction({ response });
         })
       )
@@ -90,7 +108,7 @@ export class CustomerEffects {
     switchMap(({ payload }) => {
       return this.customerService.patch(payload).pipe(
         map((response: ICustomer) => {
-          this.showNofication('Successfully updated customer!');
+          this.showSuccessNofication('Successfully updated customer!');
           return updateCustomerSuccessAction({ response });
         })
       )
@@ -115,7 +133,7 @@ export class CustomerEffects {
           return loadCustomersSuccessAction({ response });
         }),
         catchError(() => {
-          return of(notificationAction({
+          return of(notificationSuccessAction({
             notification: { error: true, message: 'Failed to load customers.' }
           }));
         })
@@ -127,7 +145,7 @@ export class CustomerEffects {
     switchMap(({ payload }) => {
       return this.customerService.post(payload).pipe(
         map((response: ICustomer) => {
-          this.showNofication('Successfully added new customer!');
+          this.showSuccessNofication('Successfully added new customer!');
           this.store.dispatch(loadCustomersAction({})); //quick fix solution
           return addCustomerSuccessAction({ response });
         })
@@ -135,8 +153,12 @@ export class CustomerEffects {
     })
   ));
 
-  private showNofication(message: string): void {
-    this.store.dispatch(notificationAction({ notification: { success: true, message } }));
+  private showSuccessNofication(message: string): void {
+    this.store.dispatch(notificationSuccessAction({ notification: { success: true, message } }));
+  }
+
+  private showFailedNofication(message: string): void {
+    this.store.dispatch(notificationFailedAction({ notification: { success: false, message } }));
   }
 
   constructor(private store: Store<RootState>,

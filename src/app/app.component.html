@@ -1,7 +1,16 @@
-<div *ngIf="($notify | async)" class="notification" [ngClass]="{'error': ($notify | async)?.error, 'success': ($notify | async)?.success }">
+<div *ngIf="($notifySuccess | async)" class="notification" [ngClass]="{'success': ($notifySuccess | async)?.success }">
   <div fxLayout="row" fxLayoutAlign="start center">
-    <p fxFlex>{{($notify | async)?.message}}</p>
-    <div (click)="onClose()" fxFlex="40px">
+    <p fxFlex>{{($notifySuccess | async)?.message}}</p>
+    <div (click)="onCloseSuccessNotification()" fxFlex="40px">
+      <i class="pi pi-times"></i>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="($notifyFailed | async)" class="notification error">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <p fxFlex>{{($notifyFailed | async)?.message}}</p>
+    <div (click)="onCloseFailedNotification()" fxFlex="40px">
       <i class="pi pi-times"></i>
     </div>
   </div>

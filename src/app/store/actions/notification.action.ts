@@ -9,13 +9,22 @@ export interface INotification {
 }
 
 export enum NotificationActionTypes {
-  notificationSuccess = '[Notification] Success',
-  removeNotificationAction = '[Notification] Remove',
+  notificationSuccessAction = '[Notification] Success',
+  notificationFailedAction = '[Notification] Failed',
+  removeSuccessNotificationAction = '[Notification] Remove Success',
+  removeFailedNotificationAction = '[Notification] Remove Failed',
 }
-export const notificationAction = createAction(
-  NotificationActionTypes.notificationSuccess,
+export const notificationFailedAction = createAction(
+  NotificationActionTypes.notificationFailedAction,
   props<{ notification: INotification }>()
 );
-export const removeNotificationAction = createAction(
-  NotificationActionTypes.removeNotificationAction,
+export const notificationSuccessAction = createAction(
+  NotificationActionTypes.notificationSuccessAction,
+  props<{ notification: INotification }>()
+);
+export const removeSuccessNotificationAction = createAction(
+  NotificationActionTypes.removeSuccessNotificationAction,
+);
+export const removeFailedNotificationAction = createAction(
+  NotificationActionTypes.removeFailedNotificationAction,
 );

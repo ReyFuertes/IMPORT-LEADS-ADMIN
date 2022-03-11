@@ -101,6 +101,11 @@ export interface ICustomer {
   name?: string;
   is_change_password?: number;
   subscription?: string;
+  create_status?: CreateStatusType
+}
+export enum CreateStatusType {
+  Failed = 'Failed',
+  Success = 'Success'
 }
 export interface IAccess extends ISimpleItem {
   id?: string;
