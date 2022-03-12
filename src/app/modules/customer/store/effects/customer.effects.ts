@@ -41,16 +41,16 @@ export class CustomerEffects {
               invitedCustomer.push(customer);
             }
           });
-          const failedCustomerNames = failedCustomer.map(value => value.username).join(', ')
-          this.showFailedNofication(`Failed to invite ${failedCustomerNames}!`);
-
           if (invitedCustomer?.length > 0) {
-            setTimeout(() => {
-              const SuccessCustomerNames = invitedCustomer.map(value => value.username).join(', ')
-              this.showSuccessNofication(`Successfully invite ${SuccessCustomerNames}!`);
-            }, 3000);
+            const SuccessCustomerNames = invitedCustomer.map(value => value.username).join(', ')
+            this.showSuccessNofication(`Successfully invite ${SuccessCustomerNames}!`);
           }
-
+          setTimeout(() => {
+            if (failedCustomer?.length > 0) {
+              const failedCustomerNames = failedCustomer.map(value => value.username).join(', ')
+              this.showFailedNofication(`Failed to invite ${failedCustomerNames}!`);
+            }
+          }, 3500);
           return inviteSuccessAction({ response });
         }),
         debounceTime(1000),

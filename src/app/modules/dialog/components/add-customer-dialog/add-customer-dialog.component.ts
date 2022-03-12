@@ -7,7 +7,7 @@ import { CustomerStatusType, FormStateType, ISubscription } from 'src/app/models
 import { clearSelectedCustomerAction, deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
 import { editCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
-import { emailRegex } from 'src/app/shared/util/email';
+import { emailRegex, urlRegex } from 'src/app/shared/util/email';
 import { RootState } from 'src/app/store/root.reducer';
 import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
 import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
@@ -49,21 +49,21 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     this.form = this.fb.group({
       id: [null],
       email_password: this.fb.group({
-        username: ['rfuertes.importleads@gmail.com', Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
-        password: ['123456', Validators.required]
+        username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
+        password: [null, Validators.required]
       }),
       profile: this.fb.group({
         id: [null],
-        firstname: ['rey', Validators.required],
-        lastname: ['fuertes', Validators.required],
-        phone_number: ['000000000', Validators.required],
-        address: ['cebu city', Validators.required],
-        company_name: ['cil china', Validators.required],
-        company_address: ['cebu city', Validators.required],
+        firstname: [null, Validators.required],
+        lastname: [null, Validators.required],
+        phone_number: [null, Validators.required],
+        address: [null, Validators.required],
+        company_name: [null, Validators.required],
+        company_address: [null, Validators.required],
         language: ['en', Validators.required],
-        website_url: ['https://cil-china.azurewebsites.net/', Validators.required],
-        api_url: ['https://cil-china-api.azurewebsites.net/api/v1/', Validators.required],
-        database_name: ['cil-china', Validators.required]
+        website_url: [null, Validators.compose([Validators.required, Validators.pattern(urlRegex.url)])],
+        api_url: [null, Validators.compose([Validators.required, Validators.pattern(urlRegex.url)])],
+        database_name: [null, Validators.required]
       }),
       users: new FormArray([]),
       subscription: [null, Validators.required]
