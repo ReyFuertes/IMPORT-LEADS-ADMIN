@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IAccess, ICustomerUser } from 'src/app/models/customer.model';
@@ -12,6 +12,7 @@ import { emailRegex } from 'src/app/shared/util/email';
 import { generatePassword } from 'src/app/shared/util/password';
 import { RootState } from 'src/app/store/root.reducer';
 import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
+import { NotificationDialogComponent } from '../notification-dialog/notification-dialog.component';
 
 @Component({
   selector: 'il-add-edit-customer-user-dialog',
@@ -32,8 +33,8 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
     'b3401f0e-5495-45c3-87b7-1cf3abe7eac7' //tags
   ];
   public userPreSelectedRole: string[] = ['2a69d8c5-3434-4ab9-ba74-bfb465c09d05'];
-  
-  constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditCustomerUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+
+  constructor(private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditCustomerUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       id: [null],
       username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
@@ -45,7 +46,7 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
 
     if (this.data?.formState === FormStateType.Edit && this.data?.id) {
       this.store.dispatch(getCustomerUserByIdAction({ id: this.data?.id }));
-    } else if(this.data?.formState === FormStateType.Edit && this.data?.id === null) {
+    } else if (this.data?.formState === FormStateType.Edit && this.data?.id === null) {
       this.form.patchValue(this.data?.selectedCustomerUser, { emitEvent: false });
     };
   }
@@ -66,8 +67,18 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
   }
 
   public onSave(): void {
-    if (this.form.valid) {
-      this.dialogRef.close(this.form.value);
+    const existingCustomers = this.data?.existingCustomers?.find(customer => customer?.username.trim() === this.form.get('username')?.value?.trim());
+    if (existingCustomers) {
+      const dialogRef = this.dialog.open(NotificationDialogComponent, {
+        width: '410px', data: { action: 0 }
+      });
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        return;
+      });
+    } else {
+      if (this.form.valid) {
+        this.dialogRef.close(this.form.value);
+      }
     }
   }
 }

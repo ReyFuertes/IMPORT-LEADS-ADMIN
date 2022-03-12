@@ -1,0 +1,13 @@
+<div class="il-dialog" fxLayout="column" fxLayoutAlign="center center">
+  <div fxLayoutAlign="end center" fxLayout="row">
+    <div fxLayoutAlign="end center">
+      <i (click)="dialogRef.close(false)" class="pi pi-times"></i>
+    </div>
+  </div>
+  <div class="content" fxLayout="row" fxLayoutAlign="center center">
+    <h2>{{ actionText[data?.action]?.message }}</h2>
+  </div>
+  <div class="footer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <button (click)="dialogRef.close(false)" pButton type="button" class="default medium" label="CLOSE"></button>
+  </div>
+</div>

@@ -25,6 +25,9 @@ export class ConfirmationDialogComponent {
   }, {
     label: 'Reset',
     message: 'Do you want to reset environment data?'
+  }, {
+    label: 'Notification',
+    message: 'This record already exist, please try again.'
   }];
 
   constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {

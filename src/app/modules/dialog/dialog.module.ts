@@ -18,6 +18,7 @@ import { AddUserDialogComponent } from './components/add-user-dialog/add-user-di
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { AddSubscriptionDialogComponent } from './components/add-subscription-dialog/add-subscription-dialog.component';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { NotificationDialogComponent } from './components/notification-dialog/notification-dialog.component';
 
 const dialogComponents = [
   AddCustomerDialogComponent,
@@ -25,7 +26,8 @@ const dialogComponents = [
   InviteCustomerDialogComponent,
   AddEditCustomerUserDialogComponent,
   AddUserDialogComponent,
-  AddSubscriptionDialogComponent
+  AddSubscriptionDialogComponent,
+  NotificationDialogComponent
 ];
 
 const materialModules = [

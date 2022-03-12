@@ -166,6 +166,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         if (result) {
           this.store.dispatch(deleteCustomerUserAction({ id: user?.id }));
           _.remove(this.getCustomerUsersFormValues, { id: user?.id });
+          this.checkSubscriptionUsersReached();
         }
       });
   }
@@ -178,7 +179,10 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     this.checkSubscriptionUsersReached();
 
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
-      width: '430px', height: '275px', data: { action: 0 }
+      width: '430px', height: '275px', data: { 
+        action: 0, 
+        existingCustomers: this.getCustomerUsersFormValues 
+      }
     });
     dialogRef.afterClosed().subscribe((user: ICustomerUser) => {
       if (user) {
@@ -193,7 +197,12 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
 
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '275px',
-      data: { action: 1, formState: FormStateType.Edit, id: customerUser?.id, selectedCustomerUser: selectedCustomerUser }
+      data: { 
+        action: 1, 
+        formState: FormStateType.Edit, 
+        id: customerUser?.id, 
+        selectedCustomerUser: selectedCustomerUser,
+        existingCustomers: this.getCustomerUsersFormValues  }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerUserResponse) => {
       if (payload) {
