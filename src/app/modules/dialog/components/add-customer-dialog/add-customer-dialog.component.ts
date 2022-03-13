@@ -114,14 +114,18 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
 
         this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
         this.getCustomerUsersFormValues.push(...customer?.customer_users);
-        this.getEmailPasswordForm.get('password').setValidators(null);
+
+        this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
+        this.getEmailPasswordForm.get('password').updateValueAndValidity();
+
+        this.getCustomerInformationForm.get('website_url').setValidators([Validators.required, Validators.pattern(urlRegex.url)]);
+        this.getCustomerInformationForm.get('website_url').updateValueAndValidity();
 
         this.checkSubscriptionUsersReached();
       } else {
         this.getCustomerInformationForm.get('language').patchValue('en');
         this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
       }
-      this.getEmailPasswordForm.get('password').updateValueAndValidity();
     });
   }
 
@@ -133,7 +137,6 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         this.subscriberMaxUserReached = false;
         this.cdRef.detectChanges();
       });
-
     if (this.isCustomerApproved) {
       this.form.get('email_password').disable();
       this.form.get('profile').disable();
@@ -179,9 +182,9 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     this.checkSubscriptionUsersReached();
 
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
-      width: '430px', height: '275px', data: { 
-        action: 0, 
-        existingCustomers: this.getCustomerUsersFormValues 
+      width: '430px', height: '275px', data: {
+        action: 0,
+        existingCustomers: this.getCustomerUsersFormValues
       }
     });
     dialogRef.afterClosed().subscribe((user: ICustomerUser) => {
@@ -197,12 +200,13 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
 
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '275px',
-      data: { 
-        action: 1, 
-        formState: FormStateType.Edit, 
-        id: customerUser?.id, 
+      data: {
+        action: 1,
+        formState: FormStateType.Edit,
+        id: customerUser?.id,
         selectedCustomerUser: selectedCustomerUser,
-        existingCustomers: this.getCustomerUsersFormValues  }
+        existingCustomers: this.getCustomerUsersFormValues
+      }
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerUserResponse) => {
       if (payload) {
