@@ -57,7 +57,11 @@ export class InviteCustomerDialogComponent extends GenericDestroyPageComponent i
     return this.formCustomersArray?.length > 0;
   }
 
-  protected createCustomer(item: ICustomer) {
+  public trackByFn(index: any, item: any) {
+    return index;
+  }
+
+  public createCustomer(item: ICustomer) {
     return this.fb.group(item);
   }
 

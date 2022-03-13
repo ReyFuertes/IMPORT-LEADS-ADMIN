@@ -35,6 +35,7 @@ import { RouterModule } from '@angular/router';
 import { InputEmailComponent } from './components/input-email/input-email.component';
 import { OptionSelectComponent } from './components/option-select/option-select.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { AutoFocusDirective } from './directives/autofocus.directive';
 
 const materialModules = [
   MatFormFieldModule,
@@ -75,7 +76,8 @@ const sharedComponents = [
 const directives = [
   NumberOnlyDirective,
   InputMaxLengthDirective,
-  CurrencyFormatterDirective
+  CurrencyFormatterDirective,
+  AutoFocusDirective
 ];
 
 @NgModule({

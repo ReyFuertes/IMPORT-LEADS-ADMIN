@@ -4,11 +4,12 @@
       <div fxFlex fxFlexOffset="20px">
         <h4>{{ 'EMAIL INVITE' }}</h4>
       </div>
-      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
+      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)"
+          class="pi pi-times"></i></div>
     </div>
   </div>
   <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
-    <div *ngFor="let customer of getCustomersFormArr; let i = index">
+    <div *ngFor="let customer of getCustomersFormArr; let i = index; trackBy:trackByFn">
       <div formArrayName="customers">
         <div [formGroupName]="i" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
           <div fxFlex fxLayout="column">
@@ -16,7 +17,8 @@
             <il-input [form]="customer" placeholder="Email" controlName="email"></il-input>
           </div>
           <div fxFlex="30">
-            <il-dropdown-select label="Subscription" [form]="customer" controlName="subscription" [options]="subscriptions"></il-dropdown-select>
+            <il-dropdown-select label="Subscription" [form]="customer" controlName="subscription"
+              [options]="subscriptions"></il-dropdown-select>
           </div>
           <div fxFlex="35px" fxLayout="row" fxLayoutAlign="end center">
             <button pButton type="button" class="danger medium" (click)="removeCustomer(i)" icon="pi pi-times"></button>
@@ -25,7 +27,8 @@
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center">
-      <button pButton type="button" class="primary medium" (click)="addCustomer()" label="Add" icon="pi pi-plus"></button>
+      <button pButton type="button" class="primary medium" (click)="addCustomer()" label="Add"
+        icon="pi pi-plus"></button>
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
