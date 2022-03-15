@@ -7,14 +7,14 @@ import { CustomerStatusType, FormStateType, ISubscription } from 'src/app/models
 import { clearSelectedCustomerAction, deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
 import { editCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
-import { emailRegex, urlApiRegex, urlRegex } from 'src/app/shared/util/email';
+import { emailRegex, urlApiRegex, websiteUrlRegex } from 'src/app/shared/util/email';
 import { RootState } from 'src/app/store/root.reducer';
 import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
 import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation/confirmation.component';
 import * as _ from 'lodash';
 import { getSubscriptionsSelector } from 'src/app/store/selectors/subscription.selector';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
 import { GenericDestroyPageComponent } from 'src/app/shared/generics/generic-destroy-page';
 import { getSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';
 
@@ -61,7 +61,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         company_name: [null, Validators.required],
         company_address: [null, Validators.required],
         language: ['en', Validators.required],
-        website_url: [null, Validators.compose([Validators.required, Validators.pattern(urlRegex.url)])],
+        website_url: [null, Validators.compose([Validators.required, Validators.pattern(websiteUrlRegex.url)])],
         api_url: [null, Validators.compose([Validators.required, Validators.pattern(urlApiRegex.url)])],
         database_name: [null, Validators.required]
       }),
@@ -85,6 +85,12 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         this.checkSubscriptionUsersReached();
       }
     });
+
+    this.form.valueChanges
+      .pipe(
+        debounceTime(1000),
+        finalize(() => this.getCustomerInformationForm.updateValueAndValidity()))
+      .subscribe();
   }
 
   public get isCustomerApproved(): boolean {
@@ -103,33 +109,33 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   ngOnInit(): void {
     this.store.pipe(select(getCustomerAccessSelector)).subscribe(access => this.access = access);
     this.store.pipe(select(getRolesSelector)).subscribe(roles => this.roles = roles);
-    this.store.pipe(select(editCustomerByIdSelector)).subscribe(customer => {
-      if (customer) {
-        this.form.patchValue({
-          id: customer?.id,
-          email_password: { username: customer?.username },
-          profile: customer?.profile,
-          users: customer?.customer_users
-        }, { emitEvent: false });
+    this.store.pipe(
+      select(editCustomerByIdSelector)).subscribe(customer => {
+        if (customer) {
+          this.form.patchValue({
+            id: customer?.id,
+            email_password: { username: customer?.username },
+            profile: customer?.profile,
+            users: customer?.customer_users
+          }, { emitEvent: true });
 
-        this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
-        this.getCustomerUsersFormValues.push(...customer?.customer_users);
+          this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
+          this.getCustomerUsersFormValues.push(...customer?.customer_users);
 
-        this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
-        this.getEmailPasswordForm.get('password').updateValueAndValidity();
+          this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
+          this.getEmailPasswordForm.get('password').updateValueAndValidity();
 
-        this.getCustomerInformationForm.get('website_url').setValidators([Validators.required, Validators.pattern(urlRegex.url)]);
-        this.getCustomerInformationForm.get('website_url').updateValueAndValidity();
+          this.getCustomerInformationForm.get('website_url').setValidators([Validators.required, Validators.pattern(websiteUrlRegex.url)]);
+          this.getCustomerInformationForm.get('api_url').setValidators([Validators.required, Validators.pattern(urlApiRegex.url)]);
 
-        this.getCustomerInformationForm.get('api_url').setValidators([Validators.required, Validators.pattern(urlApiRegex.url)]);
-        this.getCustomerInformationForm.get('api_url').updateValueAndValidity();
-
-        this.checkSubscriptionUsersReached();
-      } else {
-        this.getCustomerInformationForm.get('language').patchValue('en');
-        this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
-      }
-    });
+          this.checkSubscriptionUsersReached();
+        } else {
+          this.getCustomerInformationForm.get('language').patchValue('en');
+          this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
+        }
+      }),
+      debounceTime(1000),
+      finalize(() => this.getCustomerInformationForm.updateValueAndValidity());
   }
 
   ngAfterViewInit(): void {

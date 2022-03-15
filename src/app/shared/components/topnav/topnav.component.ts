@@ -8,6 +8,7 @@ import { logoutAction } from 'src/app/modules/auth/store/auth.action';
 import { IUser } from 'src/app/modules/auth/auth.models';
 import { ROLESROUTE, SETTINGSROUTE } from '../../constants/routes';
 import { Router } from '@angular/router';
+import { StorageService } from 'src/app/modules/service/storage.service';
 
 @Component({
   selector: 'il-topnav',
@@ -20,22 +21,23 @@ export class TopNavComponent extends GenericDestroyPageComponent {
   public svgPath: string = environment.svgPath;
   public imgPath: string = environment.imgPath;
   public user: IUser;
-  public menus: ISimpleItem[] = [
-    {
-      label: 'Customers',
-      value: '/customer'
-    },
-    // {
-    //   label: 'Billing',
-    //   value: '/billing'
-    // }, {
-    //   label: 'Invoice',
-    //   value: '/invoice'
-    // }
-  ];
+  public menus: ISimpleItem[] = [{
+    label: 'Customers',
+    value: '/customer'
+  }];
 
-  constructor(private router: Router, private store: Store<RootState>) {
+  constructor(private storageSrv: StorageService, private router: Router, private store: Store<RootState>) {
     super();
+  }
+
+  public get getUserEmail(): string {
+    const userString = this.storageSrv.get('at') || null;
+    if(userString) {
+      const user = JSON.parse(userString)?.user;
+      const splitName = String(user?.username)?.split('@');
+      return splitName[0] || '';
+    }
+    return '';
   }
 
   public gotoSettings(): void {

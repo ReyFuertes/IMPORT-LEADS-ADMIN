@@ -4,7 +4,8 @@
       <img [src]="imgPath + 'logo.png'" />
     </div>
     <ng-container *ngFor="let menu of menus; let i = index">
-      <div class="menu-box" [routerLink]="menu?.value" fxFlex="25" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:false}">{{ menu?.label }}</div>
+      <div class="menu-box" [routerLink]="menu?.value" fxFlex="25" routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{exact:false}">{{ menu?.label }}</div>
     </ng-container>
   </div>
   <div fxFlex="20" fxLayoutAlign="end center" fxLayoutGap="40px">
@@ -12,11 +13,12 @@
     </div>
     <div class="settings" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
       <img class="profile-pic" [src]="getProfilePic" />
-      <div class="username" fxLayout="row" fxLayoutAlign="start center" [matMenuTriggerFor]="menu">Customer</div>
+      <div class="username" fxLayout="row" fxLayoutAlign="start center" [matMenuTriggerFor]="menu">
+        {{getUserEmail}}
+      </div>
       <i class="pi pi-chevron-down" [matMenuTriggerFor]="menu"></i>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="gotoSettings()">{{ 'Settings' }}</button>
-        <!-- <button mat-menu-item>{{ 'Change Password' }}</button> -->
         <button mat-menu-item (click)="onLogout()">{{ 'Logout' }}</button>
       </mat-menu>
     </div>
