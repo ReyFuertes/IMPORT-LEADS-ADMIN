@@ -4,3 +4,7 @@ export const emailRegex = {
 export const urlRegex = {
   url: /^https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)+\/$/g
 };
+export const urlApiRegex = {
+  url: /^https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)+\/v1\/$/g
+};
+

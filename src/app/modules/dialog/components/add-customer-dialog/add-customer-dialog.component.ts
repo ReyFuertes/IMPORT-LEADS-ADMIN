@@ -7,7 +7,7 @@ import { CustomerStatusType, FormStateType, ISubscription } from 'src/app/models
 import { clearSelectedCustomerAction, deleteCustomerUserAction, getCustomerByIdAction } from 'src/app/modules/customer/store/actions/customer.actions';
 import { editCustomerByIdSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
-import { emailRegex, urlRegex } from 'src/app/shared/util/email';
+import { emailRegex, urlApiRegex, urlRegex } from 'src/app/shared/util/email';
 import { RootState } from 'src/app/store/root.reducer';
 import { getCustomerAccessSelector, getRolesSelector } from 'src/app/store/selectors/app.selector';
 import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-dialog/add-edit-customer-user-dialog.component';
@@ -62,7 +62,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         company_address: [null, Validators.required],
         language: ['en', Validators.required],
         website_url: [null, Validators.compose([Validators.required, Validators.pattern(urlRegex.url)])],
-        api_url: [null, Validators.compose([Validators.required, Validators.pattern(urlRegex.url)])],
+        api_url: [null, Validators.compose([Validators.required, Validators.pattern(urlApiRegex.url)])],
         database_name: [null, Validators.required]
       }),
       users: new FormArray([]),
@@ -120,6 +120,9 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
 
         this.getCustomerInformationForm.get('website_url').setValidators([Validators.required, Validators.pattern(urlRegex.url)]);
         this.getCustomerInformationForm.get('website_url').updateValueAndValidity();
+
+        this.getCustomerInformationForm.get('api_url').setValidators([Validators.required, Validators.pattern(urlApiRegex.url)]);
+        this.getCustomerInformationForm.get('api_url').updateValueAndValidity();
 
         this.checkSubscriptionUsersReached();
       } else {
