@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { FormStateType } from 'src/app/models/generic.model';
-import { passwordValidator } from 'src/app/shared/util/validator';
 import { getSubscriptionByIdAction } from 'src/app/store/actions/subscription.action';
 import { RootState } from 'src/app/store/root.reducer';
 import { editSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';

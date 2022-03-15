@@ -13,19 +13,19 @@
         <label>{{ 'Name' }}</label>
         <il-input [form]="form" placeholder="Name" controlName="name"></il-input>
       </div>
-      <div fxLayout="row" fxLayoutAlign="start center">
-        <div [formGroup]="form" fxFlex="50" fxLayout="column" fxLayoutAlign="start start">
+      <div [formGroup]="form" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <div  fxFlex="50" fxLayout="column" fxLayoutAlign="start start">
           <label>{{ 'Max Users' }}</label>
           <p-inputNumber mode="decimal" [minFractionDigits]="0" formControlName="max_users" [maxlength]="2" placeholder="Max Users"></p-inputNumber>
         </div>
         <div fxFlex="50" fxLayout="column" fxLayoutAlign="start start">
           <label>{{ 'Rates' }}</label>
-          <il-input [form]="form" placeholder="Rates" controlName="rate"></il-input>
+          <p-inputNumber mode="decimal" [minFractionDigits]="2" formControlName="rate" [maxlength]="5" placeholder="Rates"></p-inputNumber>
         </div>
       </div>
-      <div>
+      <div [formGroup]="form">
         <label>{{ 'Description' }}</label>
-        <il-input [form]="form" placeholder="Description" controlName="description"></il-input>
+        <textarea [rows]="5" formControlName="description" [cols]="30" pInputTextarea></textarea>
       </div>
     </div>
   </div>

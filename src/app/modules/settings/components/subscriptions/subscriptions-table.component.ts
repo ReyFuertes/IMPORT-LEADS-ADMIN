@@ -49,7 +49,7 @@ export class SubscriptionsTableComponent implements OnInit {
 
   public onEditSubscription(item: any): void {
     const dialogRef = this.dialog.open(AddSubscriptionDialogComponent, {
-      width: '430px', height: '335px', data: { action: 1, formState: FormStateType.Edit, id: item?.id }
+      width: '430px', height: '410px', data: { action: 1, formState: FormStateType.Edit, id: item?.id }
     });
     dialogRef.afterClosed().subscribe((payload: ISubscription) => {
       if (payload) {
@@ -60,7 +60,7 @@ export class SubscriptionsTableComponent implements OnInit {
 
   public onAddSubscription(): void {
     const dialogRef = this.dialog.open(AddSubscriptionDialogComponent, {
-      width: '430px', height: '335px', data: { action: 0 }
+      width: '430px', height: '410px', data: { action: 0 }
     });
     dialogRef.afterClosed().subscribe((payload: ISubscription) => {
       if (payload) {

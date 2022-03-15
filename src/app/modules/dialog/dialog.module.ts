@@ -19,6 +19,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { AddSubscriptionDialogComponent } from './components/add-subscription-dialog/add-subscription-dialog.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { NotificationDialogComponent } from './components/notification-dialog/notification-dialog.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 const dialogComponents = [
   AddCustomerDialogComponent,
@@ -42,7 +43,8 @@ const primeNgModules = [
   TableModule,
   TooltipModule,
   RadioButtonModule,
-  InputNumberModule
+  InputNumberModule,
+  InputTextareaModule
 ];
 
 @NgModule({
