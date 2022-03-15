@@ -114,7 +114,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         if (customer) {
           this.form.patchValue({
             id: customer?.id,
-            email_password: { username: customer?.username },
+            email_password: { username: customer?.username, password: customer?.text_password },
             profile: customer?.profile,
             users: customer?.customer_users
           }, { emitEvent: true });

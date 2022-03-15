@@ -83,7 +83,8 @@ export interface ICustomerResponse {
   profile?: IProfile
   status?: number;
   created_at?: string;
-  subscription?: ISubscription | any
+  subscription?: ISubscription | any;
+  text_password?: string;
 }
 export interface ICustomer {
   id?: string;
@@ -101,7 +102,7 @@ export interface ICustomer {
   name?: string;
   is_change_password?: number;
   subscription?: string;
-  create_status?: CreateStatusType
+  create_status?: CreateStatusType;
 }
 export enum CreateStatusType {
   Failed = 'Failed',
