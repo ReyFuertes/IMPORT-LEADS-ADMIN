@@ -82,6 +82,16 @@ export abstract class BaseService<T> {
     return this.http.get<T>(`${this.baseUrl}${this.entity}/${id}${this.fmtParam(addtnlParam)}`,
       { headers: this.binaryHeaders() });
   }
+  
+  public getOne(param?: string): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}${this.entity}${this.fmtGetParam(param)}`,
+      { headers: this.commonHeaders() });
+  }
+
+  public exist(object?: T, param?: string, overrideUrl?: string): Observable<boolean> {
+    const url: string = `${overrideUrl ?? this.baseUrl}${this.entity}${this.fmtParam(param)}`;
+    return this.http.post<any>(url, this.removeNullProps(object), { headers: this.commonHeaders() });
+  }
 
   public upload(object?: any, addtnlParam?: string): Observable<T> {
     let headers = new HttpHeaders({

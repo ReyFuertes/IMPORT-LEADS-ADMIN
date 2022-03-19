@@ -8,10 +8,10 @@ import { AppReducer, appState } from './reducers/app-reducer';
 import { NotificationReducer, NotificationState } from './reducers/notification.reducer';
 import { SubscriptionReducer, SubscriptionsState } from './reducers/subscription.reducer';
 import { UserReducer, UsersState } from './reducers/user.reducer';
+
 export interface RootState {
   appState: appState,
   notification?: NotificationState,
-  customer?: CustomerState,
   customerUser?: CustomerUserState,
   auth: AuthState,
   settings: SettingsState,
@@ -21,7 +21,6 @@ export interface RootState {
 export const reducers: ActionReducerMap<RootState> = {
   appState: AppReducer,
   notification: NotificationReducer,
-  customer: CustomerReducer,
   customerUser: CustomerUserReducer,
   auth: AuthReducer,
   settings: SettingsReducer,

@@ -1,12 +1,13 @@
-import { createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { RootState } from 'src/app/store/root.reducer';
+import { CustomerModuleState } from '../reducers';
 
-export const selectedState = (state: RootState) => state.customerUser;
+export const selectedModuleState = createFeatureSelector<CustomerModuleState>('customersModule');
 export const getCustomerUserByIdSelector = createSelector(
-  selectedState,
-  state => state?.selectedCustomerUser
+  selectedModuleState,
+  state => state?.customerUser?.selectedCustomerUser
 );
 export const getCustomerUsersSelector = createSelector(
-  selectedState,
-  state => Object.values(state.entities)
+  selectedModuleState,
+  state => Object.values(state?.customerUser?.entities)
 );

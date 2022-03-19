@@ -24,6 +24,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { CustomerUserEffects } from './store/effects/customer-user.effects';
 import { CustomerEffects } from './store/effects/customer.effects';
 import { reducers } from './store/reducers';
+import { CustomerProfileEffects } from './store/effects/customer-profile.effects';
 
 const primengModules = [
   InputTextModule,
@@ -70,8 +71,8 @@ const routes: Routes = [{
     ...primengModules,
     ...materialModules,
     RouterModule.forChild(routes),
-    StoreModule.forFeature('customerModule', reducers),
-    EffectsModule.forFeature([CustomerEffects, CustomerUserEffects]),
+    StoreModule.forFeature('customersModule', reducers),
+    EffectsModule.forFeature([CustomerEffects, CustomerProfileEffects, CustomerUserEffects]),
   ],
   exports: [],
   providers: [],

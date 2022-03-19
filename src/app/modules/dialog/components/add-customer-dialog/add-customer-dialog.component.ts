@@ -17,6 +17,10 @@ import { getSubscriptionsSelector } from 'src/app/store/selectors/subscription.s
 import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
 import { GenericDestroyPageComponent } from 'src/app/shared/generics/generic-destroy-page';
 import { getSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';
+import { combineLatest, forkJoin } from 'rxjs';
+import { isProfileLoadingSelector, isWebsiteUrlExistSelector } from 'src/app/modules/customer/store/selectors/customer-profile.selector';
+import { isWebsiteUrlExistAction, setProfileLoadingAction } from 'src/app/modules/customer/store/actions/customer-profile.actions';
+import { notificationFailedAction } from 'src/app/store/actions/notification.action';
 
 @Component({
   selector: 'il-add-customer-dialog',
@@ -43,6 +47,8 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   public subscriber: ISubscription;
   public subscriberMaxUserReached: boolean = false;
   public customerStatus: number;
+  public websiteExist: boolean = false;
+  public saveTriggered: boolean = false;
 
   constructor(private cdRef: ChangeDetectorRef, private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super();
@@ -61,7 +67,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         company_name: [null, Validators.required],
         company_address: [null, Validators.required],
         language: ['en', Validators.required],
-        website_url: [null, Validators.compose([Validators.required, Validators.pattern(websiteUrlRegex.url)])],
+        website_url: [null, [Validators.required, Validators.pattern(websiteUrlRegex.url)]],
         api_url: [null, Validators.compose([Validators.required, Validators.pattern(urlApiRegex.url)])],
         database_name: [null, Validators.required]
       }),
@@ -85,12 +91,6 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         this.checkSubscriptionUsersReached();
       }
     });
-
-    this.form.valueChanges
-      .pipe(
-        debounceTime(1000),
-        finalize(() => this.getCustomerInformationForm.updateValueAndValidity()))
-      .subscribe();
   }
 
   public get isCustomerApproved(): boolean {
@@ -107,39 +107,58 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   }
 
   ngOnInit(): void {
-    this.store.pipe(select(getCustomerAccessSelector)).subscribe(access => this.access = access);
-    this.store.pipe(select(getRolesSelector)).subscribe(roles => this.roles = roles);
+    combineLatest([
+      this.store.pipe(select(getCustomerAccessSelector)),
+      this.store.pipe(select(getRolesSelector))
+    ]).subscribe(([access, roles]) => {
+      this.access = access;
+      this.roles = roles;
+    });
+
     this.store.pipe(
       select(editCustomerByIdSelector)).subscribe(customer => {
         if (customer) {
           this.form.patchValue({
             id: customer?.id,
             email_password: { username: customer?.username, password: customer?.text_password },
-            profile: customer?.profile,
+            profile: {
+              ...customer?.profile,
+              // website_url: 'https://cil-china2.azurewebsites.net/',
+              // api_url: 'https://cil-china-api.azurewebsites.net/api/v1/'
+            },
             users: customer?.customer_users
           }, { emitEvent: true });
 
           this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
           this.getCustomerUsersFormValues.push(...customer?.customer_users);
 
-          this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
-          this.getEmailPasswordForm.get('password').updateValueAndValidity();
-
           this.getCustomerInformationForm.get('website_url').setValidators([Validators.required, Validators.pattern(websiteUrlRegex.url)]);
-          this.getCustomerInformationForm.get('api_url').setValidators([Validators.required, Validators.pattern(urlApiRegex.url)]);
+          this.getCustomerInformationForm.updateValueAndValidity();
 
           this.checkSubscriptionUsersReached();
         } else {
           this.getCustomerInformationForm.get('language').patchValue('en');
           this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
         }
-      }),
-      debounceTime(1000),
-      finalize(() => this.getCustomerInformationForm.updateValueAndValidity());
+      });
+
+    combineLatest([
+      this.store.pipe(select(isWebsiteUrlExistSelector)),
+      this.store.pipe(select(isProfileLoadingSelector))
+    ]).subscribe(([exist, loading]) => {
+      if (!loading && this.isFormValid && !exist && this.saveTriggered) {
+        this.getCustomerInformationForm.get('website_url').setErrors(null);
+        this.dialogRef.close(<ICustomer>this.form.value);
+      }
+      if (!loading && exist && this.saveTriggered) {
+        this.getCustomerInformationForm.get('website_url').setErrors({ exist: true });
+        this.store.dispatch(notificationFailedAction({ notification: { success: false, message: 'Website Url already exist..' } }));
+      }
+    });
   }
 
   ngAfterViewInit(): void {
-    this.store.pipe(select(getSubscriptionsSelector), takeUntil(this.$unsubscribe))
+    this.store.pipe(select(getSubscriptionsSelector))
       .subscribe(subscriptions => {
         this.subscriptions = subscriptions?.map(sub => ({ label: sub.name, value: sub.id }));
         this.form.get('subscription').patchValue(this.subscriptions[0]?.value);
@@ -263,9 +282,15 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   }
 
   public onSave(): void {
-    if (this.isFormValid) {
-      this.dialogRef.close(<ICustomer>this.form.value);
-    }
+    this.store.dispatch(setProfileLoadingAction());
+
+    this.store.dispatch(isWebsiteUrlExistAction({
+      payload: {
+        website_url: this.getCustomerInformationForm.get('website_url').value,
+        id: this.form.get('id').value
+      }
+    }));
+    this.saveTriggered = !this.saveTriggered;
   }
 
   public onCancel(): void {

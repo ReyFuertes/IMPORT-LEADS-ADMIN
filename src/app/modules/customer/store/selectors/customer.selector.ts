@@ -1,30 +1,32 @@
-import { createSelector } from '@ngrx/store';
-import { RootState } from 'src/app/store/root.reducer';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { CustomerModuleState } from '../reducers';
 
-export const selectedState = (state: RootState) => state.customer;
+export const selectedModuleState = createFeatureSelector<CustomerModuleState>('customersModule');
 export const getIsUserMigratedSelector = createSelector(
-  selectedState,
-  state => state?.isUserMigrated
+  selectedModuleState,
+  state => state?.customer?.isUserMigrated
 );
 export const getCustomerByIdSelector = (id: string) => createSelector(
-  selectedState,
-  state => state.entities[id]
+  selectedModuleState,
+  state => state?.customer?.entities[id]
 );
 export const editCustomerByIdSelector = createSelector(
-  selectedState,
-  state => state?.selectedCustomer
+  selectedModuleState,
+  state => state?.customer?.selectedCustomer
 );
 export const getCustomersSelector = createSelector(
-  selectedState,
-  state => Object.values(state?.entities).map(customer => {
-    return {
-      ...customer,
-      ...customer.profile,
-      profile_id: customer.profile?.id,
-      id: customer?.id,
-      name: `${customer?.profile?.firstname || '-'} ${customer?.profile?.lastname || '-'}`,
-      phone: `${customer?.profile?.phone_number  || '-'}`,
-      subscription_name: customer?.subscription?.name
-    }
-  })
+  selectedModuleState,
+  state => {
+    return state?.customer && Object.values(state?.customer?.entities).map(customer => {
+      return {
+        ...customer,
+        ...customer.profile,
+        profile_id: customer.profile?.id,
+        id: customer?.id,
+        name: `${customer?.profile?.firstname || '-'} ${customer?.profile?.lastname || '-'}`,
+        phone: `${customer?.profile?.phone_number  || '-'}`,
+        subscription_name: customer?.subscription?.name
+      }
+    })
+  }
 );
