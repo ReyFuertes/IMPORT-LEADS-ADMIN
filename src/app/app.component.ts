@@ -18,7 +18,7 @@ import { getNotificationFailedSelector, getNotificationSuccessSelector } from '.
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent extends GenericDestroyPageComponent implements OnInit {
-  public title: string = 'Import Leads Admin';
+  public title: string = 'Customer Admin';
   public $notifySuccess: Observable<any>;
   public $notifyFailed: Observable<any>;
   public isLoggedIn: boolean = false;
