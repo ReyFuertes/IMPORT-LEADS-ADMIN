@@ -1,7 +1,7 @@
 <div class="card" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
-  <p-table [value]="$customers | async" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-    responsiveLayout="scroll" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [rowsPerPageOptions]="[10,25,50]" selectionMode="single" [(selection)]="selectedItem">
+  <p-table [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]"
+    selectionMode="single">
     <ng-template pTemplate="header">
       <tr>
         <th>Username</th>
@@ -12,16 +12,14 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-customer>
-      <tr>
+      <tr class="p-selectable-row">
         <td>{{ customer?.username }}</td>
         <td>{{ customer?.firstname }} {{ customer?.lastname }}</td>
         <td>{{ customer?.company_name }}</td>
         <td>{{ customer?.api_url }}</td>
-        <td [pSelectableRow]="customer">
-          <ng-container *ngIf="customer?.api_url">
-            <p-menu #menu [popup]="true" [model]="items" appendTo="body"></p-menu>
-            <i class="pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
-          </ng-container>
+        <td>
+          <button (click)="onReset(customer)" pButton type="button" class="purple medium" label="RESET"><i
+              class="pi pi-refresh"></i></button>
         </td>
       </tr>
     </ng-template>
