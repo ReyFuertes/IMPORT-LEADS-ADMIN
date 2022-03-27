@@ -14,13 +14,11 @@ import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-di
 import { ConfirmationDialogComponent } from '../confirmation/confirmation.component';
 import * as _ from 'lodash';
 import { getSubscriptionsSelector } from 'src/app/store/selectors/subscription.selector';
-import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { GenericDestroyPageComponent } from 'src/app/shared/generics/generic-destroy-page';
 import { getSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';
-import { combineLatest, forkJoin } from 'rxjs';
-import { isProfileLoadingSelector, isWebsiteUrlExistSelector } from 'src/app/modules/customer/store/selectors/customer-profile.selector';
-import { isWebsiteUrlExistAction, setProfileLoadingAction } from 'src/app/modules/customer/store/actions/customer-profile.actions';
-import { notificationFailedAction } from 'src/app/store/actions/notification.action';
+import { combineLatest } from 'rxjs';
+import { isApiUrlExistAction, isWebsiteUrlExistAction } from 'src/app/modules/customer/store/actions/customer-profile.actions';
 
 @Component({
   selector: 'il-add-customer-dialog',
@@ -91,6 +89,30 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
         this.checkSubscriptionUsersReached();
       }
     });
+
+    this.getCustomerInformationForm.get('website_url').valueChanges
+      .pipe(takeUntil(this.$unsubscribe)).subscribe(value => {
+        if (value) {
+          this.store.dispatch(isWebsiteUrlExistAction({
+            payload: {
+              website_url: this.getCustomerInformationForm.get('website_url').value,
+              id: this.form.get('id').value
+            }
+          }));
+        }
+      });
+
+    this.getCustomerInformationForm.get('api_url').valueChanges
+      .pipe(takeUntil(this.$unsubscribe)).subscribe(value => {
+        if (value) {
+          this.store.dispatch(isApiUrlExistAction({
+            payload: {
+              api_url: this.getCustomerInformationForm.get('api_url').value,
+              id: this.form.get('id').value
+            }
+          }))
+        }
+      });
   }
 
   public get isCustomerApproved(): boolean {
@@ -121,19 +143,12 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
           this.form.patchValue({
             id: customer?.id,
             email_password: { username: customer?.username, password: customer?.text_password },
-            profile: {
-              ...customer?.profile,
-              // website_url: 'https://cil-china2.azurewebsites.net/',
-              // api_url: 'https://cil-china-api.azurewebsites.net/api/v1/'
-            },
+            profile: customer?.profile,
             users: customer?.customer_users
           }, { emitEvent: true });
 
           this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
           this.getCustomerUsersFormValues.push(...customer?.customer_users);
-
-          this.getCustomerInformationForm.get('website_url').setValidators([Validators.required, Validators.pattern(websiteUrlRegex.url)]);
-          this.getCustomerInformationForm.updateValueAndValidity();
 
           this.checkSubscriptionUsersReached();
         } else {
@@ -141,20 +156,6 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
           this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
         }
       });
-
-    combineLatest([
-      this.store.pipe(select(isWebsiteUrlExistSelector)),
-      this.store.pipe(select(isProfileLoadingSelector))
-    ]).subscribe(([exist, loading]) => {
-      if (!loading && this.isFormValid && !exist && this.saveTriggered) {
-        this.getCustomerInformationForm.get('website_url').setErrors(null);
-        this.dialogRef.close(<ICustomer>this.form.value);
-      }
-      if (!loading && exist && this.saveTriggered) {
-        this.getCustomerInformationForm.get('website_url').setErrors({ exist: true });
-        this.store.dispatch(notificationFailedAction({ notification: { success: false, message: 'Website Url already exist..' } }));
-      }
-    });
   }
 
   ngAfterViewInit(): void {
@@ -282,15 +283,9 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   }
 
   public onSave(): void {
-    this.store.dispatch(setProfileLoadingAction());
-
-    this.store.dispatch(isWebsiteUrlExistAction({
-      payload: {
-        website_url: this.getCustomerInformationForm.get('website_url').value,
-        id: this.form.get('id').value
-      }
-    }));
-    this.saveTriggered = !this.saveTriggered;
+    if (this.isFormValid) {
+      this.dialogRef.close(<ICustomer>this.form.value);
+    }
   }
 
   public onCancel(): void {

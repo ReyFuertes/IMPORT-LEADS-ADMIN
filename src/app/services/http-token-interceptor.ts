@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } from '@angular/common/http';
 import { Observable, throwError, from, TimeoutError, BehaviorSubject } from 'rxjs';
-import { catchError, debounceTime, filter, finalize, map, takeUntil, tap } from 'rxjs/operators';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { GenericDestroyPageComponent } from '../shared/generics/generic-destroy-page';
 import { RootState } from '../store/root.reducer';
 import { notificationSuccessAction } from '../store/actions/notification.action';
 import { logoutAction } from '../modules/auth/store/auth.action';
+
 @Injectable({ providedIn: 'root' })
 export class LoaderService {
   public isLoading = new BehaviorSubject(false);
 }
+
 @Injectable()
 export class TokenInterceptor extends GenericDestroyPageComponent implements HttpInterceptor {
   public requests: HttpRequest<any>[] = [];
@@ -30,8 +31,12 @@ export class TokenInterceptor extends GenericDestroyPageComponent implements Htt
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.requests.push(request);
-    this.loaderSrv.isLoading.next(true);
-
+    
+    const doNotLoadUrl = request?.url.includes('check-website-url') || request?.url.includes('check-api-url');
+    if(!doNotLoadUrl) {
+      this.loaderSrv.isLoading.next(true);
+    }
+  
     return Observable.create(observer => {
       const subscription = next.handle(request)
         .subscribe(event => {
@@ -40,8 +45,6 @@ export class TokenInterceptor extends GenericDestroyPageComponent implements Htt
             observer.next(event);
           }
         }, error => {
-          /* Handle 500 error */
-
           /* Handle timeout error */
           if (error instanceof TimeoutError) {
             from(this.handleHttpErrorRequest(request, 'Timeout error, please try again!'));

@@ -4,7 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { finalize, map, switchMap, tap } from 'rxjs/operators';
 import { CustomerService, CustomerUserService } from 'src/app/services/api.service';
 import { RootState } from 'src/app/store/root.reducer';
-import { isWebsiteUrlExistAction, isWebsiteUrlExistSuccessAction, removeProfileLoadingAction, setProfileLoadingAction } from '../actions/customer-profile.actions';
+import { isApiUrlExistAction, isApiUrlExistSuccessAction, isWebsiteUrlExistAction, isWebsiteUrlExistSuccessAction, removeProfileLoadingAction, setProfileLoadingAction } from '../actions/customer-profile.actions';
 
 @Injectable()
 export class CustomerProfileEffects {
@@ -14,6 +14,17 @@ export class CustomerProfileEffects {
       return this.customerService.exist(payload, 'check-website-url').pipe(
         map((response: boolean) => {
           return isWebsiteUrlExistSuccessAction({ response });
+        }),
+        finalize(() => this.store.dispatch(removeProfileLoadingAction()))
+      )
+    })
+  ));
+  isApiUrlExistAction$ = createEffect(() => this.actions$.pipe(
+    ofType(isApiUrlExistAction),
+    switchMap(({ payload }) => {
+      return this.customerService.exist(payload, 'check-api-url').pipe(
+        map((response: boolean) => {
+          return isApiUrlExistSuccessAction({ response });
         }),
         finalize(() => this.store.dispatch(removeProfileLoadingAction()))
       )
