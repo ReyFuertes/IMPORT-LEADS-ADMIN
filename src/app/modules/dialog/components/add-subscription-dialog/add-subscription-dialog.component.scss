@@ -46,6 +46,9 @@ label {
   padding-top: 15px;
   padding-left: 20px;
 }
+textarea {
+  resize: none;
+}
 :host ::ng-deep {
   il-input, p-inputNumber {
     width: 100%;

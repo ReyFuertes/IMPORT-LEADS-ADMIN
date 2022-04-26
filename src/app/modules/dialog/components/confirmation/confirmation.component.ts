@@ -23,10 +23,10 @@ export class ConfirmationDialogComponent {
     label: 'OK',
     message: 'Do you want to cancel?'
   }, {
-    label: 'Reset',
-    message: 'Do you want to reset environment data?'
+    label: 'RESET',
+    message: 'Do you want to reset environment data? This will permanently delete Main Applications data and cannot be undone.'
   }, {
-    label: 'Notification',
+    label: 'NOTIFICATION',
     message: 'This record already exist, please try again.'
   }];
 
