@@ -74,7 +74,8 @@ export interface ICustomerUserResponse {
   id?: string;
   roles?: string[];
   status?: number;
-  username?: string
+  username?: string;
+  customer_id?: string;
 }
 export interface ICustomerResponse {
   id?: string;

@@ -4,14 +4,16 @@
       <div fxFlex fxFlexOffset="20px">
         <h4>{{ actionText[data?.action] }} {{ 'CUSTOMER' }}</h4>
       </div>
-      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)" class="pi pi-times"></i></div>
+      <div fxFlex="20px"><i pTooltip="Close" tooltipPosition="top" (click)="dialogRef.close(false)"
+          class="pi pi-times"></i></div>
     </div>
   </div>
   <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
     <p-tabView>
       <p-tabPanel header="General Info">
         <div fxLayout="row" fxLayoutGap="20px">
-          <il-dropdown-select fxFlex="50" label="Subscriptions" [form]="form" controlName="subscription" [options]="subscriptions"></il-dropdown-select>
+          <il-dropdown-select fxFlex="50" label="Subscriptions" [form]="form" controlName="subscription"
+            [options]="subscriptions"></il-dropdown-select>
           <div fxFlex="50"></div>
         </div>
         <div fxLayout="row" fxLayoutGap="20px">
@@ -27,17 +29,20 @@
         <div fxLayout="row" fxLayoutGap="20px">
           <div>
             <label>{{ 'Username/Email' }}</label>
-            <il-input-email [form]="getEmailPasswordForm" placeholder="Username/Email" type="email" controlName="username"></il-input-email>
+            <il-input-email [form]="getEmailPasswordForm" placeholder="Username/Email" type="email"
+              controlName="username"></il-input-email>
           </div>
           <div>
             <label>{{ 'Password' }}</label>
-            <il-input-password [form]="getEmailPasswordForm" placeholder="Password" controlName="password"></il-input-password>
+            <il-input-password [form]="getEmailPasswordForm" placeholder="Password" controlName="password">
+            </il-input-password>
           </div>
         </div>
         <div fxLayout="row" fxLayoutGap="20px">
           <div>
             <label>{{ 'Phone Number' }}</label>
-            <il-input [form]="getCustomerInformationForm" placeholder="Phone Number" controlName="phone_number"></il-input>
+            <il-input [form]="getCustomerInformationForm" placeholder="Phone Number" controlName="phone_number">
+            </il-input>
           </div>
           <div>
             <label>{{ 'Address' }}</label>
@@ -47,20 +52,24 @@
         <div fxLayout="row" fxLayoutGap="20px">
           <div>
             <label>{{ 'Company Name' }}</label>
-            <il-input [form]="getCustomerInformationForm" placeholder="Company Name" controlName="company_name"></il-input>
+            <il-input [form]="getCustomerInformationForm" placeholder="Company Name" controlName="company_name">
+            </il-input>
           </div>
           <div>
             <label>{{ 'Company Address' }}</label>
-            <il-input [form]="getCustomerInformationForm" placeholder="Company Address" controlName="company_address"></il-input>
+            <il-input [form]="getCustomerInformationForm" placeholder="Company Address" controlName="company_address">
+            </il-input>
           </div>
         </div>
         <div fxLayout="row" fxLayoutGap="20px">
           <div>
-            <il-dropdown-select label="Language" [form]="getCustomerInformationForm" controlName="language" [options]="languageOptions"></il-dropdown-select>
+            <il-dropdown-select label="Language" [form]="getCustomerInformationForm" controlName="language"
+              [options]="languageOptions"></il-dropdown-select>
           </div>
           <div>
             <label>{{ 'Website URL' }}</label>
-            <il-input [form]="getCustomerInformationForm" placeholder="Website URL" controlName="website_url"></il-input>
+            <il-input [form]="getCustomerInformationForm" placeholder="Website URL" controlName="website_url">
+            </il-input>
           </div>
         </div>
         <div fxLayout="row" fxLayoutGap="20px">
@@ -70,7 +79,8 @@
           </div>
           <div>
             <label>{{ 'Datebase Name' }}</label>
-            <il-input [form]="getCustomerInformationForm" placeholder="Datebase Name" controlName="database_name"></il-input>
+            <il-input [form]="getCustomerInformationForm" placeholder="Datebase Name" controlName="database_name">
+            </il-input>
           </div>
         </div>
       </p-tabPanel>
@@ -105,7 +115,8 @@
               <td fxFlex="70px">
                 <div *ngIf="!isCustomerApproved" class="actions-icon">
                   <i (click)="onEditCustomerUser(user)" pTooltip="Edit" tooltipPosition="top" class="pi pi-pencil"></i>
-                  <i (click)="onDeleteCustomerUser(user)" pTooltip="Delete" tooltipPosition="top" class="pi pi-times"></i>
+                  <i (click)="onDeleteCustomerUser(user)" pTooltip="Delete" tooltipPosition="top"
+                    class="pi pi-times"></i>
                 </div>
               </td>
             </tr>
@@ -113,16 +124,27 @@
         </p-table>
         <div class="actions" fxLayout="row" fxLayoutAlign="end center">
           <div fxFlex>
-            <div fxLayout="row" fxLayoutAlign="start center" *ngIf="!subscriberMaxUserReached"><i class="pi pi-info-circle"></i> Your plan is {{subscriber?.name}} with a limit of {{ subscriber?.max_users }} users.</div>
-            <div *ngIf="subscriberMaxUserReached" class="notice"><i class="pi pi-times-circle"></i> Max users reached, please upgrade your Subscription.</div>
+            <div fxLayout="row" fxLayoutAlign="start center" *ngIf="!subscriberMaxUserReached"><i
+                class="pi pi-info-circle"></i> Your plan is {{subscriber?.name}} with a limit of {{
+              subscriber?.max_users }} users.</div>
+            <div *ngIf="subscriberMaxUserReached" class="notice"><i class="pi pi-times-circle"></i> Max users reached,
+              please upgrade your Subscription.</div>
           </div>
-          <button *ngIf="!isCustomerApproved" [disabled]="subscriberMaxUserReached" [ngClass]="{'disabled': subscriberMaxUserReached}" (click)="onAddCustomerUser()" pButton type="button" class="default semi-medium" label="Add a User"></button>
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <button *ngIf="isSubscriptionChanged" (click)="onRefresh()" pButton type="button"
+              class="default semi-medium" label="Refresh"></button>
+            <button *ngIf="!isCustomerApproved" [disabled]="subscriberMaxUserReached"
+              [ngClass]="{'disabled': subscriberMaxUserReached}" (click)="onAddCustomerUser()" pButton type="button"
+              class="default semi-medium" label="Add a User"></button>
+          </div>
         </div>
       </p-tabPanel>
     </p-tabView>
   </div>
   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="footer">
-    <button (click)="onCancel()" pButton type="button" class="default medium" [label]="!isCustomerApproved ? 'CANCEL' : 'CLOSE'"></button>
-    <button *ngIf="!isCustomerApproved" [disabled]="!isFormValid" (click)="onSave()" pButton type="button" class="purple medium" [label]="actionText[data?.action]"></button>
+    <button (click)="onCancel()" pButton type="button" class="default medium"
+      [label]="!isCustomerApproved ? 'CANCEL' : 'CLOSE'"></button>
+    <button *ngIf="!isCustomerApproved" [disabled]="!isFormValid" (click)="onSave()" pButton type="button"
+      class="purple medium" [label]="actionText[data?.action]"></button>
   </div>
 </div>

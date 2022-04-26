@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { IAccess, ICustomer, ICustomerUser, ICustomerUserResponse, IRole } from 'src/app/models/customer.model';
@@ -14,7 +14,7 @@ import { AddEditCustomerUserDialogComponent } from '../add-edit-customer-user-di
 import { ConfirmationDialogComponent } from '../confirmation/confirmation.component';
 import * as _ from 'lodash';
 import { getSubscriptionsSelector } from 'src/app/store/selectors/subscription.selector';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, skip, takeUntil } from 'rxjs/operators';
 import { GenericDestroyPageComponent } from 'src/app/shared/generics/generic-destroy-page';
 import { getSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';
 import { combineLatest } from 'rxjs';
@@ -45,8 +45,10 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   public subscriber: ISubscription;
   public subscriberMaxUserReached: boolean = false;
   public customerStatus: number;
-  public websiteExist: boolean = false;
-  public saveTriggered: boolean = false;
+  public initialUsers: ICustomerUserResponse[];
+  public initialSubscription: ISubscription;
+  public customerUsersArray: FormArray;
+  public userResetState: boolean = false;
 
   constructor(private cdRef: ChangeDetectorRef, private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddCustomerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super();
@@ -78,17 +80,20 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       this.customerStatus = this.data?.userStatus;
     }
 
-    this.form.get('subscription').valueChanges.subscribe(subscriberId => {
-      if (subscriberId) {
-        this.store.pipe(select(getSubscriptionByIdSelector(subscriberId)))
-          .subscribe(subscriber => {
-            this.subscriber = subscriber;
-            this.form.get('users').patchValue([]);
-            this.subscriberMaxUserReached = false;
-          });
-        this.checkSubscriptionUsersReached();
-      }
-    });
+    this.form.get('subscription').valueChanges.pipe(
+      takeUntil(this.$unsubscribe),
+      distinctUntilChanged(() => this.userResetState))
+      .subscribe(subscriberId => {
+        if (subscriberId) {
+          this.store.pipe(select(getSubscriptionByIdSelector(subscriberId)))
+            .subscribe(subscriber => {
+              this.subscriber = subscriber;
+              this.form.setControl('users', this.fb.array([]));
+              this.subscriberMaxUserReached = false;
+            });
+          this.checkSubscriptionUsersReached();
+        }
+      });
 
     this.getCustomerInformationForm.get('website_url').valueChanges
       .pipe(takeUntil(this.$unsubscribe)).subscribe(value => {
@@ -138,7 +143,9 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     });
 
     this.store.pipe(
-      select(editCustomerByIdSelector)).subscribe(customer => {
+      select(editCustomerByIdSelector),
+      takeUntil(this.$unsubscribe))
+      .subscribe(customer => {
         if (customer) {
           this.form.patchValue({
             id: customer?.id,
@@ -147,22 +154,25 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
             users: customer?.customer_users
           }, { emitEvent: true });
 
-          this.form.get('subscription').patchValue(customer.subscription?.id) // we use only id here so we can bind it so easily
+          this.form.get('subscription').patchValue(customer.subscription?.id, { emitEvent: false });
+          this.initialSubscription = customer?.subscription;
+          this.initialUsers = customer?.customer_users;
           this.getCustomerUsersFormValues.push(...customer?.customer_users);
 
           this.checkSubscriptionUsersReached();
         } else {
-          this.getCustomerInformationForm.get('language').patchValue('en');
+          this.getCustomerInformationForm.get('language').patchValue('en', { emitEvent: false });
           this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
         }
       });
   }
 
   ngAfterViewInit(): void {
-    this.store.pipe(select(getSubscriptionsSelector))
+    this.store.pipe(select(getSubscriptionsSelector),
+      takeUntil(this.$unsubscribe))
       .subscribe(subscriptions => {
         this.subscriptions = subscriptions?.map(sub => ({ label: sub.name, value: sub.id }));
-        this.form.get('subscription').patchValue(this.subscriptions[0]?.value);
+        this.form.get('subscription').patchValue(this.subscriptions[0]?.value, { emitEvent: false });
         this.subscriberMaxUserReached = false;
         this.cdRef.detectChanges();
       });
@@ -171,6 +181,37 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       this.form.get('profile').disable();
       this.form.get('subscription').disable();
     }
+  }
+
+  public onRefresh(): void {
+    this.userResetState = true;
+    this.customerUsersArray = this.form.get('users') as FormArray;
+    this.customerUsersArray.clear();
+
+    this.initialUsers.forEach(customerUser => {
+      const newValue = new FormGroup({
+        id: new FormControl(customerUser.id),
+        accesses: new FormControl(customerUser.accesses),
+        created_at: new FormControl(customerUser.created_at),
+        customer_id: new FormControl(customerUser.customer_id),
+        roles: new FormControl(customerUser.roles),
+        username: new FormControl(customerUser.username),
+      });
+      this.customerUsersArray.push(newValue);
+    });
+
+    this.form.get('subscription').setValue({
+      value: this.initialSubscription?.id,
+      label: this.initialSubscription?.name
+    }, { emitEvent: false });
+
+    setTimeout(() => {
+      this.userResetState = false;
+    }, 100);
+  }
+
+  public get isSubscriptionChanged(): boolean {
+    return this.subscriber?.id !== this.initialSubscription?.id;
   }
 
   public getRoles(roles: string[]): IRole[] {
