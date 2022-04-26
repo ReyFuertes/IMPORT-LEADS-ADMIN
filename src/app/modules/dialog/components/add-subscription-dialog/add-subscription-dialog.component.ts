@@ -6,6 +6,7 @@ import { FormStateType } from 'src/app/models/generic.model';
 import { getSubscriptionByIdAction } from 'src/app/store/actions/subscription.action';
 import { RootState } from 'src/app/store/root.reducer';
 import { editSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'il-add-subscription-dialog',
@@ -15,7 +16,8 @@ import { editSubscriptionByIdSelector } from 'src/app/store/selectors/subscripti
 export class AddSubscriptionDialogComponent implements OnInit {
   public form: FormGroup;
   public actionText: string[] = ['ADD', 'UPDATE'];
-
+  public currencySymbol = environment.currencySymbol;
+  
   constructor(private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddSubscriptionDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       id: [null],

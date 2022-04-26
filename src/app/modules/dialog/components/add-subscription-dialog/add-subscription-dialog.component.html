@@ -20,7 +20,7 @@
         </div>
         <div fxFlex="50" fxLayout="column" fxLayoutAlign="start start">
           <label>{{ 'Rates' }}</label>
-          <p-inputNumber mode="decimal" [minFractionDigits]="2" formControlName="rate" [maxlength]="5" placeholder="Rates"></p-inputNumber>
+          <p-inputNumber [prefix]="currencySymbol" formControlName="rate" [maxlength]="5" placeholder="Rates"></p-inputNumber>
         </div>
       </div>
       <div [formGroup]="form">

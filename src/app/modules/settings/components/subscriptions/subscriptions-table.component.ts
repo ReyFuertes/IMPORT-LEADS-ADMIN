@@ -10,6 +10,7 @@ import { StorageService } from 'src/app/modules/service/storage.service';
 import { addSubscriptionAction, deleteSubscriptionAction, updateSubscriptionAction } from 'src/app/store/actions/subscription.action';
 import { RootState } from 'src/app/store/root.reducer';
 import { getSubscriptionsSelector } from 'src/app/store/selectors/subscription.selector';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'il-subscriptions-table',
@@ -20,6 +21,7 @@ export class SubscriptionsTableComponent implements OnInit {
   public $subscriptions: Observable<ISubscription[]>;
   public items: MenuItem[];
   public selectedItem: ISubscription;
+  public currencySymbol = environment.currencySymbol;
 
   constructor(private storageSrv: StorageService, private store: Store<RootState>, private dialog: MatDialog) {
     this.$subscriptions = this.store.pipe(select(getSubscriptionsSelector));
