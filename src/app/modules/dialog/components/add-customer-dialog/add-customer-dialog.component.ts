@@ -154,7 +154,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
             users: customer?.customer_users
           }, { emitEvent: true });
 
-          this.form.get('subscription').patchValue(customer.subscription?.id, { emitEvent: false });
+          this.form.get('subscription').patchValue(customer.subscription?.id, { emitEvent: true });
           this.initialSubscription = customer?.subscription;
           this.initialUsers = customer?.customer_users;
           this.getCustomerUsersFormValues.push(...customer?.customer_users);
@@ -188,7 +188,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     this.customerUsersArray = this.form.get('users') as FormArray;
     this.customerUsersArray.clear();
 
-    this.initialUsers.forEach(customerUser => {
+    this.initialUsers?.forEach(customerUser => {
       const newValue = new FormGroup({
         id: new FormControl(customerUser.id),
         accesses: new FormControl(customerUser.accesses),
@@ -200,7 +200,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       this.customerUsersArray.push(newValue);
     });
 
-    this.form.get('subscription').setValue({
+    this.form.get('subscription').patchValue({
       value: this.initialSubscription?.id,
       label: this.initialSubscription?.name
     }, { emitEvent: false });
@@ -251,10 +251,11 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
   public onAddCustomerUser(): void {
     this.checkSubscriptionUsersReached();
     this.store.dispatch(clearSelectedCustomerAction());
-    
+
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '275px', data: {
         action: 0,
+        formState: FormStateType.Add,
         existingCustomers: this.getCustomerUsersFormValues
       }
     });
