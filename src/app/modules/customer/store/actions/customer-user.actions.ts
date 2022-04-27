@@ -5,8 +5,12 @@ export enum CustomerUserActionTypes {
   addCustomerUserAction = '[Customer] add customer user',
   addCustomerUserSuccessAction = '[Customer] add customer user (success)',
   getCustomerUserByIdAction = '[Customer] get customer user by id',
-  getCustomerUserByIdSuccessAction = '[Customer] get customer user by id (success)'
+  getCustomerUserByIdSuccessAction = '[Customer] get customer user by id (success)',
+  clearSelectedCustomerAction = '[Customer] clear selected customer'
 }
+export const clearSelectedCustomerAction = createAction(
+  CustomerUserActionTypes.clearSelectedCustomerAction
+);
 export const getCustomerUserByIdAction = createAction(
   CustomerUserActionTypes.getCustomerUserByIdAction,
   props<{ id: string }>()

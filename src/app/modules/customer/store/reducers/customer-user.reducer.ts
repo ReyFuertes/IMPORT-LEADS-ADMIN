@@ -1,7 +1,7 @@
 import { createReducer, on, Action } from "@ngrx/store";
 import { ICustomerUser, ICustomerUserResponse } from "src/app/models/customer.model";
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
-import { addCustomerUserSuccessAction, getCustomerUserByIdSuccessAction } from "../actions/customer-user.actions";
+import { addCustomerUserSuccessAction, clearSelectedCustomerAction, getCustomerUserByIdSuccessAction } from "../actions/customer-user.actions";
 export interface CustomerUserState extends EntityState<ICustomerUser> {
   selectedCustomerUser: ICustomerUserResponse
 }
@@ -12,6 +12,9 @@ export const initialState: CustomerUserState = adapter.getInitialState({
 
 const customerUserReducer = createReducer(
   initialState,
+  on(clearSelectedCustomerAction, (state) => {
+    return Object.assign({}, state, { selectedCustomerUser: null })
+  }),
   on(getCustomerUserByIdSuccessAction, (state, action) => {
     return Object.assign({}, state, { selectedCustomerUser: action?.response })
   }),

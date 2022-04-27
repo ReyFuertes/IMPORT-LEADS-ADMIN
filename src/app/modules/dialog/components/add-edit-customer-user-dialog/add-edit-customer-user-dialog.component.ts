@@ -3,10 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IAccess, ICustomerUser } from 'src/app/models/customer.model';
 import { FormStateType } from 'src/app/models/generic.model';
 import { getCustomerUserByIdAction } from 'src/app/modules/customer/store/actions/customer-user.actions';
 import { getCustomerUserByIdSelector } from 'src/app/modules/customer/store/selectors/customer-user.selector';
+import { GenericDestroyPageComponent } from 'src/app/shared/generics/generic-destroy-page';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { emailRegex } from 'src/app/shared/util/email';
 import { generatePassword } from 'src/app/shared/util/password';
@@ -19,7 +21,7 @@ import { NotificationDialogComponent } from '../notification-dialog/notification
   templateUrl: './add-edit-customer-user-dialog.component.html',
   styleUrls: ['./add-edit-customer-user-dialog.component.scss']
 })
-export class AddEditCustomerUserDialogComponent implements OnInit {
+export class AddEditCustomerUserDialogComponent extends GenericDestroyPageComponent implements OnInit {
   public actionText: string[] = ['ADD', 'UPDATE'];
   public form: FormGroup;
   public $access: Observable<IAccess[]>;
@@ -35,6 +37,7 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
   public userPreSelectedRole: string[] = ['2a69d8c5-3434-4ab9-ba74-bfb465c09d05'];
 
   constructor(private dialog: MatDialog, private store: Store<RootState>, private fb: FormBuilder, public dialogRef: MatDialogRef<AddEditCustomerUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    super();
     this.form = this.fb.group({
       id: [null],
       username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
@@ -55,20 +58,23 @@ export class AddEditCustomerUserDialogComponent implements OnInit {
     this.$access = this.store.pipe(select(getCustomerAccessSelector));
     this.$roles = this.store.pipe(select(getRolesSelector));
 
-    this.store.pipe(select(getCustomerUserByIdSelector)).subscribe(customerUser => {
-      if (customerUser) {
-        this.form.patchValue(customerUser, { emitEvent: false });
-        this.form.get('password').setValidators(null);
-      } else {
-        this.form.get('password').setValidators([Validators.required]);
-      }
-      this.form.get('password').updateValueAndValidity();
-    });
+    this.store.pipe(select(getCustomerUserByIdSelector), takeUntil(this.$unsubscribe))
+      .subscribe(customerUser => {
+        if (customerUser) {
+          this.form.patchValue(customerUser, { emitEvent: false });
+          this.form.get('password').setValidators(null);
+        } else {
+          this.form.get('password').setValidators([Validators.required]);
+        }
+        this.form.get('password').updateValueAndValidity();
+      });
   }
 
   public onSave(): void {
-    const existingCustomers = this.data?.existingCustomers?.find(customer => customer?.username.trim() === this.form.get('username')?.value?.trim());
-    if (existingCustomers) {
+    const customeExist = this.data?.existingCustomers
+      ?.find(customer => customer?.username.trim() === this.form.get('username')?.value?.trim());
+
+    if (customeExist && this.data?.formState === FormStateType.Add) {
       const dialogRef = this.dialog.open(NotificationDialogComponent, {
         width: '410px', data: { action: 0 }
       });

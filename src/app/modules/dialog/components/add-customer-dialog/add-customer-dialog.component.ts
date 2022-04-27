@@ -250,7 +250,8 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
 
   public onAddCustomerUser(): void {
     this.checkSubscriptionUsersReached();
-
+    this.store.dispatch(clearSelectedCustomerAction());
+    
     const dialogRef = this.dialog.open(AddEditCustomerUserDialogComponent, {
       width: '430px', height: '275px', data: {
         action: 0,
