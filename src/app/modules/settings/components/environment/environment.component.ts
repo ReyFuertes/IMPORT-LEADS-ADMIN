@@ -3,11 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { ICustomer } from 'src/app/models/customer.model';
+import { CustomerStatusType } from 'src/app/models/generic.model';
 import { IUser } from 'src/app/modules/auth/auth.models';
+import { updateCustomerStatusOnlyAction } from 'src/app/modules/customer/store/actions/customer.actions';
 import { getCustomersSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
 import { RootState } from 'src/app/store/root.reducer';
-import { cleanUpAction } from '../../store/settings.action';
+import { cleanUpAction, resetAction } from '../../store/settings.action';
 
 @Component({
   selector: 'il-environment',
@@ -24,7 +26,26 @@ export class EnvironmentComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  public onReset(customer: ICustomer): void {
+  public onResetStatus(customer: ICustomer): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '410px', data: { action: 7 }
+    });
+    dialogRef.afterClosed()
+      .subscribe((result: boolean) => {
+        if (result === true) {
+          const payload = {
+            customer: {
+              id: customer?.id,
+              username: customer?.username
+            },
+            status: `${CustomerStatusType.Pending}`
+          }
+          this.store.dispatch(resetAction({ payload }));
+        }
+      });
+  }
+
+  public onResetData(customer: ICustomer): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '410px', data: { action: 4 }
     });

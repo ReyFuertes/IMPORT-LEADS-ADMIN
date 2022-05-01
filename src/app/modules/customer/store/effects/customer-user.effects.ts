@@ -1,9 +1,9 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { tap, map, switchMap } from 'rxjs/operators';
-import { CustomerService, CustomerUserService } from 'src/app/services/api.service';
-import { ICustomer, ICustomerUser, ICustomerUserResponse } from 'src/app/models/customer.model';
+import { map, switchMap } from 'rxjs/operators';
+import { CustomerUserService } from 'src/app/services/api.service';
+import { ICustomerUser, ICustomerUserResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
 import { addCustomerUserAction, addCustomerUserSuccessAction, getCustomerUserByIdAction, getCustomerUserByIdSuccessAction } from '../actions/customer-user.actions';
 import { deleteCustomerUserAction, deleteCustomerUserSuccessAction } from '../actions/customer.actions';

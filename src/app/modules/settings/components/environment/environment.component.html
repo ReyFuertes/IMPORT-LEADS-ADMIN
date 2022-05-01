@@ -18,8 +18,10 @@
         <td>{{ customer?.company_name }}</td>
         <td>{{ customer?.api_url }}</td>
         <td>
-          <button (click)="onReset(customer)" pButton type="button" class="purple medium" label="RESET"><i
-              class="pi pi-refresh"></i></button>
+          <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <button (click)="onResetData(customer)" pButton type="button" class="purple medium" label="RESET DATA"></button>
+            <button (click)="onResetStatus(customer)" pButton type="button" class="default medium" label="RESET STATUS"></button>
+          </div>
         </td>
       </tr>
     </ng-template>

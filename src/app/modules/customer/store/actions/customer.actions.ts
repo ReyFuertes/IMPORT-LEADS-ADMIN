@@ -19,6 +19,8 @@ export enum CustomerActionTypes {
   deleteCustomerSuccessAction = '[Customer] delete customer (success)',
   updateCustomerStatusAction = '[Customer] update customer status',
   updateCustomerStatusSuccessAction = '[Customer] add customer status (success)',
+  updateCustomerStatusOnlyAction = '[Customer] update customer status only',
+  updateCustomerStatusOnlySuccessAction = '[Customer] add customer status only (success)',
   migrateAccessAction = '[Customer] migrate access',
   migrateAccessSuccessAction = '[Customer] migrate access (success)',
   migrateRoleAction = '[Customer] migrate role',
@@ -30,6 +32,14 @@ export enum CustomerActionTypes {
   createCustomerUsersAction = '[Customer] update customer users details',
   createCustomerUsersSuccessAction = '[Customer] update customer users details (success)'
 }
+export const updateCustomerStatusOnlyAction = createAction(
+  CustomerActionTypes.updateCustomerStatusOnlyAction,
+  props<{ payload: CustomerUpdateStatus }>()
+);
+export const updateCustomerStatusOnlySuccessAction = createAction(
+  CustomerActionTypes.updateCustomerStatusOnlySuccessAction,
+  props<{ response: ICustomer }>()
+);
 export const createCustomerUsersAction = createAction(
   CustomerActionTypes.createCustomerUsersAction,
   props<{ payload: ICustomerUser[], api_url: string }>()
@@ -72,7 +82,7 @@ export const migrateAccessSuccessAction = createAction(
 );
 export const updateCustomerStatusAction = createAction(
   CustomerActionTypes.updateCustomerStatusAction,
-  props<{ payload: CustomerUpdateStatus, customer?: ICustomerPayload, access?: IAccess[], role?: IRole[], customer_users: IUser[] }>()
+  props<{ payload: CustomerUpdateStatus, customer?: ICustomerPayload, access?: IAccess[], role?: IRole[], customer_users?: IUser[] }>()
 );
 export const updateCustomerStatusSuccessAction = createAction(
   CustomerActionTypes.updateCustomerStatusSuccessAction,

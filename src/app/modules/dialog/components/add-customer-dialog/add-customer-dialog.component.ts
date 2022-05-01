@@ -56,7 +56,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       id: [null],
       email_password: this.fb.group({
         username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
-        password: [null, Validators.required]
+        password: [null, [Validators.required, Validators.minLength(6)]],
       }),
       profile: this.fb.group({
         id: [null],

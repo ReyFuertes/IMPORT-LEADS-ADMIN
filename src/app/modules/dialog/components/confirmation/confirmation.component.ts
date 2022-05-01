@@ -28,6 +28,9 @@ export class ConfirmationDialogComponent {
   }, {
     label: 'NOTIFICATION',
     message: 'This record already exist, please try again.'
+  }, , {
+    label: 'RESET',
+    message: 'Do you want to reset customer status?'
   }];
 
   constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {

@@ -36,14 +36,14 @@ export abstract class BaseService<T> {
     });
   }
 
-  private removeNullProps(obj: any): any {
-    let ret: any;
-    if (!Array.isArray(obj)) {
-      ret = _.pickBy(obj, _.identity);
+  private removeNullProps(payload: any): any {
+    let formattedPayload: any;
+    if (!Array.isArray(payload)) {
+      formattedPayload = _.pickBy(payload, _.identity);
     } else {
-      ret = Object.values(_.pickBy(obj, o => o !== null && o !== undefined));
+      formattedPayload = Object.values(_.pickBy(payload, o => o !== null && o !== undefined));
     }
-    return ret;
+    return formattedPayload;
   }
 
   public post(object?: T | T[], param?: string, overrideUrl?: string): Observable<T | any> {
