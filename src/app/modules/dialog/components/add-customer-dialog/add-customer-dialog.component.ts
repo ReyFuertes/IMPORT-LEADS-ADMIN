@@ -74,10 +74,12 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       users: new FormArray([]),
       subscription: [null, Validators.required]
     });
-
+    
     if (this.isEditMode && this.data?.id) {
       this.store.dispatch(getCustomerByIdAction({ id: this.data?.id }));
       this.customerStatus = this.data?.userStatus;
+    } else {
+      this.store.dispatch(clearSelectedCustomerAction());
     }
 
     this.form.get('subscription').valueChanges.pipe(
@@ -147,6 +149,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       takeUntil(this.$unsubscribe))
       .subscribe(customer => {
         if (customer) {
+          
           this.form.patchValue({
             id: customer?.id,
             email_password: { username: customer?.username, password: customer?.text_password },
