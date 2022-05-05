@@ -1,9 +1,14 @@
 import { ISimpleItem } from "../shared/generics/generic.model";
 import { ISubscription } from "./generic.model";
 
-export interface CustomerUpdateStatus {
-  customer: ICustomer;
+export interface ICustomerApprovePayload {
+  api_url: string;
   status: any;
+  customer: ICustomer;
+  profile: IProfile;
+  access: IAccess[];
+  role: IRole[];
+  customer_users: ICustomerUser[]
 }
 export interface ICustomerAccess {
   id: string;
@@ -105,6 +110,7 @@ export interface ICustomer {
   is_change_password?: number;
   subscription?: string;
   create_status?: CreateStatusType;
+  change_password_token?: any;
 }
 export enum CreateStatusType {
   Failed = 'Failed',

@@ -31,7 +31,7 @@ export class CustomerUserService extends BaseService<ICustomer | ICustomerPayloa
   }
 }
 @Injectable({ providedIn: 'root' })
-export class CustomerService extends BaseService<ICustomerResponse | ICustomerPayload | ICustomer | { website_url: string }> {
+export class CustomerService extends BaseService<ICustomerResponse | ICustomerPayload | ICustomer > {
   constructor(http: HttpClient, storageSrv: StorageService) {
     super(http, 'customer', storageSrv);
   }

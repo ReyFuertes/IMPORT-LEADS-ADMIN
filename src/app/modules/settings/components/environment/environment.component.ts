@@ -5,7 +5,7 @@ import { MenuItem } from 'primeng/api';
 import { ICustomer } from 'src/app/models/customer.model';
 import { CustomerStatusType } from 'src/app/models/generic.model';
 import { IUser } from 'src/app/modules/auth/auth.models';
-import { updateCustomerStatusOnlyAction } from 'src/app/modules/customer/store/actions/customer.actions';
+import { updateCustomerStatusAction } from 'src/app/modules/customer/store/actions/customer.actions';
 import { getCustomersSelector } from 'src/app/modules/customer/store/selectors/customer.selector';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
 import { RootState } from 'src/app/store/root.reducer';

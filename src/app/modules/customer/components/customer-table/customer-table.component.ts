@@ -3,13 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ChangePasswordType, CustomerStatusType, FormStateType } from 'src/app/models/generic.model';
-import { IAccess, ICustomer, ICustomerPayload } from 'src/app/models/customer.model';
+import { IAccess, ICustomer, ICustomerApprovePayload, ICustomerPayload } from 'src/app/models/customer.model';
 import { AddCustomerDialogComponent } from 'src/app/modules/dialog/components/add-customer-dialog/add-customer-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/modules/dialog/components/confirmation/confirmation.component';
 import { InviteCustomerDialogComponent } from 'src/app/modules/dialog/components/invite-customer-dialog/invite-customer-dialog.component';
 import { ISimpleItem } from 'src/app/shared/generics/generic.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, deleteCustomerAction, inviteAction, loadCustomersAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerStatusAction } from '../../store/actions/customer.actions';
+import { addCustomerAction, deleteCustomerAction, inviteAction, loadCustomersAction, updateCustomerAction, updateCustomerDetailsAction, approveCustomerAction } from '../../store/actions/customer.actions';
 import { getCustomersSelector } from '../../store/selectors/customer.selector';
 import { debounceTime } from 'rxjs/operators';
 import { notificationSuccessAction } from 'src/app/store/actions/notification.action';
@@ -109,21 +109,19 @@ export class CustomerTableComponent implements OnInit {
         if (result) {
           const { api_url, customer_users, profile } = customer;
           if (api_url) {
-            const approvePayload = {
-              payload: { customer, status: CustomerStatusType.Approved },
+            const payload: ICustomerApprovePayload = {
+              api_url,
+              status: { customer, status: CustomerStatusType.Approved },
               customer: {
-                api_url,
-                user: {
-                  id: customer?.id,
-                  name: customer?.name,
-                  username: customer?.username,
-                  password: customer?.password,
-                  status: customer?.status,
-                  change_password_token: customer?.change_password_token,
-                  is_change_password: ChangePasswordType.ChangePassword,
-                },
-                user_profile: profile
+                id: customer?.id,
+                name: customer?.name,
+                username: customer?.username,
+                password: customer?.password,
+                status: customer?.status,
+                change_password_token: customer?.change_password_token,
+                is_change_password: ChangePasswordType.ChangePassword
               },
+              profile,
               access: this.access?.map((access: IAccess) => {
                 return {
                   id: access?.value,
@@ -148,11 +146,11 @@ export class CustomerTableComponent implements OnInit {
                     company_name: customer?.company_name,
                     company_address: customer?.company_address,
                     language: 'en'
-                  } 
+                  }
                 }
               })
             }
-            this.store.dispatch(updateCustomerStatusAction(approvePayload));
+            this.store.dispatch(approveCustomerAction({ payload }));
           } else {
             this.store.dispatch(notificationSuccessAction({
               notification: { error: true, message: 'Failed to approve customer, api url not defined.' }

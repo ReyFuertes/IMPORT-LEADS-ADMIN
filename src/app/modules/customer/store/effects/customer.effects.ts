@@ -1,23 +1,23 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap} from 'rxjs/operators';
+import { catchError, concatMap, debounceTime, distinctUntilChanged, finalize, map, switchMap } from 'rxjs/operators';
 import { AccessService, CustomerService, RolesService } from 'src/app/services/api.service';
 import { CreateStatusType, ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerDetailsSuccessAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction, updateCustomerSuccessAction, createCustomerUsersAction, createCustomerUsersSuccessAction, updateCustomerStatusOnlyAction, updateCustomerStatusOnlySuccessAction } from '../actions/customer.actions';
+import { addCustomerAction, addCustomerSuccessAction, deleteCustomerAction, deleteCustomerSuccessAction, getCustomerByIdAction, getCustomerByIdSuccessAction, inviteAction, inviteSuccessAction, loadCustomersAction, loadCustomersSuccessAction, updateCustomerAction, updateCustomerDetailsAction, updateCustomerDetailsSuccessAction, approveCustomerAction, approveCustomerSuccessAction, updateCustomerSuccessAction, createCustomerUsersAction, createCustomerUsersSuccessAction, updateCustomerStatusAction, updateCustomerStatusSuccessAction } from '../actions/customer.actions';
 import { notificationFailedAction, notificationSuccessAction } from 'src/app/store/actions/notification.action';
 import { combineLatest, of } from 'rxjs';
 
 @Injectable()
 export class CustomerEffects {
-  updateCustomerStatusOnlyAction$ = createEffect(() => this.actions$.pipe(
-    ofType(updateCustomerStatusOnlyAction),
+  updateCustomerStatusAction$ = createEffect(() => this.actions$.pipe(
+    ofType(updateCustomerStatusAction),
     switchMap(({ payload }) => {
       return this.customerService.patch(payload, 'status').pipe(
         map((response) => {
           this.showSuccessNofication('Successfully updated customer status!');
-          return updateCustomerStatusOnlySuccessAction({ response });
+          return updateCustomerStatusSuccessAction({ response });
         }),
         catchError(() => {
           return of(notificationSuccessAction({
@@ -75,6 +75,7 @@ export class CustomerEffects {
       )
     })
   ));
+
   createCustomerUsersAction$ = createEffect(() => this.actions$.pipe(
     ofType(createCustomerUsersAction),
     switchMap(({ payload, api_url }) => {
@@ -85,21 +86,17 @@ export class CustomerEffects {
       )
     })
   ));
-  updateCustomerStatusAction$ = createEffect(() => this.actions$.pipe(
-    ofType(updateCustomerStatusAction),
-    switchMap(({ payload, customer, access, role, customer_users }) => {
+
+  approveCustomerAction$ = createEffect(() => this.actions$.pipe(
+    ofType(approveCustomerAction),
+    switchMap(({ payload }) => {
       return combineLatest([
-        this.accessService.post(access, 'migrate', customer?.api_url),
-        this.roleService.post(role, 'migrate', customer?.api_url),
-        this.customerService.post(customer, 'user', customer?.api_url),
-        this.customerService.patch(payload, 'status')
+        this.customerService.patch(payload?.status, 'status'),
+        this.customerService.post(payload, '', payload?.api_url)
       ]).pipe(
-        map(([access, role, customer, response]) => {
+        map(([response]) => {
           this.showSuccessNofication('Successfully updated customer status!');
-          return updateCustomerStatusSuccessAction({ response });
-        }),
-        finalize(() => {
-          this.store.dispatch(createCustomerUsersAction({ payload: customer_users, api_url: customer?.api_url }))
+          return approveCustomerSuccessAction({ response });
         }),
         catchError(() => {
           return of(notificationSuccessAction({
