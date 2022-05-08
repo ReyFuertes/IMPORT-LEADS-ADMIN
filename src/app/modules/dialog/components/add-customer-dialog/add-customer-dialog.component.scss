@@ -68,6 +68,11 @@ label {
   }
 }
 :host ::ng-deep {
+  button.disabled {
+    &:hover {
+      color: $color-gray-2 !important;
+    }
+  }
   il-option-select {
     label {
       &:first-child {

@@ -88,6 +88,9 @@ img.logo {
 .disabled {
   color: $color-gray-2 !important;
   cursor: not-allowed !important;
+  &:hover {
+    color: $color-gray-1 !important;
+  }
 }
 .p-menu.p-menu-overlay {
   width: fit-content !important;

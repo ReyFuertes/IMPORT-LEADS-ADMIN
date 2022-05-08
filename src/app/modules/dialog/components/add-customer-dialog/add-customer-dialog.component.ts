@@ -240,7 +240,9 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     dialogRef.afterClosed()
       .subscribe(result => {
         if (result) {
-          this.store.dispatch(deleteCustomerUserAction({ id: user?.id }));
+          if(user?.id) {
+            this.store.dispatch(deleteCustomerUserAction({ id: user?.id }));
+          };
           _.remove(this.getCustomerUsersFormValues, { id: user?.id });
           this.checkSubscriptionUsersReached();
         }

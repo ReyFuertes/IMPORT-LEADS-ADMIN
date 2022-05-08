@@ -5,7 +5,6 @@ export interface ICustomerApprovePayload {
   api_url: string;
   status: any;
   customer: ICustomer;
-  profile: IProfile;
   access: IAccess[];
   role: IRole[];
   customer_users: ICustomerUser[]
@@ -48,7 +47,7 @@ export interface ICustomerUser {
   created_at?: string;
   change_password_token?: string;
   is_change_password?: number;
-  user_profile?: IProfile;
+  profile?: IProfile;
   user_access?: ICustomerUserAccess[];
   user_role?: ICustomerUserRole[];
 }
@@ -68,11 +67,10 @@ export interface ICustomerRole {
   customer_user?: ICustomerUser
 }
 export interface ICustomerPayload {
-  profile?: ICustomer;
   email_password?: { username: string, password: string };
   api_url?: string;
   user: ICustomerUser,
-  user_profile?: IProfile
+  profile?: IProfile
 }
 export interface ICustomerUserResponse {
   accesses?: string[]

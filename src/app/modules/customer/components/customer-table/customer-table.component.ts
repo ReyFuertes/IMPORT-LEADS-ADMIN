@@ -119,9 +119,9 @@ export class CustomerTableComponent implements OnInit {
                 password: customer?.password,
                 status: customer?.status,
                 change_password_token: customer?.change_password_token,
-                is_change_password: ChangePasswordType.ChangePassword
+                is_change_password: ChangePasswordType.ChangePassword,
+                profile,
               },
-              profile,
               access: this.access?.map((access: IAccess) => {
                 return {
                   id: access?.value,
@@ -137,8 +137,8 @@ export class CustomerTableComponent implements OnInit {
               customer_users: customer_users?.map((_customer_user: ICustomerUser) => {
                 return {
                   ..._customer_user,
-                  user_profile: {
-                    ..._customer_user?.user_profile,
+                  profile: {
+                    ..._customer_user?.profile,
                     website_url: customer?.website_url,
                     api_url: customer?.api_url,
                     database_name: customer?.database_name,
