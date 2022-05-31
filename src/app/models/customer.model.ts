@@ -7,7 +7,8 @@ export interface ICustomerApprovePayload {
   customer: ICustomer;
   access: IAccess[];
   role: IRole[];
-  customer_users: ICustomerUser[]
+  customer_users: ICustomerUser[];
+  subscription?: ISubscription
 }
 export interface ICustomerAccess {
   id: string;
@@ -19,7 +20,7 @@ export interface IProfile {
   firstname?: string;
   lastname?: string;
   language?: string;
-  phone_number?: string;
+  phone?: string;
   email?: string;
   facebook?: string;
   twitter?: string;
@@ -67,10 +68,13 @@ export interface ICustomerRole {
   customer_user?: ICustomerUser
 }
 export interface ICustomerPayload {
+  id?: string;
   email_password?: { username: string, password: string };
   api_url?: string;
-  user: ICustomerUser,
-  profile?: IProfile
+  users?: ICustomerUser,
+  customer?: ICustomer;
+  profile?: IProfile;
+  subscription?: ISubscription;
 }
 export interface ICustomerUserResponse {
   accesses?: string[]

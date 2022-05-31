@@ -57,10 +57,7 @@ const customerReducer = createReducer(
   }),
   on(loadCustomersSuccessAction, (state, action) => {
     return ({ ...adapter.setAll(action.response, state) });
-  }),
-  // on(addCustomerSuccessAction, (state, action) => {
-  //   return adapter.addOne(action.response, state)
-  // })
+  })
 );
 export function CustomerReducer(state: CustomerState, action: Action) {
   return customerReducer(state, action);

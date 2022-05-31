@@ -65,7 +65,6 @@ export class CustomerTableComponent implements OnInit {
         this.store.dispatch(loadCustomersAction({ params: `take=${this.take}&skip=${this.skip}&${criteria}` }));
       }
     });
-
   }
 
   ngOnInit() { }
@@ -111,12 +110,15 @@ export class CustomerTableComponent implements OnInit {
           if (api_url) {
             const payload: ICustomerApprovePayload = {
               api_url,
-              status: { customer, status: CustomerStatusType.Approved },
+              status: {
+                customer: { id: customer?.id, status: customer?.status },
+                status: CustomerStatusType.Approved
+              },
               customer: {
                 id: customer?.id,
                 name: customer?.name,
                 username: customer?.username,
-                password: customer?.password,
+                password: customer?.text_password,
                 status: customer?.status,
                 change_password_token: customer?.change_password_token,
                 is_change_password: ChangePasswordType.ChangePassword,
@@ -148,7 +150,8 @@ export class CustomerTableComponent implements OnInit {
                     language: 'en'
                   }
                 }
-              })
+              }),
+              subscription: customer?.subscription
             }
             this.store.dispatch(approveCustomerAction({ payload }));
           } else {
@@ -209,7 +212,17 @@ export class CustomerTableComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerPayload) => {
       if (payload) {
-        this.store.dispatch(addCustomerAction({ payload }));
+        this.store.dispatch(addCustomerAction({
+          payload: {
+            customer: {
+              username: payload?.email_password?.username,
+              password: payload?.email_password?.password,
+              profile: payload?.profile
+            },
+            users: payload?.users,
+            subscription: payload?.subscription
+          }
+        }));
       }
     });
   }
@@ -225,7 +238,18 @@ export class CustomerTableComponent implements OnInit {
         if (customer?.status === this.customerStatusType.Approved) {
           this.store.dispatch(updateCustomerDetailsAction({ payload }));
         } else {
-          this.store.dispatch(updateCustomerAction({ payload }));
+          this.store.dispatch(updateCustomerAction({
+            payload: {
+              customer: {
+                id: customer?.id,
+                username: payload?.email_password?.username,
+                password: payload?.email_password?.password,
+                profile: payload?.profile
+              },
+              users: payload?.users,
+              subscription: payload?.subscription
+            }
+          }));
         }
       }
     });

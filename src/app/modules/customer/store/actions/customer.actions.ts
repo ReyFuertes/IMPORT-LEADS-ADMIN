@@ -50,7 +50,7 @@ export const createCustomerUsersSuccessAction = createAction(
 );
 export const updateCustomerDetailsAction = createAction(
   CustomerActionTypes.updateCustomerDetailsAction,
-  props<{ payload: ICustomer }>()
+  props<{ payload: ICustomerPayload }>()
 );
 export const updateCustomerDetailsSuccessAction = createAction(
   CustomerActionTypes.updateCustomerDetailsSuccessAction,

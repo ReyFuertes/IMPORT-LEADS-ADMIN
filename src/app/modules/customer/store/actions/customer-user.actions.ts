@@ -6,8 +6,18 @@ export enum CustomerUserActionTypes {
   addCustomerUserSuccessAction = '[Customer] add customer user (success)',
   getCustomerUserByIdAction = '[Customer] get customer user by id',
   getCustomerUserByIdSuccessAction = '[Customer] get customer user by id (success)',
-  clearSelectedCustomerAction = '[Customer] clear selected customer'
+  clearSelectedCustomerAction = '[Customer] clear selected customer',
+  updateCustomerUserAction = '[Customer] update customer user',
+  updateCustomerUserSuccessAction = '[Customer] update customer user (success)',
 }
+export const updateCustomerUserAction = createAction(
+  CustomerUserActionTypes.updateCustomerUserAction,
+  props<{ payload: ICustomerUser }>()
+);
+export const updateCustomerUserSuccessAction = createAction(
+  CustomerUserActionTypes.updateCustomerUserSuccessAction,
+  props<{ response: ICustomerUser }>()
+);
 export const clearSelectedCustomerAction = createAction(
   CustomerUserActionTypes.clearSelectedCustomerAction
 );

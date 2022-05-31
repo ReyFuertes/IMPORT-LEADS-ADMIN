@@ -95,3 +95,7 @@ img.logo {
 .p-menu.p-menu-overlay {
   width: fit-content !important;
 }
+.p-disabled, .p-component:disabled {
+  opacity: 0.9 !important;
+  background-color: $color-gray-3;
+}

@@ -19,6 +19,8 @@ import { GenericDestroyPageComponent } from 'src/app/shared/generics/generic-des
 import { getSubscriptionByIdSelector } from 'src/app/store/selectors/subscription.selector';
 import { combineLatest } from 'rxjs';
 import { isApiUrlExistAction, isWebsiteUrlExistAction } from 'src/app/modules/customer/store/actions/customer-profile.actions';
+import { updateCustomerUserAction } from 'src/app/modules/customer/store/actions/customer-user.actions';
+import { NullTemplateVisitor } from '@angular/compiler';
 
 @Component({
   selector: 'il-add-customer-dialog',
@@ -56,13 +58,13 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       id: [null],
       email_password: this.fb.group({
         username: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex.email)])],
-        password: [null, [Validators.required, Validators.minLength(6)]],
+        password: [null],
       }),
       profile: this.fb.group({
         id: [null],
         firstname: [null, Validators.required],
         lastname: [null, Validators.required],
-        phone_number: [null, Validators.required],
+        phone: [null, Validators.required],
         address: [null, Validators.required],
         company_name: [null, Validators.required],
         company_address: [null, Validators.required],
@@ -74,7 +76,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       users: new FormArray([]),
       subscription: [null, Validators.required]
     });
-    
+
     if (this.isEditMode && this.data?.id) {
       this.store.dispatch(getCustomerByIdAction({ id: this.data?.id }));
       this.customerStatus = this.data?.userStatus;
@@ -149,23 +151,26 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       takeUntil(this.$unsubscribe))
       .subscribe(customer => {
         if (customer) {
-          
           this.form.patchValue({
             id: customer?.id,
-            email_password: { username: customer?.username, password: customer?.text_password },
+            email_password: {
+              username: customer?.username,
+              password: customer?.text_password
+            },
             profile: customer?.profile,
             users: customer?.customer_users
           }, { emitEvent: true });
 
           this.form.get('subscription').patchValue(customer.subscription?.id, { emitEvent: true });
           this.initialSubscription = customer?.subscription;
-          this.initialUsers = customer?.customer_users;
-          this.getCustomerUsersFormValues.push(...customer?.customer_users);
+
+          const customer_users = customer?.customer_users || [];
+          this.initialUsers = customer_users;
+          this.getCustomerUsersFormValues.push(...customer_users);
 
           this.checkSubscriptionUsersReached();
         } else {
           this.getCustomerInformationForm.get('language').patchValue('en', { emitEvent: false });
-          this.getEmailPasswordForm.get('password').setValidators([Validators.required]);
         }
       });
   }
@@ -240,7 +245,7 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     dialogRef.afterClosed()
       .subscribe(result => {
         if (result) {
-          if(user?.id) {
+          if (user?.id) {
             this.store.dispatch(deleteCustomerUserAction({ id: user?.id }));
           };
           _.remove(this.getCustomerUsersFormValues, { id: user?.id });
@@ -287,6 +292,10 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     });
     dialogRef.afterClosed().subscribe((payload: ICustomerUserResponse) => {
       if (payload) {
+        if (customerUser?.id) {
+          this.store.dispatch(updateCustomerUserAction({ payload }));
+        }
+
         const itemToRemove = this.getCustomerUsersFormValues.find(value => value.username === customerUser?.username);
         _.remove(this.getCustomerUsersFormValues, { username: itemToRemove.username });
         this.getCustomerUsersFormValues.unshift(payload);
@@ -306,8 +315,8 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
     return this.getCustomerUsersForm.value as FormArray;
   }
 
-  public get getCustomerUsersForm(): FormGroup {
-    return this.form.get('users') as FormGroup;
+  public get getCustomerUsersForm(): any {
+    return this.form.get('users') as any;
   }
 
   public get getEmailPasswordFormValues(): any {

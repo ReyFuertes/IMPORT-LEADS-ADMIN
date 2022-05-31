@@ -5,11 +5,22 @@ import { map, switchMap } from 'rxjs/operators';
 import { CustomerUserService } from 'src/app/services/api.service';
 import { ICustomerUser, ICustomerUserResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
-import { addCustomerUserAction, addCustomerUserSuccessAction, getCustomerUserByIdAction, getCustomerUserByIdSuccessAction } from '../actions/customer-user.actions';
+import { addCustomerUserAction, addCustomerUserSuccessAction, getCustomerUserByIdAction, getCustomerUserByIdSuccessAction, updateCustomerUserAction, updateCustomerUserSuccessAction } from '../actions/customer-user.actions';
 import { deleteCustomerUserAction, deleteCustomerUserSuccessAction } from '../actions/customer.actions';
 
 @Injectable()
 export class CustomerUserEffects {
+  updateCustomerUserAction$ = createEffect(() => this.actions$.pipe(
+    ofType(updateCustomerUserAction),
+    switchMap(({ payload }) => {
+      return this.customerUserService.patch(payload).pipe(
+        map((response: ICustomerUser) => {
+          return updateCustomerUserSuccessAction({ response });
+        })
+      )
+    })
+  ));
+    
   deleteCustomerAction$ = createEffect(() => this.actions$.pipe(
     ofType(deleteCustomerUserAction),
     switchMap(({ id }) => {
@@ -20,6 +31,7 @@ export class CustomerUserEffects {
       )
     })
   ));
+
   getCustomerByIdAction$ = createEffect(() => this.actions$.pipe(
     ofType(getCustomerUserByIdAction),
     switchMap(({ id }) => {
@@ -30,6 +42,7 @@ export class CustomerUserEffects {
       )
     })
   ));
+
   addCustomerUserAction$ = createEffect(() => this.actions$.pipe(
     ofType(addCustomerUserAction),
     switchMap(({ payload }) => {
