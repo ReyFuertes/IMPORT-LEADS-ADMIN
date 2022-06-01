@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, concatMap, debounceTime, distinctUntilChanged, finalize, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap } from 'rxjs/operators';
 import { AccessService, CustomerService, RolesService } from 'src/app/services/api.service';
 import { CreateStatusType, ICustomer, ICustomerResponse } from 'src/app/models/customer.model';
 import { RootState } from 'src/app/store/root.reducer';
@@ -44,6 +44,7 @@ export class CustomerEffects {
       )
     })
   ));
+  
   inviteAction$ = createEffect(() => this.actions$.pipe(
     ofType(inviteAction),
     switchMap(({ payload }) => {
@@ -102,10 +103,12 @@ export class CustomerEffects {
           return of(notificationSuccessAction({
             notification: { error: true, message: 'Failed to add tenant, please contact your site administrator' }
           }));
-        })
+        }),
+        finalize(() => this.store.dispatch(loadCustomersAction({})))
       )
     })
   ));
+  
   deleteCustomerAction$ = createEffect(() => this.actions$.pipe(
     ofType(deleteCustomerAction),
     switchMap(({ id }) => {
