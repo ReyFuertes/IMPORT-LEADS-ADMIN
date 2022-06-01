@@ -208,14 +208,10 @@ export class AddCustomerDialogComponent extends GenericDestroyPageComponent impl
       this.customerUsersArray.push(newValue);
     });
 
-    this.form.get('subscription').patchValue({
-      value: this.initialSubscription?.id,
-      label: this.initialSubscription?.name
-    }, { emitEvent: false });
+    this.subscriber = this.initialSubscription;
+    this.form.get('subscription').patchValue(this.subscriber, { emitEvent: false });
 
-    setTimeout(() => {
-      this.userResetState = false;
-    }, 100);
+    setTimeout(() => this.userResetState = false, 100);
   }
 
   public get isSubscriptionChanged(): boolean {
